@@ -140,7 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Data.c" />
+    <ClCompile Include="Input.c" />
     <ClCompile Include="Main.c" />
+    <ClCompile Include="Render.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
