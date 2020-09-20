@@ -1,13 +1,3 @@
-#include <stdio.h>
+#include "Input.h"
 
-typedef enum key { Up, Down, Left, Right, A, B } Key;
-
-void bindkey()
-{
-
-}
-
-int main()
-{
-
-}
+enum Key { KEY_UP = 0, KEY_DOWN, KEY_LEFT, Key_RIGHT, KEY_A, KEY_B };

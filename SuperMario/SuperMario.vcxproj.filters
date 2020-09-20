@@ -24,8 +24,22 @@
     <ClCompile Include="Input.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Render.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Render.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Object.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Input.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
