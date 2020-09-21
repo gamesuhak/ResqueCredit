@@ -33,6 +33,18 @@
     <ClCompile Include="Object.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Image.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="FileLoader.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h">
@@ -40,6 +52,18 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

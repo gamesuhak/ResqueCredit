@@ -1,42 +1,64 @@
-#include <stdio.h>
-#include <Windows.h>
 #include "Render.h"
+#include "Color.h"
+#define SPRITES_COUNT 10
 
-HANDLE Handle;
-
-enum Color {
+enum Color
+{
 	COLOR_BLACK = 0, COLOR_DARKBLUE, COLOR_DARKGREEN, COLOR_DARKSKY, COLOR_DARKRED, COLOR_DARKPINK, COLOR_DARKYELLOW, COLOR_DARKWHITE,
 	COLOR_GRAY, COLOR_BLUE, COLOR_GREEN, COLOR_SKY, COLOR_RED, COLOR_PINK, COLOR_YELLOW, COLOR_WHITE
+};
+
+struct Image
+{
+	int id;
+	int width;
+	int height;
+	char** data;
+};
+
+// 게임 내에서 쓸 스프라이트 목록
+Image *Sprites;
+
+enum Sprite
+{
+	SPRITE_ = 0
 };
 
 // 화면 출력 함수
 void Render()
 {
 	InitializeRender();
-	SetPixelColor(2, 2, COLOR_BLACK, COLOR_WHITE);
-	printf("렌더링 되었습니다.");
+
+	for (int i = 0; i < SPRITES_COUNT; i++)
+	{
+		Sprites[i].id = i;
+	}
+}
+
+void UpdateRender()
+{
+
 }
 
 void InitializeRender()
 {
-	Handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	
+	Sprites = malloc(sizeof(Image) * SPRITES_COUNT);
+	SetScreenSize(176, 128);
 }
 
-// x와 y 좌표로 커서 옮기는 함수
-void SetPoint(int x, int y)
+void InitializeSprites()
 {
-	COORD Pos;
-	Pos.X = x << 1;
-	Pos.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
+	//Sprites = (Image*)malloc(sizeof(Image) * SPRITES_COUNT);
 }
 
-void SetPixelColor(int x, int y, Color textColor, Color backColor)
+void RenderImage(int x, int y, Image* image)
 {
-	printf("textColor = %d, backColor = %d\n", textColor, (backColor << 4));
-	printf("textColor = %d, backColor = %d", textColor, (backColor * 16));
-
-	SetPoint(x, y);
-	SetConsoleTextAttribute(Handle, textColor + (backColor << 4));
-	printf("  ");
+	for (int posx = x; x < posx + image->width; x++)
+	{
+		for (int posy = y; y < posy + image->height; y++)
+		{
+			SetPixelColor(x, y, 0, image->data[posx][posy]);
+		}
+	}
 }
