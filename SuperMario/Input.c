@@ -1,57 +1,52 @@
 #include "Input.h"
 #include <stdio.h>
 #include <conio.h>
-
+#include<windows.h>
 
 enum Key { KEY_UP = 72, KEY_DOWN = 80, KEY_LEFT = 75, KEY_RIGHT = 77, KEY_A = 'a', KEY_B = 'b' };
 enum Bool { false = 0, true };//true´Â 0,false´Â 1
 struct K {
 	int Up; int Down; int Left; int Right; int A; int B;
-<<<<<<< HEAD
-
-};
-struct K Kb[1] = { false,false,false,false,false,false };
-=======
 };
 int Cng = 0;
-struct K Kb= { false,false,false,false,false,false };//¸ğµç ¹æÇâÅ°ÀÇ ºÎ¿ï°ªÀ» false·Î ÃÊ±âÈ­
+struct K Kb = { false,false,false,false,false,false };//¸ğµç ¹æÇâÅ°ÀÇ ºÎ¿ï°ªÀ» false·Î ÃÊ±âÈ­
 
-void MakeFalse() {
+/*void MakeFalse() {
 	switch (Cng) //CngÀÇ °ª¿¡ µû¶ó º¯È­ÇÒ º¯¼öÀÇ °ªÀ» ÁöÁ¤
 	{
 	case KEY_UP:
 		Kb.Up = false;
-		Cng = false;
+		Cng = 0;
 		printf("UP false\n");
 		break;
 	case KEY_DOWN:
 		Kb.Down = false;
-		Cng = false;
+		Cng = 0;
 		printf("DOWN false\n");
 		break;
 	case KEY_LEFT:
 		Kb.Left = false;
-		Cng = false;
+		Cng = 0;
 		printf("LEFT false\n");
 		break;
 	case KEY_RIGHT:
 		Kb.Right = false;
-		Cng = false;
+		Cng = 0;
 		printf("RIGHT false\n");
 		break;
 	case KEY_A:
 		Kb.A = false;
-		Cng = false;
+		Cng = 0;
 		printf("A KEY false\n");
 		break;
 	case KEY_B:
 		Kb.B = false;
-		Cng = false;
+		Cng = 0;
 		printf("B KEY false\n");
 		break;
 	}
 
-}
+}*/
 void KeyChange(int a) {//¹ŞÀº ÀÎÀÚ¿¡ µû¶ó º¯°æÇÒ ±¸Á¶Ã¼ ¸â¹ö °áÁ¤
 
 	switch (a) {
@@ -84,37 +79,36 @@ void KeyChange(int a) {//¹ŞÀº ÀÎÀÚ¿¡ µû¶ó º¯°æÇÒ ±¸Á¶Ã¼ ¸â¹ö °áÁ¤
 void move() {
 	if (Kb.Up == true) {
 		printf("UP true \n");
-		MakeFalse();
+
 	}
 	if (Kb.Down == true) {
 		printf("DOWN true\n");
-		MakeFalse();
+
 	}
 	if (Kb.Left == true) {
 		printf("LEFT true\n");
-		MakeFalse();
 	}
 	if (Kb.Right == true) {
 		printf("RIHGT true\n");
-		MakeFalse();
 	}
 	if (Kb.A == true) {
 		printf("A KEY true\n");
-		MakeFalse();
+
 	}
 	else if (Kb.B == true) {
 		printf("B KEY true\n");
-		MakeFalse();
+
 	}
 
->>>>>>> parent of de92306... ì•½ê°„ì˜ ìˆ˜ì •
+	//MakeFalse();
 
-Key KeyPush() {
+}
+void KeyPush() {
 	int Pkey = _getch();
 	//¹æÇâÅ°ÀÔ·Â¹Ş±â
 	if (Pkey == 0 || Pkey == 224)
 	{
-		return (Key)KeyPush();
+		KeyPush();
 	}
 	if (Pkey == KEY_UP || Pkey == KEY_DOWN || Pkey == KEY_LEFT || Pkey == KEY_RIGHT)
 	{
@@ -127,42 +121,58 @@ Key KeyPush() {
 		else if (Pkey == KEY_RIGHT)
 			KeyChange(KEY_RIGHT);
 	}
-	if (Pkey == 'a' || Pkey == 'A')
-		KeyChange('a');
-	else if (Pkey == 'b' || Pkey == 'B')
-		KeyChange('b');
+	if (Pkey == KEY_A || Pkey == 'A')
+		KeyChange(KEY_A);
+	else if (Pkey == KEY_B || Pkey == 'B')
+		KeyChange(KEY_B);
 }
 
-void KeyChange() {
 
-}
+/*void Check() {
+	if (Kb.Up == true) {
+		move(KEY_UP);
 
-void RcvSgn() {
-	int i;
-	for (i = 0; i < 6; i++)
-	{
-		if (Kb[i] == true)
 	}
-}
+	if (Kb.Down == true) {
+		move(KEY_DOWN);
+		MakeFalse();
+	}
+	if (Kb.Left == true) {
+		move(KEY_LEFT);
+		MakeFalse();
+	}
+	if (Kb.Right == true) {
+		move(KEY_RIGHT);
+		MakeFalse();
+	}
+	if (Kb.A == true) {
+		move(KEY_A);
+		MakeFalse();
+	}
+	else if(Kb.B== true) {
+		move(KEY_B);
+		MakeFalse();
+	}
+}*/
 
+
+/*
 int main() {
-<<<<<<< HEAD
-	int x = 0, y = 0;
-	struct K key;
-	int Push;
-=======
-	
->>>>>>> parent of de92306... ì•½ê°„ì˜ ìˆ˜ì •
+
+	//printf("%d %d %d %d %d %d\n",Kb.Up, Kb.Down,Kb.Left,Kb.Right,Kb.A,Kb.B);
+
 
 	while (1)
 	{
+
 		KeyPush();
-<<<<<<< HEAD
-=======
+		system("cls");
+
 		move();
->>>>>>> parent of de92306... ì•½ê°„ì˜ ìˆ˜ì •
+		getchar();
+
 	};
 	return 0;
 
 
-}
+}*/
