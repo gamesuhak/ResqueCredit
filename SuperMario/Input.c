@@ -1,7 +1,7 @@
 #include "Input.h"
 #include <stdio.h>
 #include <conio.h>
-
+#include<windows.h>
 
 enum Key { KEY_UP = 72, KEY_DOWN = 80, KEY_LEFT = 75, KEY_RIGHT = 77, KEY_A = 'a', KEY_B = 'b' };
 enum Bool { false = 0, true };//true는 0,false는 1
@@ -11,42 +11,42 @@ struct K {
 int Cng = 0;
 struct K Kb= { false,false,false,false,false,false };//모든 방향키의 부울값을 false로 초기화
 
-void MakeFalse() {
+/*void MakeFalse() {
 	switch (Cng) //Cng의 값에 따라 변화할 변수의 값을 지정
 	{
 	case KEY_UP:
 		Kb.Up = false;
-		Cng = false;
+		Cng = 0;
 		printf("UP false\n");
 		break;
 	case KEY_DOWN:
 		Kb.Down = false;
-		Cng = false;
+		Cng = 0;
 		printf("DOWN false\n");
 		break;
 	case KEY_LEFT:
 		Kb.Left = false;
-		Cng = false;
+		Cng = 0;
 		printf("LEFT false\n");
 		break;
 	case KEY_RIGHT:
 		Kb.Right = false;
-		Cng = false;
+		Cng = 0;
 		printf("RIGHT false\n");
 		break;
 	case KEY_A:
 		Kb.A = false;
-		Cng = false;
+		Cng = 0;
 		printf("A KEY false\n");
 		break;
 	case KEY_B:
 		Kb.B = false;
-		Cng = false;
+		Cng = 0;
 		printf("B KEY false\n");
 		break;
 	}
 
-}
+}*/
 void KeyChange(int a) {//받은 인자에 따라 변경할 구조체 멤버 결정
 
 	switch (a) {
@@ -79,29 +79,28 @@ void KeyChange(int a) {//받은 인자에 따라 변경할 구조체 멤버 결정
 void move() {
 	if (Kb.Up == true) {
 		printf("UP true \n");
-		MakeFalse();
+	
 	}
 	if (Kb.Down == true) {
 		printf("DOWN true\n");
-		MakeFalse();
+		
 	}
 	if (Kb.Left == true) {
 		printf("LEFT true\n");
-		MakeFalse();
 	}
 	if (Kb.Right == true) {
 		printf("RIHGT true\n");
-		MakeFalse();
 	}
 	if (Kb.A == true) {
 		printf("A KEY true\n");
-		MakeFalse();
+	
 	}
 	else if (Kb.B == true) {
 		printf("B KEY true\n");
-		MakeFalse();
+		
 	}
 
+	//MakeFalse();
 
 }
 void KeyPush() {
@@ -160,11 +159,18 @@ void KeyPush() {
 
 int main() {
 	
+	//printf("%d %d %d %d %d %d\n",Kb.Up, Kb.Down,Kb.Left,Kb.Right,Kb.A,Kb.B);
+
 
 	while (1)
 	{
+		
 		KeyPush();
+		system("cls");
+		
 		move();
+		getchar();
+		
 	};
 	return 0;
 

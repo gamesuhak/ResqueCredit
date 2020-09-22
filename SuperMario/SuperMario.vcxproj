@@ -147,6 +147,9 @@
   <ItemGroup>
     <ClInclude Include="Input.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="x64\Debug\SuperMario.log" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
