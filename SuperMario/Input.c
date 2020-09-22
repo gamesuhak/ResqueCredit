@@ -35,7 +35,7 @@ Key KeyPush() {
 		KeyChange('b');
 }
 
-void KeyChange() {
+void KeyChange(Key key) {
 
 }
 
@@ -43,11 +43,11 @@ void RcvSgn() {
 	int i;
 	for (i = 0; i < 6; i++)
 	{
-		if (Kb[i] == true)
+		//if (Kb[i] == true);
 	}
 }
 
-int main() {
+int Ke() {
 	int x = 0, y = 0;
 	struct K key;
 	int Push;
@@ -57,6 +57,4 @@ int main() {
 		KeyPush();
 	};
 	return 0;
-
-
 }

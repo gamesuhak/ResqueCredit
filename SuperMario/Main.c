@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "Input.h"
 
+
 typedef struct Creature
 {
 	int x;

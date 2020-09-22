@@ -1,11 +1,14 @@
+
 #include "Render.h"
+#include "FileLoader.h"
 #include "Color.h"
-#define SPRITES_COUNT 10
+#define SPRITES_COUNT		10
+#define SPRITES_NAME_MAX	20
 
 enum Color
 {
-	COLOR_BLACK = 0, COLOR_DARKBLUE, COLOR_DARKGREEN, COLOR_DARKSKY, COLOR_DARKRED, COLOR_DARKPINK, COLOR_DARKYELLOW, COLOR_DARKWHITE,
-	COLOR_GRAY, COLOR_BLUE, COLOR_GREEN, COLOR_SKY, COLOR_RED, COLOR_PINK, COLOR_YELLOW, COLOR_WHITE
+	COLOR_TRANSPARENT = -1, COLOR_BLACK, COLOR_DARKRED, COLOR_DARKGREEN, COLOR_DARKYELLOW, COLOR_DARKBLUE, COLOR_DARKPINK, COLOR_DARKSKY, COLOR_GRAY,
+	COLOR_DARKWHITE, COLOR_RED, COLOR_GREEN, COLOR_YELLOW, COLOR_BLUE, COLOR_PINK, COLOR_SKY, COLOR_WHITE
 };
 
 struct Image
@@ -13,26 +16,29 @@ struct Image
 	int id;
 	int width;
 	int height;
-	char** data;
+	int pivotx;
+	int pivoty;
+	Bitmap bitmap;
 };
 
 // 게임 내에서 쓸 스프라이트 목록
-Image *Sprites;
+Image** Sprites;
+char SpriteName[SPRITES_COUNT][SPRITES_NAME_MAX] = {
+	"Player", "Player", "Player", "Player", "Player", 
+	"Player", "Player", "Player", "Player", "Player"
+};
 
 enum Sprite
 {
-	SPRITE_ = 0
+	SPRITE_PLAYER_LEFT = 0, SPRITE_PLAYER_RIGHT
 };
 
 // 화면 출력 함수
 void Render()
 {
+	InitializeScreen();
+	printf("Render\n");
 	InitializeRender();
-
-	for (int i = 0; i < SPRITES_COUNT; i++)
-	{
-		Sprites[i].id = i;
-	}
 }
 
 void UpdateRender()
@@ -42,23 +48,30 @@ void UpdateRender()
 
 void InitializeRender()
 {
-	
-	Sprites = malloc(sizeof(Image) * SPRITES_COUNT);
-	SetScreenSize(176, 128);
+	printf("InitializeRender\n");
+	InitializeSprites();
 }
 
 void InitializeSprites()
 {
-	//Sprites = (Image*)malloc(sizeof(Image) * SPRITES_COUNT);
+	Sprites = (Image**)malloc(sizeof(Image*) * SPRITES_COUNT);
+	if (Sprites == NULL) { return; }
+	for (int i = 0; i < SPRITES_COUNT; i++)
+	{
+		//Sprites[i] = LoadBitmapFile(SpriteName[i], COLOR_WHITE);
+	}
+	Sprites[0] = LoadBitmapFile("Player", COLOR_WHITE);
+	RenderImage(0, 0, Sprites[0]);
 }
 
 void RenderImage(int x, int y, Image* image)
 {
-	for (int posx = x; x < posx + image->width; x++)
+	printf("RenderImage\n");
+	for (int posx = x; posx < x + image->width; posx++)
 	{
-		for (int posy = y; y < posy + image->height; y++)
+		for (int posy = y; posy < y + image->height; posy++)
 		{
-			SetPixelColor(x, y, 0, image->data[posx][posy]);
+			SetPixelColor(posx, posy, 0, image->bitmap[posx][posy]);
 		}
 	}
 }
