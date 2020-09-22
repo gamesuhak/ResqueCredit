@@ -1,9 +1,6 @@
 #include "Screen.h"
-//#include "Color.h"
-#define SCREEN_WIDTH	176
-#define SCREEN_HEIGHT	64
-#define BUFFER_MAX		4
-#define COMMAND_MAX		30
+#define SCREEN_WIDTH 176
+#define SCREEN_HEIGHT 128
 
 // 화면 정보를 가지고 있는 핸들을 저장할 변수
 HANDLE Handle;
@@ -12,7 +9,7 @@ void InitializeScreen()
 {
 	Handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTitle("Title");
-	//system("cls");
+	system("cls");
 	SetScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	RemoveScrollbar();
 }
@@ -45,17 +42,15 @@ void SetPixelColor(int x, int y, Color textColor, Color backColor)
 	printf("  ");
 }
 
-void SetScreenSize(int width, int height)
+void SetScreenSize(int x, int y)
 {
-	char command[COMMAND_MAX] = "mode con:cols=";
-	char buffer[BUFFER_MAX] = "";
-
-	sprintf(buffer, "%d", width);
-	strcat(command, buffer);
-	strcat(command, " lines=");
-	sprintf(buffer, "%d", height);
-	strcat(command, buffer);
-
-	system(command);
-	//system("mode con:cols=176 lines=64");
+	system("mode con:cols=342 lines=128");
+	for (int i = 0; i < 176; i++)
+	{
+		printf("%d", i % 10);
+	}
+	for (int i = 0; i < 128; i++)
+	{
+		//printf("%d\n", i);
+	}
 }
