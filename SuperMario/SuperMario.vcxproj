@@ -148,7 +148,10 @@
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
+<<<<<<< HEAD
     <ClInclude Include="Object.h" />
+=======
+>>>>>>> parent of de92306... 약간의 수정
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
