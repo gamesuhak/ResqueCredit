@@ -43,10 +43,11 @@ void Render()
 	InitializeSprites();
 	while (1)
 	{
+		/*
 		if (++PlayerX >= 50)
 		{
 			PlayerX = 0;
-		}
+		}*/
 		UpdateRender();
 	}
 }
@@ -109,6 +110,10 @@ void AddImage(int x, int y, Image* image, Bitmap target)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
+			if (image->bitmap[posx][posy] < 0)
+			{
+				continue;
+			}
 			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
 		}
 	}

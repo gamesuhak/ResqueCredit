@@ -25,6 +25,9 @@ Image* LoadBitmapFile(char* name, Color transparent)
 {
 	//printf("LoadBitmapFile\n");
 	Image* image = (Image*)malloc(sizeof(Image));
+	image->id = 0;
+	image->pivotx = 0;
+	image->pivoty = 0;
 	Bitmap bitmap;
 	FILE* file = NULL;
 	int data;

@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include "Screen.h"
+
+#include <stdio.h>
 
 // 화면 정보를 가지고 있는 핸들을 저장할 변수
 HANDLE Handle;
@@ -11,7 +12,18 @@ void InitializeScreen()
 	//system("cls");
 	SetScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	RemoveScrollbar();
+	ViewCursor(0);
 }
+
+// 커서 숨기기
+void ViewCursor(char value)
+{
+	CONSOLE_CURSOR_INFO ConsoleCursor;
+	ConsoleCursor.bVisible = value;
+	ConsoleCursor.dwSize = 1;
+
+	SetConsoleCursorInfo(Handle, &ConsoleCursor);
+} // 참고 : https://blog.naver.com/upssuyo/80092210109
 
 void RemoveScrollbar()
 {

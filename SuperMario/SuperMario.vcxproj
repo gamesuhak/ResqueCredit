@@ -149,6 +149,7 @@
     <ClCompile Include="Render.c" />
     <ClCompile Include="Render.h" />
     <ClCompile Include="Screen.c" />
+    <ClCompile Include="Thread.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bool.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="Thread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
