@@ -3,6 +3,8 @@
 #include "Object.h"
 #include "Input.h"
 #include "Thread.h"
+#include "Bool.h"
+
 
 typedef struct Creature
 {
@@ -13,12 +15,34 @@ typedef struct Creature
 	int speed;
 };
 
+extern bool KeyState[KEY_COUNT];
 extern Creature* Monsters;
 extern int PlayerX;
 extern int PlayerY;
 
-// 자료형 bool을 사용할 수 있도록 선언 및 정의
-typedef enum bool{ false = 0, true } bool;
+void Move()
+{
+	while (1)
+	{
+		if (KeyState[KEY_UP])
+		{
+			PlayerY -= 1;
+		}
+		if (KeyState[KEY_DOWN])
+		{
+			PlayerY += 1;
+		}
+		if (KeyState[KEY_LEFT])
+		{
+			PlayerX -= 1;
+		}
+		if (KeyState[KEY_RIGHT])
+		{
+			PlayerX += 1;
+		}
+		Sleep(100);
+	}
+}
 
 void PlayerMove()
 {
@@ -36,7 +60,8 @@ void PlayerMove()
 
 int main()
 {
-	Thread(PlayerMove);
+	Thread(Input);
+	Thread(Move);
 	Thread(Render);
 	while (1)
 	{

@@ -50,6 +50,9 @@
     <ClCompile Include="Thread.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Map.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileLoader.h">
@@ -75,6 +78,9 @@
     </ClInclude>
     <ClInclude Include="Thread.h">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

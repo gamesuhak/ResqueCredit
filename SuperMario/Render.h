@@ -1,11 +1,8 @@
 #pragma once
-//#include <stdio.h>
 #include "Image.h"
-//#include "Screen.h"
 
 // Image.h에 선언된 사항
 typedef struct Image Image;
-
 typedef enum Sprite Sprite;
 void Render();
 void UpdateRender();
