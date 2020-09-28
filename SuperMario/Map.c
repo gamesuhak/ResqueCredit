@@ -1,17 +1,18 @@
 #include "Map.h"
+#include <string.h> // memset
+#include <stdlib.h> // NULL, malloc
 
-typedef enum Tile { TILE_GROUND,  } Tile;
-typedef char** TileData;
-struct Map
+TileData CreateMap(int width, int height)
 {
-	int id; // 고유숫자
-	int variety; // 종류
-	int width; // 가로길이
-	int height; // 세로길이
-	TileData tile; // 타일정보
-};
-
-void CreateMap(int width, int height)
-{
-
+	TileData  tileData = (TileData)malloc(sizeof(char*) * width);
+	if (tileData == NULL) { printf("CreateMap1\n"); return NULL; }
+	tileData[0] = (char*)malloc(sizeof(char) * width * height);
+	if (tileData[0] == NULL) { printf("CreateMap2\n"); return NULL; }
+	for (int i = 1; i < width; i++)
+	{
+		tileData[i] = tileData[i - 1] + height;
+		if (tileData[i] == NULL) { printf("CreateMap : %d\n", i); return NULL; }
+	}
+	memset(tileData[0], 0, sizeof(char) * width * height);
+	return tileData;
 }

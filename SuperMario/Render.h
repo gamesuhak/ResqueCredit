@@ -1,10 +1,14 @@
 #pragma once
 #include "Image.h"
+#define SPRITES_COUNT	10
 
-// Image.h에 선언된 사항
-typedef struct Image Image;
-typedef enum Sprite Sprite;
+typedef enum Sprite
+{
+	SPRITE_FIN_DOWN_0 = 0
+} Sprite;
+//const char* SPRITENAME[SPRITES_COUNT] = { "FinnDown0", "FinnDown1", "FinnDown2"  };
 void Render();
+void CheckRender();
 void UpdateRender();
 void InitializeRender();
 void InitializeSprites();

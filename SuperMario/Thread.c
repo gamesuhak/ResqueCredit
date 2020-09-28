@@ -3,12 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int global = 1;
 static int MethodCount = 0;
 
 int Thread(void (*method)())
 {
-    HANDLE handle; //스레드를 접근하기 위한 손잡이 개념
+    HANDLE handle; // 스레드를 접근하기 위한 손잡이 개념
     DWORD threadId;
     //printf("");
     handle = CreateThread(NULL, 0, method, (LPVOID)MethodCount++, 0, &threadId);

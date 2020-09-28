@@ -1,9 +1,13 @@
 #include "Screen.h"
-
 #include <stdio.h>
+#include "Bool.h"
 
 // 화면 정보를 가지고 있는 핸들을 저장할 변수
 HANDLE Handle;
+
+char ASCIIMODE = false;
+const char* ASCIIColor[COLOR_COUNT] = { "  ", "■", "♣", "＠", "▒", "▤", "▥", "▨", "▩", "♨", "☏", "♥", "♠", "★", "▣", "◈" };
+//const char* ASCIIColor[COLOR_COUNT] = { "  ", "aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "mm", "ll", "kk", "jj", "as", "ab" };
 
 void InitializeScreen()
 {
@@ -68,7 +72,15 @@ void SetPixelColor(int x, int y, Color textColor, Color backColor)
 		return;
 	}
 	SetPoint(x, y);
-	SetConsoleTextAttribute(Handle, textColor + (backColor << 4)); // backColor << 4는 backColor * 16과 같음
-	printf("  ");
+	if (ASCIIMODE)
+	{
+		SetConsoleTextAttribute(Handle, COLOR_WHITE);
+		printf("%s", ASCIIColor[backColor]);
+		//printf("%c%c", 97 + backColor, 97 + backColor);
+	}
+	else
+	{
+		SetConsoleTextAttribute(Handle, textColor + (backColor << 4)); // backColor << 4는 backColor * 16과 같음
+		printf("  ");
+	}
 }
-

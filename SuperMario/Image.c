@@ -2,8 +2,6 @@
 #include <stdlib.h> // malloc
 #include "Image.h"
 
-void TestBitmap(int width, int height, Bitmap bitmap);
-
 Bitmap NewBitmap(int width, int height)
 {
 	//printf("NewBitmap\n");
@@ -27,17 +25,20 @@ Bitmap NewBitmap(int width, int height)
 	// 참고 : https://codeng.tistory.com/8
 }
 
-void TestBitmap(int width, int height, Bitmap bitmap)
+// 이미지를 가로와 세로 개수로 나누어 반환하는 함수
+void DivideBitmap(Image* image, int column, int rows)
 {
-	for (int y = 0; y < height; y++)
+	int width = image->width / column;
+	int height = image->height / rows;
+	Image** list = NULL;
+	list = (Image**)malloc(sizeof(Image*) * column * rows);
+	for (int x = 0; x < column; x++)
 	{
-		for (int x = 0; x < width; x++)
+		for (int y = 0; y < column; y++)
 		{
-			printf("%d,", bitmap[x][y]);
+			NewBitmap(width, height);
 		}
-		printf("\n");
 	}
-	
 }
 
 void DestroyBitmap(Bitmap bitmap)

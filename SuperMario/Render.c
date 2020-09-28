@@ -1,32 +1,19 @@
 #include "Render.h"
-#include <stdio.h>//
-//#include "Image.h"//
-#include "Screen.h"//
+#include <stdio.h> // 
+
+#include "Screen.h" // 
 #include "FileLoader.h"
 #include "Color.h"
-#define SPRITES_COUNT 10
-
-struct Image
-{
-	int id;
-	int width;
-	int height;
-	int pivotx;
-	int pivoty;
-	Bitmap bitmap;
-};
+#include "Object.h"
+#include "Bool.h"
 
 // 게임 내에서 쓸 스프라이트 목록
 Image** Sprites;
 Bitmap Screen;
 Bitmap Buffer;
-int PlayerX = 0;
-int PlayerY = 0;
-
-enum Sprite
-{
-	SPRITE_ = 0
-};
+extern Creature* Player;
+extern Creature** Monsters;
+extern int CreatureCount;
 
 // 화면 출력 함수
 void Render()
@@ -37,12 +24,15 @@ void Render()
 	InitializeSprites();
 	while (1)
 	{
-		/*
-		if (++PlayerX >= 50)
-		{
-			PlayerX = 0;
-		}*/
 		UpdateRender();
+	}
+}
+
+void CheckRender()
+{
+	for (int i = 0; i <= COLOR_WHITE; i++)
+	{
+		SetPixelColor(i, 0, 0, i);
 	}
 }
 
@@ -50,7 +40,16 @@ void UpdateRender()
 {
 	//printf("UpdateRender\n");
 	AddImage(0, 0, Sprites[0], Buffer);
-	AddImage(PlayerX, PlayerY, Sprites[1], Buffer);
+	AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], Buffer);
+	for (int i = 0; i < CreatureCount - 1; i++)
+	{
+		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
+		if (Monsters[i]->id == 0 || !Monsters[i]->enable)
+		{
+			continue;
+		}
+		AddImage(Monsters[i]->object.position.x, Monsters[i]->object.position.y, Sprites[2], Buffer);
+	}
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{
 		for (int posy = 0; posy < SCREEN_HEIGHT; posy++)
@@ -78,12 +77,17 @@ void InitializeSprites()
 	if (Sprites == NULL) { return; }
 	for (int i = 0; i < SPRITES_COUNT; i++)
 	{
-		Sprites[i] = LoadBitmapFile("Player", COLOR_WHITE);
-		Sprites[i]->pivotx = 0;
-		Sprites[i]->pivoty = 0;
+		Sprites[i] = LoadBitmapFile("FinnDown0", COLOR_WHITE);
+		Sprites[i]->pivotx = 4;
+		Sprites[i]->pivoty = 4;
 	}
 	Sprites[0] = LoadBitmapFile("Map", COLOR_WHITE);
-	Sprites[1] = LoadBitmapFile("Player", COLOR_WHITE);
+	Sprites[1] = LoadBitmapFile("FinnDown0", COLOR_GRAY);
+	Sprites[1]->pivotx = 4;
+	Sprites[1]->pivoty = 4;
+	Sprites[2] = LoadBitmapFile("Monster", COLOR_YELLOW);
+	Sprites[2]->pivotx = 4;
+	Sprites[2]->pivoty = 4;
 	//RenderImage(0, 0, Sprites[1]);
 }
 
@@ -104,7 +108,7 @@ void AddImage(int x, int y, Image* image, Bitmap target)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
-			if (image->bitmap[posx][posy] < 0)
+			if ((image->bitmap[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
 			{
 				continue;
 			}

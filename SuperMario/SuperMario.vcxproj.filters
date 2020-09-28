@@ -44,9 +44,6 @@
     <ClCompile Include="Screen.c">
       <Filter>소스 파일\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Color.c">
-      <Filter>소스 파일\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Thread.c">
       <Filter>소스 파일</Filter>
     </ClCompile>

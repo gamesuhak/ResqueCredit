@@ -1,66 +1,81 @@
 #include <Windows.h>
+#include <time.h> // time
 #include "Render.h"
 #include "Object.h"
 #include "Input.h"
 #include "Thread.h"
 #include "Bool.h"
+#include "Map.h"
 
-
-typedef struct Creature
-{
-	int x;
-	int y;
-	int hp;
-	int power;
-	int speed;
-};
-
+extern Creature** Monsters;
+extern Creature* Player;
 extern bool KeyState[KEY_COUNT];
-extern Creature* Monsters;
-extern int PlayerX;
-extern int PlayerY;
+extern int KeyCharge[KEY_COUNT];
+extern char ASCIIMODE;
+
+int Random(int value)
+{
+	srand(time(NULL));
+	return rand() % value;
+} // 참고 : https://edu.goorm.io/learn/lecture/201/%ED%95%9C-%EB%88%88%EC%97%90-%EB%81%9D%EB%82%B4%EB%8A%94-c%EC%96%B8%EC%96%B4-%EA%B8%B0%EC%B4%88/lesson/12382/%EB%82%9C%EC%88%98-%EB%9E%9C%EB%8D%A4-%EB%A7%8C%EB%93%A4%EA%B8%B0
 
 void Move()
 {
 	while (1)
 	{
+		Coordination move = { 0,0 };
+		if (KeyState[KEY_C])
+		{
+			ASCIIMODE = !ASCIIMODE;
+		}
 		if (KeyState[KEY_UP])
 		{
-			PlayerY -= 1;
+			if ((KeyCharge[KEY_UP] < KeyCharge[KEY_DOWN]) || !KeyState[KEY_DOWN])
+			{
+				move.y = -1;
+			}
 		}
 		if (KeyState[KEY_DOWN])
 		{
-			PlayerY += 1;
+			if ((KeyCharge[KEY_DOWN] < KeyCharge[KEY_UP]) || !KeyState[KEY_UP])
+			{
+				move.y += 1;
+			}
 		}
 		if (KeyState[KEY_LEFT])
 		{
-			PlayerX -= 1;
+			if ((KeyCharge[KEY_LEFT] < KeyCharge[KEY_RIGHT]) || !KeyState[KEY_RIGHT])
+			{
+				move.x -= 1;
+			}
 		}
 		if (KeyState[KEY_RIGHT])
 		{
-			PlayerX += 1;
+			if ((KeyCharge[KEY_RIGHT] < KeyCharge[KEY_LEFT]) || !KeyState[KEY_LEFT])
+			{
+				move.x += 1;
+			}
 		}
-		Sleep(100);
-	}
-}
-
-void PlayerMove()
-{
-	int self = 0;
-	while (true)
-	{
-		if (++PlayerX >= 50)
+		if (KeyState[KEY_A])
 		{
-			PlayerX = 0;
+
 		}
-		//printf("%d : %d\n", self++, PlayerX);
-		Sleep(100);
+		if (move.x != 0 || move.y != 0)
+		{
+			move = CheckCollider(0, &Player->object, move);
+			Player->object.position.x += move.x;
+			Player->object.position.y += move.y;
+			Player->object.direction = move;
+			//printf("플레이어 방향 x : %d, y : %d", Player->direction.x, Player->direction.y);
+		}
+		Sleep(50);
 	}
 }
 
 int main()
 {
 	Thread(Input);
+	Thread(ProcessObject);
 	Thread(Move);
 	Thread(Render);
 	while (1)

@@ -1,19 +1,10 @@
 #include "FileLoader.h"
 
 #include "Bool.h"
+#include "Map.h"
 #include <stdio.h>
 #include <stdlib.h> // malloc »ç¿ë
-#include <string.h>
-
-struct Image
-{
-	int id;
-	int width;
-	int height;
-	int pivotx;
-	int pivoty;
-	Bitmap bitmap;
-};
+#include <string.h> // strcat
 
 Image* LoadBitmapFile(char* name, Color transparent)
 {
@@ -91,4 +82,10 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	}
 	image->bitmap = bitmap;
 	return image;
+}
+
+Map LoadMapFile(char* name)
+{
+	Map* map = (Map*)malloc(sizeof(Map));
+
 }
