@@ -11,7 +11,6 @@ const char* KeyName[KEY_COUNT] = { "위", "아래", "왼쪽", "오른쪽", "A", "B" };
 void Input()
 {
 	InitializeKey();
-	BindKey();
 	while (1)
 	{
 		PushKey();
@@ -24,6 +23,7 @@ void InitializeKey()
 	{
 		KeyCharge[i] = 0;
 	}
+	BindKey();
 }
 
 void BindKey()

@@ -155,6 +155,7 @@
     <ClInclude Include="Bool.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="FileLoader.h" />
+    <ClInclude Include="Function.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Map.h" />

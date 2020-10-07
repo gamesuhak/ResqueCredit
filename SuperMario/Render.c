@@ -9,17 +9,19 @@
 
 // 게임 내에서 쓸 스프라이트 목록
 Image** Sprites;
-Bitmap Screen;
-Bitmap Buffer;
+Bitmap Screen; // 메인 화면 이미지
+Bitmap Buffer; // 
+Bitmap Transition;
 extern Creature* Player;
 extern Creature** Monsters;
+extern Projectile** Projectiles;
 extern int CreatureCount;
+extern int ProjectileCount;
 
 // 화면 출력 함수
 void Render()
 {
 	InitializeScreen();
-	//printf("Render\n");
 	InitializeRender();
 	InitializeSprites();
 	while (1)
@@ -41,14 +43,23 @@ void UpdateRender()
 	//printf("UpdateRender\n");
 	AddImage(0, 0, Sprites[0], Buffer);
 	AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], Buffer);
-	for (int i = 0; i < CreatureCount - 1; i++)
+	for (int i = 1; i < CreatureCount; i++)
 	{
 		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
-		if (Monsters[i]->id == 0 || !Monsters[i]->enable)
+		if (!Monsters[i]->enable)
 		{
 			continue;
 		}
 		AddImage(Monsters[i]->object.position.x, Monsters[i]->object.position.y, Sprites[2], Buffer);
+	}
+	for (int i = 0; i < ProjectileCount; i++)
+	{
+		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
+		if (!Projectiles[i]->enable)
+		{
+			continue;
+		}
+		AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], Buffer);
 	}
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{

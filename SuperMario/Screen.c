@@ -7,7 +7,6 @@ HANDLE Handle;
 
 char ASCIIMODE = false;
 const char* ASCIIColor[COLOR_COUNT] = { "  ", "¡á", "¢À", "£À", "¢Æ", "¢Ç", "¢È", "¢É", "¢Ì", "¢Í", "¢Î", "¢¾", "¢¼", "¡Ú", "¢Ã", "¢Â" };
-//const char* ASCIIColor[COLOR_COUNT] = { "  ", "aa", "bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "mm", "ll", "kk", "jj", "as", "ab" };
 
 void InitializeScreen()
 {

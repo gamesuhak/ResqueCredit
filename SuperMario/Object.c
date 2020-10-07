@@ -3,54 +3,155 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> // memset
+#include "Function.h"
 
 Creature* Player; // 플레이어 객체를 저장할 
-Creature** Monsters; // 몬스터 리스트
+Creature** Monsters; // 몬스터 배열
+Projectile** Projectiles; // 발사체 배열
 int CreatureCount = 0;
+int ProjectileCount = 0;
 
 void ProcessObject()
 {
 	InitializeObject();
-	TestObject();
 	while (1)
 	{
+		ProcessMonster();
+		ProcessProjectile();
+		Sleep(1000);
 	}
 }
 
-void TestObject()
+void ProcessMonster()
 {
-	for (int i = 0; i < MONSTER_COUNT; i++)
+	for (int i = 1; i < CreatureCount; i++)
 	{
 		if (Monsters[i]->enable)
 		{
-			//printf("아이디 : %d , x : %d, y : %d", Monsters[i]->id, Monsters[i]->object.position.x, Monsters[i]->object.position.y);
+			Coordination temp = { 0,0 };
+			if (Random(2))
+			{
+				temp.x = RandomRange(-1, 1);
+			}
+			else
+			{
+				temp.y = RandomRange(-1, 1);
+			}
+			temp = CheckMove(Monsters[i]->id, &Monsters[i]->object, temp);
+			if (temp.x == 0 && temp.y == 0)
+			{
+
+			}
+			Monsters[i]->object.position.x += temp.x;
+			Monsters[i]->object.position.y += temp.y;
 		}
 	}
 }
 
-void InitializePlayer()
+void ProcessProjectile()
 {
-	Player = CreateCreature();
-	Player->object.position.x = 40;
-	Player->object.position.y = 32;
+	for (int i = 0; i < ProjectileCount; i++)
+	{
+		if (Projectiles[i]->enable == true)
+		{
+			Coordination temp = { 0,0 };
+			temp = Projectiles[i]->object.direction;
+			temp.x *= Projectiles[i]->speed;
+			temp.y *= Projectiles[i]->speed;
+			Projectiles[i]->object.position.x += temp.x;
+			Projectiles[i]->object.position.y += temp.y;
+			CheckProjectile(Projectiles[i]);
+			if (--Projectiles[i]->distance == 0)
+			{
+				Projectiles[i]->enable = false;
+			}
+		}
+	}
 }
 
 void InitializeObject()
 {
-	InitializePlayer();
+	Player = CreateCreature();
+	Player->enable = true;
+	Player->object.position.x = 40;
+	Player->object.position.y = 32;
+
 	Monsters = (Creature**)malloc(sizeof(Creature*) * MONSTER_COUNT);
 	if (Monsters == NULL) { return; }
-	for (int i = 0; i < MONSTER_COUNT; i++)
+	Monsters[0] = Player;
+	for (int i = 1; i < MONSTER_COUNT; i++)
 	{
 		Monsters[i] = CreateCreature();
 	}
 	Monsters[1]->object.position.x = 16;
 	Monsters[1]->object.position.y = 32;
 	Monsters[1]->enable = true;
+	Monsters[1]->hp = 5;
 
 	Monsters[2]->object.position.x = 48;
 	Monsters[2]->object.position.y = 32;
 	Monsters[2]->enable = true;
+	Monsters[1]->hp = 10;
+
+	Projectiles = (Projectile**)malloc(sizeof(Projectile*) * MONSTER_COUNT);
+	if (Projectiles == NULL) { return; }
+	
+	for (int i = 0; i < MONSTER_COUNT; i++)
+	{
+		Projectiles[i] = CreateProjectile();
+	}
+}
+
+void ShootProjectile(Coordination position, Coordination direction, ProjectileType type, int power, int speed)
+{
+	Projectile* projectile;
+	projectile = NewProjectile();
+	projectile->object.position = position;
+	projectile->object.direction = direction;
+	projectile->power = power;
+	projectile->speed = speed;
+	projectile->penetration = 1;
+	projectile->distance = 15;
+	projectile->enable = true;
+}
+
+Projectile* NewProjectile()
+{
+	for (int i = 0; i < ProjectileCount; i++)
+	{
+		if (Projectiles[i]->enable == false)
+		{
+			return Projectiles[i];
+		}
+	}
+	return CreateProjectile();
+}
+
+Creature* NewCreature()
+{
+	for (int i = 0; i < CreatureCount; i++)
+	{
+		if (Monsters[i]->enable == false)
+		{
+			return Monsters[i];
+		}
+	}
+	return CreateCreature();
+}
+
+Projectile* CreateProjectile()
+{
+	Projectile* projectile = (Projectile*)malloc(sizeof(Projectile));
+	if (projectile == NULL) { return NULL; }
+	memset(projectile, 0, sizeof(Projectile));
+	ProjectileCount++;
+	projectile->enable = false;
+	projectile->object.layer = 0;
+	projectile->object.collider.pivot.x = 4;
+	projectile->object.collider.pivot.y = 4;
+	projectile->object.collider.size.x = 8;
+	projectile->object.collider.size.y = 8;
+	return projectile;
 }
 
 Creature* CreateCreature()
@@ -60,6 +161,7 @@ Creature* CreateCreature()
 	memset(creature, 0, sizeof(Creature));
 	creature->id = CreatureCount++;
 	creature->enable = false;
+	creature->object.layer = 0;
 	creature->object.collider.pivot.x = 4;
 	creature->object.collider.pivot.y = 4;
 	creature->object.collider.size.x = 8;
@@ -67,6 +169,7 @@ Creature* CreateCreature()
 	return creature;
 }
 
+// id로 크리쳐 
 Creature* GetCreature(int id)
 {
 	for (int i = 0; i < CreatureCount; i++)
@@ -79,39 +182,25 @@ Creature* GetCreature(int id)
 	return NULL;
 }
 
-Coordination CheckCollider(int id, Object* object, Coordination direction)
+Coordination CheckMove(int id, Object* object, Coordination direction)
 {
-	// 오브젝트 콜라이더의 중점의 계산
-	float pivotx = object->position.x - object->collider.pivot.x + (object->collider.size.x * 0.5f); // + direction.x;
-	float pivoty = object->position.y - object->collider.pivot.y + (object->collider.size.y * 0.5f); // + direction.y;
-	float distancex;
-	float distancey;
-	for (int i = 0; i < CreatureCount - 1; i++)
+	Coordination temp = { 0, 0 };
+	for (int i = 0; i < CreatureCount; i++)
 	{
 		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
-		if (Monsters[i]->id == id || !Monsters[i]->enable)
+		if (Monsters[i]->id == id || !Monsters[i]->enable || (object->layer != Monsters[i]->object.layer))
 		{
 			continue;
 		}
-		distancex = Monsters[i]->object.position.x - Monsters[i]->object.collider.pivot.x + Monsters[i]->object.collider.size.x * 0.5f - pivotx - direction.x;
-		distancey = Monsters[i]->object.position.y - Monsters[i]->object.collider.pivot.y + Monsters[i]->object.collider.size.y * 0.5f - pivoty;
-
-		distancex = (distancex < 0) ? -distancex : distancex;
-		distancey = (distancey < 0) ? -distancey : distancey;
-		bool vertical = (distancex < object->collider.size.x * 0.5f + Monsters[i]->object.collider.size.x * 0.5f);
-		bool horizontal = (distancey < object->collider.size.y * 0.5f + Monsters[i]->object.collider.size.y * 0.5f);
-		if (vertical && horizontal)
+		temp.x = direction.x;
+		temp.y = 0;
+		if (CheckCollider(object, &Monsters[i]->object, temp))
 		{
 			direction.x = 0;
 		}
-
-		distancex = Monsters[i]->object.position.x - Monsters[i]->object.collider.pivot.x + Monsters[i]->object.collider.size.x * 0.5f - pivotx;
-		distancey = Monsters[i]->object.position.y - Monsters[i]->object.collider.pivot.y + Monsters[i]->object.collider.size.y * 0.5f - pivoty - direction.y;
-		distancex = (distancex < 0) ? -distancex : distancex;
-		distancey = (distancey < 0) ? -distancey : distancey;
-		vertical = (distancex < object->collider.size.x * 0.5f + Monsters[i]->object.collider.size.x * 0.5f);
-		horizontal = (distancey < object->collider.size.y * 0.5f + Monsters[i]->object.collider.size.y * 0.5f);
-		if (vertical && horizontal)
+		temp.x = 0;
+		temp.y = direction.y;
+		if (CheckCollider(object, &Monsters[i]->object, temp))
 		{
 			direction.y = 0;
 		}
@@ -119,10 +208,39 @@ Coordination CheckCollider(int id, Object* object, Coordination direction)
 	return direction;
 }
 
-bool OnCollider(Object* object1, Object* object2)
+void HitProjectile(Projectile* bullet, Creature* target)
 {
-	float pivotx1 = object1->position.x - object1->collider.pivot.x + (object1->collider.size.x * 0.5f);
-	float pivoty1 = object1->position.y - object1->collider.pivot.y + (object1->collider.size.y * 0.5f);
+	target->hp -= bullet->power;
+	if (--bullet->penetration == 0)
+	{
+		bullet->enable = false;
+	}
+	if (target->hp <= 0)
+	{
+		target->enable = false;
+	}
+}
+
+void CheckProjectile(Projectile* projectile)
+{
+	Coordination zero = { 0,0 };
+	for (int i = 1; i < CreatureCount; i++)
+	{
+		if (Monsters[i]->enable == true)
+		{
+			if (CheckCollider(&projectile->object, &Monsters[i]->object, zero) == true)
+			{
+				HitProjectile(projectile, Monsters[i]);
+			}
+		}
+	}
+}
+
+// object1에 offset을 더한 위치가 object2와 충돌해있는지 판별하는 함수
+bool CheckCollider(Object* object1, Object* object2, Coordination offset)
+{
+	float pivotx1 = object1->position.x - object1->collider.pivot.x + (object1->collider.size.x * 0.5f) + offset.x;
+	float pivoty1 = object1->position.y - object1->collider.pivot.y + (object1->collider.size.y * 0.5f) + offset.y;
 	float pivotx2 = object2->position.x - object2->collider.pivot.x + (object2->collider.size.x * 0.5f);
 	float pivoty2 = object2->position.y - object2->collider.pivot.y + (object2->collider.size.y * 0.5f);
 	pivotx2 -= pivotx1;

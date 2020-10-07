@@ -8,7 +8,6 @@ typedef enum Color
 	COLOR_SKY, COLOR_RED, COLOR_PINK, COLOR_YELLOW, COLOR_WHITE, COLOR_COUNT
 } Color;
 
-
 /*
 typedef enum Color
 {
