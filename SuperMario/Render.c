@@ -12,11 +12,22 @@ Image** Sprites;
 Bitmap Screen; // 메인 화면 이미지
 Bitmap Buffer; // 
 Bitmap Transition;
+bool isTransition;
+
 extern Creature* Player;
 extern Creature** Monsters;
 extern Projectile** Projectiles;
 extern int CreatureCount;
 extern int ProjectileCount;
+
+const char* SPRITENAME[SPRITES_COUNT] = {
+	"Map",
+	"FinnDown0", "FinnDown1", "FinnDown2",
+	"FinnUp0", "FinnUp1", "FinnUp2",
+	"FinnLeft0", "FinnLeft1", "FinnLeft2",
+	"FinnRight0", "FinnRight1", "FinnRight2",
+	"Monster"
+};
 
 // 화면 출력 함수
 void Render()
@@ -26,21 +37,14 @@ void Render()
 	InitializeSprites();
 	while (1)
 	{
+		UpdateAnimation();
 		UpdateRender();
 	}
 }
 
-void CheckRender()
-{
-	for (int i = 0; i <= COLOR_WHITE; i++)
-	{
-		SetPixelColor(i, 0, 0, i);
-	}
-}
-
+// 화면을 갱신하는 함수
 void UpdateRender()
 {
-	//printf("UpdateRender\n");
 	AddImage(0, 0, Sprites[0], Buffer);
 	AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], Buffer);
 	for (int i = 1; i < CreatureCount; i++)
@@ -75,6 +79,7 @@ void UpdateRender()
 	}
 }
 
+// Render를 초기화하는 함수
 void InitializeRender()
 {
 	//printf("InitializeRender\n");
@@ -82,26 +87,30 @@ void InitializeRender()
 	Buffer = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
+// Sprites를 초기화하는 함수
 void InitializeSprites()
 {
 	Sprites = (Image**)malloc(sizeof(Image*) * SPRITES_COUNT);
 	if (Sprites == NULL) { return; }
-	for (int i = 0; i < SPRITES_COUNT; i++)
+
+	Sprites[0] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
+	for (int i = 0; i < 1; i++)
 	{
-		Sprites[i] = LoadBitmapFile("FinnDown0", COLOR_WHITE);
+		Sprites[i] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
 		Sprites[i]->pivotx = 4;
 		Sprites[i]->pivoty = 4;
 	}
-	Sprites[0] = LoadBitmapFile("Map", COLOR_WHITE);
-	Sprites[1] = LoadBitmapFile("FinnDown0", COLOR_GRAY);
+	
+	Sprites[1] = LoadBitmapFile(SPRITENAME[SPRITE_FINN], COLOR_GRAY);
 	Sprites[1]->pivotx = 4;
 	Sprites[1]->pivoty = 4;
-	Sprites[2] = LoadBitmapFile("Monster", COLOR_YELLOW);
+	Sprites[2] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
 	Sprites[2]->pivotx = 4;
 	Sprites[2]->pivoty = 4;
 	//RenderImage(0, 0, Sprites[1]);
 }
 
+// 이미지를 화면에 그리는 함수
 void RenderImage(int x, int y, Image* image)
 {
 	for (int posx = 0; posx < image->width; posx++)
@@ -113,6 +122,7 @@ void RenderImage(int x, int y, Image* image)
 	}
 }
 
+// 이미지를 이미지에 그리는 함수
 void AddImage(int x, int y, Image* image, Bitmap target)
 {
 	for (int posx = 0; posx < image->width; posx++)
@@ -126,4 +136,9 @@ void AddImage(int x, int y, Image* image, Bitmap target)
 			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
 		}
 	}
+}
+
+void UpdateAnimation()
+{
+
 }

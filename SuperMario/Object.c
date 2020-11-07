@@ -18,7 +18,7 @@ void ProcessObject()
 	{
 		ProcessMonster();
 		ProcessProjectile();
-		Sleep(1000);
+		Sleep(100);
 	}
 }
 
