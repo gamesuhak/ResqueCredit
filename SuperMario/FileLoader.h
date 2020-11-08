@@ -8,5 +8,5 @@
 #include "Map.h"
 
 Image* LoadBitmapFile(char* name, Color transparent);
-
-RoomInfo* LoadMapFile(char* name);
+RoomInfo* LoadRoomFile(char* name);
+MonsterInfo* LoadMonsterFile(char* name);

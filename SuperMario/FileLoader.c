@@ -86,9 +86,6 @@ Image* LoadBitmapFile(char* name, Color transparent)
 RoomInfo* LoadMapFile(char* name)
 {
 	Map* map = (Map*)malloc(sizeof(Map));
-	image->id = 0;
-	image->pivotx = 0;
-	image->pivoty = 0;
-	Bitmap bitmap;
+	map->id = 0;
 	FILE* file = NULL;
 }

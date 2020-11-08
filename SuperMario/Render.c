@@ -9,6 +9,7 @@
 
 // 게임 내에서 쓸 스프라이트 목록
 Image** Sprites;
+Bitmap MainCamera;
 Bitmap Screen; // 메인 화면 이미지
 Bitmap Buffer; // 
 Bitmap Transition;
