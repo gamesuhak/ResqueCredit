@@ -1,10 +1,23 @@
 #pragma once
 #include "Object.h"
+#define MAP_WIDTH		10
+#define MAP_HEIGHT		10
 typedef enum Tile { TILE_GROUND = 0, } Tile;
 
 typedef char** TileData;
 typedef char** TileTag;
-typedef char** RoomData;
+
+typedef struct RoomInfo
+{
+	int variety;
+	int width;
+	int height;
+	int percentage;
+	TileData tile;
+	TileTag tag;
+	Creature** Monsters;
+	Coordination* MonstersPositions;
+} RoomInfo;
 
 typedef struct Room
 {

@@ -3,22 +3,52 @@
 #include <stdlib.h> // NULL, malloc
 #include "Function.h"
 
+int RoomInfoCount;
+RoomInfo** RoomInfos;
+Room** Rooms;
+
+void InitializeMap()
+{
+	LoadMapInfos();
+	CreateStage();
+}
+
 void CreateStage()
 {
 	int stages[5][5] = { 0 };
+	int sumPercentage = 0; // 모든 방의 등장 퍼센테이지
+
+	// 모든 방의 등장 퍼센테이지를 합산
+	for (int i = 0; i < RoomInfoCount; i++)
+	{
+		sumPercentage += RoomInfos[i]->percentage;
+	}
 
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 5; j++)
 		{
-			stages[j][i] = Random(5);
+			stages[j][i] = RandomRoom(sumPercentage);
 		}
 	}
 }
 
-Map LoadMap()
+Room* RandomRoom(int sumPercentage)
 {
+	for (int i = 0; i < RoomInfoCount; i++)
+	{
+		if (RoomInfos[i]->percentage < sumPercentage)
+		{
+			return RoomInfos[i];
+		}
+		sumPercentage -= RoomInfos[i]->percentage;
+	}
+	return NULL;
+}
 
+void LoadRoomInfos()
+{
+	RoomInfos[i] = 
 }
 
 TileData CreateMap(int width, int height)

@@ -5,4 +5,8 @@
 
 #include "Color.h"
 #include "Image.h"
+#include "Map.h"
+
 Image* LoadBitmapFile(char* name, Color transparent);
+
+RoomInfo* LoadMapFile(char* name);

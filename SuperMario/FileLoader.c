@@ -1,7 +1,6 @@
 #include "FileLoader.h"
 
 #include "Bool.h"
-#include "Map.h"
 #include <stdio.h>
 #include <stdlib.h> // malloc »ç¿ë
 #include <string.h> // strcat
@@ -84,8 +83,12 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	return image;
 }
 
-Map LoadMapFile(char* name)
+RoomInfo* LoadMapFile(char* name)
 {
 	Map* map = (Map*)malloc(sizeof(Map));
-
+	image->id = 0;
+	image->pivotx = 0;
+	image->pivoty = 0;
+	Bitmap bitmap;
+	FILE* file = NULL;
 }
