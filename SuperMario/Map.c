@@ -3,9 +3,12 @@
 #include <stdlib.h> // NULL, malloc
 #include "Function.h"
 
-int RoomInfoCount;
-RoomInfo** RoomInfos;
-Room** Rooms;
+int RoomInfoCount = 0;
+RoomInfo** RoomInfos = NULL;
+Room** Rooms = NULL;
+
+int PlayerMapX;
+int PlayerMapY;
 
 void InitializeMap()
 {
@@ -48,20 +51,25 @@ Room* RandomRoom(int sumPercentage)
 
 void LoadRoomInfos()
 {
-	RoomInfos[i] = 
+	for (int i = 0; 1; i++)
+	{
+		RoomInfos[i] = LoadRoomFile(i);
+	}
 }
 
-TileData CreateMap(int width, int height)
+TileData NewTileData(int width, int height)
 {
-	TileData tileData = (TileData)malloc(sizeof(char*) * width);
-	if (tileData == NULL) { printf("CreateMap1\n"); return NULL; }
+	TileData tileData = NULL;
+	tileData = (TileData)malloc(sizeof(char*) * width);
+	if (tileData == NULL) { printf("CreateTileData2\n"); return NULL; }
 	tileData[0] = (char*)malloc(sizeof(char) * width * height);
-	if (tileData[0] == NULL) { printf("CreateMap2\n"); return NULL; }
+	if (tileData[0] == NULL) { printf("CreateTileData3\n"); return NULL; }
 	for (int i = 1; i < width; i++)
 	{
 		tileData[i] = tileData[i - 1] + height;
-		if (tileData[i] == NULL) { printf("CreateMap : %d\n", i); return NULL; }
+		if (tileData[i] == NULL) { printf("CreateTileData : %d\n", i); return NULL; }
 	}
-	memset(tileData[0], 0, sizeof(char) * width * height);
+
+	memset(tileData[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
 	return tileData;
 }

@@ -8,6 +8,7 @@
 Creature* Player; // 플레이어 객체를 저장할 
 Creature** Monsters; // 몬스터 배열
 Projectile** Projectiles; // 발사체 배열
+int MonsterInfoCount = 0;
 int CreatureCount = 0;
 int ProjectileCount = 0;
 

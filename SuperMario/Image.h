@@ -8,7 +8,7 @@ typedef struct Image
 	int height;
 	int pivotx;
 	int pivoty;
-	Bitmap bitmap;
+	Bitmap tileData;
 } Image;
 
 Bitmap NewBitmap(int width, int height);

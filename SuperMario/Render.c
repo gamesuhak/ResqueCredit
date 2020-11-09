@@ -5,15 +5,26 @@
 #include "FileLoader.h"
 #include "Color.h"
 #include "Object.h"
+#include "Map.h"
+#include "Animator.h"
 #include "Bool.h"
 
 // 게임 내에서 쓸 스프라이트 목록
 Image** Sprites;
-Bitmap MainCamera;
 Bitmap Screen; // 메인 화면 이미지
-Bitmap Buffer; // 
-Bitmap Transition;
-bool isTransition;
+Bitmap Buffer; // 메인 화면 그리기 전에 그리는 구간
+
+Bitmap UI;
+
+Bitmap CurrentRoom;
+Bitmap BuferRoom;
+
+extern int PlayerMapX;
+extern int PlayerMapY;
+
+bool IsTransition;
+int TransitionX;
+int TransitionY;
 
 extern Creature* Player;
 extern Creature** Monsters;
@@ -27,7 +38,11 @@ const char* SPRITENAME[SPRITES_COUNT] = {
 	"FinnUp0", "FinnUp1", "FinnUp2",
 	"FinnLeft0", "FinnLeft1", "FinnLeft2",
 	"FinnRight0", "FinnRight1", "FinnRight2",
-	"Monster"
+	"Monster",
+
+	"UI_Heart",
+	"UI_Heart_Half",
+	"UI_Heart",
 };
 
 // 화면 출력 함수
@@ -43,9 +58,24 @@ void Render()
 	}
 }
 
+void StartTransition(Coordination direction)
+{
+	direction.x;
+	IsTransition = true;
+}
+
 // 화면을 갱신하는 함수
+// 참고로 레이어별 / Y축 기준으로 정렬되어야됨
 void UpdateRender()
 {
+	if (IsTransition)
+	{
+
+	}
+	UpdateUI(); // UI 업데이트
+	RenderCamera();
+
+	for (int layer; layer < LAYER_COUNT; layer++)
 	AddImage(0, 0, Sprites[0], Buffer);
 	AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], Buffer);
 	for (int i = 1; i < CreatureCount; i++)
@@ -80,12 +110,24 @@ void UpdateRender()
 	}
 }
 
+void RenderMap(Room* room)
+{
+	for (int y = 0; y < room->height; y++)
+	{
+		for (int x = 0; x < room->width; x++)
+		{
+			room->tile[x][y]
+		}
+	}
+}
+
 // Render를 초기화하는 함수
 void InitializeRender()
 {
 	//printf("InitializeRender\n");
 	Screen = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
 	Buffer = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	UI = NewBitmap(UI_WIDTH, UI_HEIGHT);
 }
 
 // Sprites를 초기화하는 함수
@@ -111,6 +153,23 @@ void InitializeSprites()
 	//RenderImage(0, 0, Sprites[1]);
 }
 
+void UpdateUI()
+{
+	//AddImage(0, 0, Sprites[], Buffer);
+	for (int i = 0; i <	Player->HP; i++)
+	{
+		//HP가 홀수일 때
+		if (i ^ 1 == 1)
+		{
+			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[], Buffer);
+		}
+		else
+		{
+			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[], Buffer);
+		}
+	}
+}
+
 // 이미지를 화면에 그리는 함수
 void RenderImage(int x, int y, Image* image)
 {
@@ -118,7 +177,7 @@ void RenderImage(int x, int y, Image* image)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
-			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->bitmap[posx][posy]);
+			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->tileData[posx][posy]);
 		}
 	}
 }
@@ -130,11 +189,11 @@ void AddImage(int x, int y, Image* image, Bitmap target)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
-			if ((image->bitmap[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
+			if ((image->tileData[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
 			{
 				continue;
 			}
-			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
+			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->tileData[posx][posy];
 		}
 	}
 }
@@ -142,4 +201,15 @@ void AddImage(int x, int y, Image* image, Bitmap target)
 void UpdateAnimation()
 {
 
+}
+
+void RenderCamera()
+{
+	for (int y = 0; y < )
+	{
+		for (int x = 0; x < )
+		{
+
+		}
+	}
 }
