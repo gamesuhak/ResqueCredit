@@ -1,8 +1,11 @@
 #pragma once
 #include "Bool.h"
 #include "Image.h"
+#include "Animator.h"
 #define MONSTER_COUNT		10
+#define PLAYER_HP_MAX		6
 
+typedef struct MonsterInfo MonsterInfo;
 typedef struct Creature Creature;
 typedef struct Projectile Projectile;
 typedef struct Object Object;
@@ -34,15 +37,22 @@ struct Object
 	Collider collider; // 오브젝트의 콜라이더
 };
 
+struct MonsterInfo
+{
+	Coordination position;
+};
+
 struct Creature
 {
 	short id;
 	int hp;
 	int power;
 	int speed;
+	int sprite; // 현재 스프라이트 번호
 	//Sprite sprite;
 	bool enable;
 	Object object;
+	Animator* animator;
 };
 
 struct Projectile
@@ -81,3 +91,5 @@ Creature* GetCreature(int id);
 
 Coordination CheckMove(int id, Object* object, Coordination direction);
 bool CheckCollider(Object* object1, Object* object2, Coordination offset);
+
+void StartTransition(Coordination direction);

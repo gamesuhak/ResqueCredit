@@ -38,3 +38,8 @@ typedef struct Map
 
 	Creature** Monsters;
 } Map;
+
+void CreateStage();
+Room* RandomRoom(int sumPercentage);
+void LoadRoomInfos();
+TileData NewTileData(int width, int height);

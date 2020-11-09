@@ -4,19 +4,19 @@
 
 Bitmap NewBitmap(int width, int height)
 {
-	Bitmap bitmap = NULL;
-	bitmap = (Bitmap)malloc(sizeof(char*) * width);
-	if (bitmap == NULL) { printf("CreateBitmap2\n"); return NULL; }
-	bitmap[0] = (char*)malloc(sizeof(char) * width * height);
-	if (bitmap[0] == NULL) { printf("CreateBitmap3\n"); return NULL; }
+	Bitmap tileData = NULL;
+	tileData = (Bitmap)malloc(sizeof(char*) * width);
+	if (tileData == NULL) { printf("CreateBitmap2\n"); return NULL; }
+	tileData[0] = (char*)malloc(sizeof(char) * width * height);
+	if (tileData[0] == NULL) { printf("CreateBitmap3\n"); return NULL; }
 	for (int i = 1; i < width; i++)
 	{
-		bitmap[i] = bitmap[i - 1] + height;
-		if (bitmap[i] == NULL) { printf("CreateBitmap : %d\n", i); return NULL; }
+		tileData[i] = tileData[i - 1] + height;
+		if (tileData[i] == NULL) { printf("CreateBitmap : %d\n", i); return NULL; }
 	}
 	
-	memset(bitmap[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
-	return bitmap;
+	memset(tileData[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
+	return tileData;
 } // 참고 : https://codeng.tistory.com/8
 
 // 이미지를 가로와 세로 개수로 나누어 반환하는 함수
@@ -31,12 +31,12 @@ Image** DivideBitmap(Image* image, int column, int rows)
 	{
 		for (int y = 0; y < rows; y++)
 		{
-			images[x][y].bitmap = NewBitmap(width, height);
+			images[x][y].tileData = NewBitmap(width, height);
 			for (int pixelX = 0; pixelX < width; pixelX++)
 			{
 				for (int pixelY = 0; pixelY < height; pixelY++)
 				{
-					images[x][y].bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
+					images[x][y].tileData[pixelX][pixelY] = image->tileData[pixelX + width * x][pixelY + height * y];
 				}
 			}
 		}
@@ -44,8 +44,8 @@ Image** DivideBitmap(Image* image, int column, int rows)
 	return images;
 }
 
-void DestroyBitmap(Bitmap bitmap)
+void DestroyBitmap(Bitmap tileData)
 {
-	free(bitmap[0]);
-	free(bitmap);
+	free(tileData[0]);
+	free(tileData);
 }
