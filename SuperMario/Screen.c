@@ -18,7 +18,7 @@ void InitializeScreen()
 	ViewCursor(0);
 }
 
-// Ä¿¼­ ¼û±â±â
+// ±ôºýÀÌ´Â Ä¿¼­ ¼û±â´Â ¸Þ¼Òµå
 void ViewCursor(char value)
 {
 	CONSOLE_CURSOR_INFO ConsoleCursor;

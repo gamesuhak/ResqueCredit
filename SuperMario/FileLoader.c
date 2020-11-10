@@ -18,14 +18,12 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	char names[50] = "Image/";
 	strcat(names, name);
 	strcat(names, ".bmp");
-	//printf("\"%s\"파일을 로드 중...\n", name);
 	if ((file = fopen(names, "rb")) == NULL)
 	{
 		printf("\"%s\"파일을 찾을 수 없습니다.", name);
 		fputs("파일 열기 에러!", stderr);
 	}
-	//printf("LoadBitmapFile\n");
-	
+
 	image = (Image*)malloc(sizeof(Image));
 
 	image->id = 0;

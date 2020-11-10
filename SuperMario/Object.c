@@ -5,9 +5,9 @@
 #include <string.h> // memset
 #include "Function.h"
 
-Creature* Player; // 플레이어 객체를 저장할 
-Creature** Monsters; // 몬스터 배열
-Projectile** Projectiles; // 발사체 배열
+Creature* Player; // 플레이어 객체를 저장할 포인터
+Creature** Monsters; // 몬스터를 저장할 이중 포인터
+Projectile** Projectiles; // 발사체 포인터 배열
 int MonsterInfoCount = 0;
 int CreatureCount = 0;
 int ProjectileCount = 0;
@@ -170,7 +170,7 @@ Creature* CreateCreature()
 	return creature;
 }
 
-// id로 크리쳐 
+// id값으로 크리쳐 찾기
 Creature* GetCreature(int id)
 {
 	for (int i = 0; i < CreatureCount; i++)

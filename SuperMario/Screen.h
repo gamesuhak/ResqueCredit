@@ -1,8 +1,11 @@
 #pragma once
 #include <Windows.h>
 #include "Color.h"
+
+// 화면 크기
 #define SCREEN_WIDTH		176
 #define SCREEN_HEIGHT		64
+
 #define BUFFER_MAX			4
 #define COMMAND_MAX			30
 
