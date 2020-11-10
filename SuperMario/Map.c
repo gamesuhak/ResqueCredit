@@ -70,6 +70,6 @@ TileData NewTileData(int width, int height)
 		if (tileData[i] == NULL) { printf("CreateTileData : %d\n", i); return NULL; }
 	}
 
-	memset(tileData[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
+	memset(tileData[0], 0, sizeof(char) * width * height);
 	return tileData;
 }

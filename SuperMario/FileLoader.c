@@ -10,12 +10,8 @@ extern int MonsterInfoCount;
 
 Image* LoadBitmapFile(char* name, Color transparent)
 {
-	//printf("LoadBitmapFile\n");
-	Image* image = (Image*)malloc(sizeof(Image));
-	image->id = 0;
-	image->pivotx = 0;
-	image->pivoty = 0;
-	Bitmap tileData;
+	Image* image;
+	Bitmap bitmap;
 	FILE* file = NULL;
 	int data;
 	char padding;
@@ -28,11 +24,18 @@ Image* LoadBitmapFile(char* name, Color transparent)
 		printf("\"%s\"파일을 찾을 수 없습니다.", name);
 		fputs("파일 열기 에러!", stderr);
 	}
+	//printf("LoadBitmapFile\n");
+	
+	image = (Image*)malloc(sizeof(Image));
+
+	image->id = 0;
+	image->pivotx = 0;
+	image->pivoty = 0;
 	fseek(file, DATA_WIDTH, SEEK_SET); // 처음부터 가로길이를 나타내는 곳까지 이동
 	image->width = fgetc(file); // 가로길이 대입
 	fseek(file, DATA_HEIGHT, SEEK_SET); // 처음부터 세로길이를 나타내는 곳까지 이동
 	image->height = fgetc(file); // 세로길이 대입
-	tileData = NewBitmap(image->width, image->height);
+	bitmap = NewBitmap(image->width, image->height);
 	fseek(file, DATA_START, SEEK_SET);
 	// (w & 1)? (w>>1)+1:w>>1;//홀수라면 나누고 나머지 반쪽을 위해 +1,짝수라면 나누기
 	padding = (4 - (((image->width & 1) ? (image->width >> 1) + 1 : image->width >> 1) % 4)) % 4;
@@ -42,35 +45,35 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	{
 		for (char x = 0; x < image->width && (data = fgetc(file)) != EOF; x++)
 		{
-			tileData[x][y] = data >> 4;
+			bitmap[x][y] = data >> 4;
 
-			if (tileData[x][y] == COLOR_DARKBLUE) { tileData[x][y] = COLOR_DARKRED; }
-			else if (tileData[x][y] == COLOR_DARKSKY) { tileData[x][y] = COLOR_DARKYELLOW; }
-			else if (tileData[x][y] == COLOR_DARKRED) { tileData[x][y] = COLOR_DARKBLUE; }
-			else if (tileData[x][y] == COLOR_DARKYELLOW) { tileData[x][y] = COLOR_DARKSKY; }
-			else if (tileData[x][y] == COLOR_DARKWHITE) { tileData[x][y] = COLOR_GRAY; }
-			else if (tileData[x][y] == COLOR_GRAY) { tileData[x][y] = COLOR_DARKWHITE; }
-			else if (tileData[x][y] == COLOR_BLUE) { tileData[x][y] = COLOR_RED; }
-			else if (tileData[x][y] == COLOR_SKY) { tileData[x][y] = COLOR_YELLOW; }
-			else if (tileData[x][y] == COLOR_RED) { tileData[x][y] = COLOR_BLUE; }
-			else if (tileData[x][y] == COLOR_YELLOW) { tileData[x][y] = COLOR_SKY; }
+			if (bitmap[x][y] == COLOR_DARKBLUE) { bitmap[x][y] = COLOR_DARKRED; }
+			else if (bitmap[x][y] == COLOR_DARKSKY) { bitmap[x][y] = COLOR_DARKYELLOW; }
+			else if (bitmap[x][y] == COLOR_DARKRED) { bitmap[x][y] = COLOR_DARKBLUE; }
+			else if (bitmap[x][y] == COLOR_DARKYELLOW) { bitmap[x][y] = COLOR_DARKSKY; }
+			else if (bitmap[x][y] == COLOR_DARKWHITE) { bitmap[x][y] = COLOR_GRAY; }
+			else if (bitmap[x][y] == COLOR_GRAY) { bitmap[x][y] = COLOR_DARKWHITE; }
+			else if (bitmap[x][y] == COLOR_BLUE) { bitmap[x][y] = COLOR_RED; }
+			else if (bitmap[x][y] == COLOR_SKY) { bitmap[x][y] = COLOR_YELLOW; }
+			else if (bitmap[x][y] == COLOR_RED) { bitmap[x][y] = COLOR_BLUE; }
+			else if (bitmap[x][y] == COLOR_YELLOW) { bitmap[x][y] = COLOR_SKY; }
 			
 			if (x >= image->width)
 			{
 				break;
 			}
-			tileData[++x][y] = data % 16;
+			bitmap[++x][y] = data % 16;
 
-			if (tileData[x][y] == COLOR_DARKBLUE) { tileData[x][y] = COLOR_DARKRED; }
-			else if (tileData[x][y] == COLOR_DARKSKY) { tileData[x][y] = COLOR_DARKYELLOW; }
-			else if (tileData[x][y] == COLOR_DARKRED) { tileData[x][y] = COLOR_DARKBLUE; }
-			else if (tileData[x][y] == COLOR_DARKYELLOW) { tileData[x][y] = COLOR_DARKSKY; }
-			else if (tileData[x][y] == COLOR_DARKWHITE) { tileData[x][y] = COLOR_GRAY; }
-			else if (tileData[x][y] == COLOR_GRAY) { tileData[x][y] = COLOR_DARKWHITE; }
-			else if (tileData[x][y] == COLOR_BLUE) { tileData[x][y] = COLOR_RED; }
-			else if (tileData[x][y] == COLOR_SKY) { tileData[x][y] = COLOR_YELLOW; }
-			else if (tileData[x][y] == COLOR_RED) { tileData[x][y] = COLOR_BLUE; }
-			else if (tileData[x][y] == COLOR_YELLOW) { tileData[x][y] = COLOR_SKY; }
+			if (bitmap[x][y] == COLOR_DARKBLUE) { bitmap[x][y] = COLOR_DARKRED; }
+			else if (bitmap[x][y] == COLOR_DARKSKY) { bitmap[x][y] = COLOR_DARKYELLOW; }
+			else if (bitmap[x][y] == COLOR_DARKRED) { bitmap[x][y] = COLOR_DARKBLUE; }
+			else if (bitmap[x][y] == COLOR_DARKYELLOW) { bitmap[x][y] = COLOR_DARKSKY; }
+			else if (bitmap[x][y] == COLOR_DARKWHITE) { bitmap[x][y] = COLOR_GRAY; }
+			else if (bitmap[x][y] == COLOR_GRAY) { bitmap[x][y] = COLOR_DARKWHITE; }
+			else if (bitmap[x][y] == COLOR_BLUE) { bitmap[x][y] = COLOR_RED; }
+			else if (bitmap[x][y] == COLOR_SKY) { bitmap[x][y] = COLOR_YELLOW; }
+			else if (bitmap[x][y] == COLOR_RED) { bitmap[x][y] = COLOR_BLUE; }
+			else if (bitmap[x][y] == COLOR_YELLOW) { bitmap[x][y] = COLOR_SKY; }
 		}
 		fseek(file, padding, SEEK_CUR);
 	}
@@ -79,16 +82,16 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	{
 		for (char x = 0; x < image->width; x++)
 		{
-			(tileData[x][y] == transparent) ? tileData[x][y] = COLOR_TRANSPARENT : 0; // 해당 색상이 인자로 받은 배경색과 일치하면 COLOR_TRANSPARENT를 대입
+			(bitmap[x][y] == transparent) ? bitmap[x][y] = COLOR_TRANSPARENT : 0; // 해당 색상이 인자로 받은 배경색과 일치하면 COLOR_TRANSPARENT를 대입
 		}
 	}
-	image->tileData = tileData;
+	image->bitmap = bitmap;
 	return image;
 }
 
 RoomInfo* LoadRoomFile(char* name)
 {
-	RoomInfo* map = (Map*)malloc(sizeof(Map));
+	RoomInfo* room = (Map*)malloc(sizeof(Map));
 	FILE* file = NULL;
 
 	char names[50] = "Map/";
@@ -97,26 +100,26 @@ RoomInfo* LoadRoomFile(char* name)
 	//printf("\"%s\"파일을 로드 중...\n", name);
 	if ((file = fopen(names, "rb")) == NULL)
 	{
-
+		
 	}
-	map->variety = 1;
-	map->width = 0;
-	map->height = 0;
-	map->percentage = 0;
-	map->tile = NewTileData(map->width, map->height);
-	map->tag = NewTileData(map->width, map->height);
-	for (int y = 0; y < map->height; y++)
+	room->variety = 1;
+	room->width = 0;
+	room->height = 0;
+	room->percentage = 0;
+	room->tile = NewTileData(room->width, room->height);
+	room->tag = NewTileData(room->width, room->height);
+	for (int y = 0; y < room->height; y++)
 	{
-		for (int x = 0; x < map->width; x++)
+		for (int x = 0; x < room->width; x++)
 		{
-			map->tile[x][y] = fgetc();
+			room->tile[x][y] = fgetc();
 		}
 	}
-	for (int y = 0; y < map->height; y++)
+	for (int y = 0; y < room->height; y++)
 	{
-		for (int x = 0; x < map->width; x++)
+		for (int x = 0; x < room->width; x++)
 		{
-			map->tag[x][y] = fgetc();
+			room->tag[x][y] = fgetc();
 		}
 	}
 	//while (fget)

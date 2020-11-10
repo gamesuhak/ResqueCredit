@@ -2,6 +2,7 @@
 #include "Object.h"
 #define MAP_WIDTH		10
 #define MAP_HEIGHT		10
+#define LAYER_COUNT		3
 typedef enum Tile { TILE_GROUND = 0, } Tile;
 
 typedef char** TileData;

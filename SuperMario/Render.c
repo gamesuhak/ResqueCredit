@@ -14,15 +14,13 @@ Image** Sprites;
 Bitmap Screen; // 메인 화면 이미지
 Bitmap Buffer; // 메인 화면 그리기 전에 그리는 구간
 
-Bitmap UI;
-
 Bitmap CurrentRoom;
 Bitmap BuferRoom;
 
 extern int PlayerMapX;
 extern int PlayerMapY;
 
-bool IsTransition;
+bool IsTransition = false;
 int TransitionX;
 int TransitionY;
 
@@ -32,6 +30,7 @@ extern Projectile** Projectiles;
 extern int CreatureCount;
 extern int ProjectileCount;
 
+// 스프라이트의 이름들
 const char* SPRITENAME[SPRITES_COUNT] = {
 	"Map",
 	"FinnDown0", "FinnDown1", "FinnDown2",
@@ -53,15 +52,18 @@ void Render()
 	InitializeSprites();
 	while (1)
 	{
-		UpdateAnimation();
-		UpdateRender();
-	}
-}
+		
+		if (IsTransition)
+		{
 
-void StartTransition(Coordination direction)
-{
-	direction.x;
-	IsTransition = true;
+		}
+		else
+		{
+			UpdateAnimation();
+			UpdateRender();
+		}
+		
+	}
 }
 
 // 화면을 갱신하는 함수
@@ -72,46 +74,46 @@ void UpdateRender()
 	{
 
 	}
+
 	UpdateUI(); // UI 업데이트
 	RenderCamera();
 
-	for (int layer; layer < LAYER_COUNT; layer++)
-	AddImage(0, 0, Sprites[0], Buffer);
-	AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], Buffer);
-	for (int i = 1; i < CreatureCount; i++)
-	{
-		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
-		if (!Monsters[i]->enable)
-		{
-			continue;
-		}
-		AddImage(Monsters[i]->object.position.x, Monsters[i]->object.position.y, Sprites[2], Buffer);
-	}
-	for (int i = 0; i < ProjectileCount; i++)
-	{
-		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
-		if (!Projectiles[i]->enable)
-		{
-			continue;
-		}
-		AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], Buffer);
-	}
+	
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{
 		for (int posy = 0; posy < SCREEN_HEIGHT; posy++)
 		{
-			if (Screen[posx][posy] == Buffer[posx][posy])
-			{
-				continue;
-			}
+			if (Screen[posx][posy] == Buffer[posx][posy]) { continue; }
 			Screen[posx][posy] = Buffer[posx][posy];
 			SetPixelColor(posx, posy, 0, Screen[posx][posy]);
 		}
 	}
 }
 
-void RenderMap(Room* room)
+void RenderMap(Room* room, Bitmap target)
 {
+	for (int layer; layer < LAYER_COUNT; layer++)
+	{
+		AddImage(0, 0, Sprites[0], Buffer);
+		AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], Buffer);
+		for (int i = 1; i < CreatureCount; i++)
+		{
+			// 몬스터가 비활성화 돼있을 때 생략
+			if (!Monsters[i]->enable) { continue; }
+
+			AddImage(Monsters[i]->object.position.x, Monsters[i]->object.position.y, Sprites[2], Buffer);
+		}
+		for (int i = 0; i < ProjectileCount; i++)
+		{
+			// 투사체가 비활성화 돼있을 때 생략
+			if (!Projectiles[i]->enable) { continue; }
+
+			AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], Buffer);
+		}
+	}
+
+
+
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
@@ -124,10 +126,8 @@ void RenderMap(Room* room)
 // Render를 초기화하는 함수
 void InitializeRender()
 {
-	//printf("InitializeRender\n");
 	Screen = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
 	Buffer = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
-	UI = NewBitmap(UI_WIDTH, UI_HEIGHT);
 }
 
 // Sprites를 초기화하는 함수
@@ -150,34 +150,35 @@ void InitializeSprites()
 	Sprites[2] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
 	Sprites[2]->pivotx = 4;
 	Sprites[2]->pivoty = 4;
+
+	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_BLACK);
 	//RenderImage(0, 0, Sprites[1]);
 }
 
 void UpdateUI()
 {
-	//AddImage(0, 0, Sprites[], Buffer);
-	for (int i = 0; i <	Player->HP; i++)
+	for (int i = 0; i <	Player->hp; i++)
 	{
 		//HP가 홀수일 때
 		if (i ^ 1 == 1)
 		{
-			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[], Buffer);
+			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[SPRITE_HEART], Buffer);
 		}
 		else
 		{
-			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[], Buffer);
+			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[SPRITE_HEART], Buffer);
 		}
 	}
 }
 
-// 이미지를 화면에 그리는 함수
+// 이미지를 화면에 그리는 함수 나중에 처분할 예정
 void RenderImage(int x, int y, Image* image)
 {
 	for (int posx = 0; posx < image->width; posx++)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
-			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->tileData[posx][posy]);
+			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->bitmap[posx][posy]);
 		}
 	}
 }
@@ -189,11 +190,27 @@ void AddImage(int x, int y, Image* image, Bitmap target)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
-			if ((image->tileData[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
+			if ((image->bitmap[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
 			{
 				continue;
 			}
-			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->tileData[posx][posy];
+			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
+		}
+	}
+}
+
+// 이미지를 이미지에 그리는 함수
+void AddImage2(int x, int y, Image* image, Image* target)
+{
+	for (int posx = 0; posx < image->width; posx++)
+	{
+		for (int posy = 0; posy < image->height; posy++)
+		{
+			if ((image->bitmap[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
+			{
+				continue;
+			}
+			target->bitmap[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
 		}
 	}
 }

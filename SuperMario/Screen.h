@@ -1,10 +1,10 @@
 #pragma once
 #include <Windows.h>
 #include "Color.h"
-#define SCREEN_WIDTH	176
-#define SCREEN_HEIGHT	64
-#define BUFFER_MAX		4
-#define COMMAND_MAX		30
+#define SCREEN_WIDTH		176
+#define SCREEN_HEIGHT		64
+#define BUFFER_MAX			4
+#define COMMAND_MAX			30
 
 void InitializeScreen();
 void RemoveScrollbar();
