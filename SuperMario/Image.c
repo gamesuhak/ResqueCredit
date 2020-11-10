@@ -27,7 +27,13 @@ void DestroyBitmap(Bitmap bitmap)
 
 Image* NewImage(int width, int height)
 {
+	Image* image = (Image*)malloc(sizeof(Image));
+	if (image == NULL) { return NULL; }
 
+	image->id = 0;
+	image->pivotx = 0;
+	image->pivoty = 0;
+	return image;
 }
 
 // 이미지를 가로와 세로 개수로 나누어 반환하는 함수

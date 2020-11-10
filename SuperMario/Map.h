@@ -17,7 +17,6 @@ typedef struct RoomInfo
 	TileData tile;
 	TileTag tag;
 	Creature** Monsters;
-	Coordination* MonstersPositions;
 } RoomInfo;
 
 typedef struct Room
@@ -26,9 +25,11 @@ typedef struct Room
 	int variety; // 종류
 	int width; // 가로길이
 	int height; // 세로길이
+	int monsterCount; // 몬스터 개체 수
 	TileData tile; // 타일정보
 	TileTag tag; // 타일태그
-	Creature** Monsters;
+	Creature** monsters;
+	Projectile** projectiles;
 } Room;
 
 typedef struct Map

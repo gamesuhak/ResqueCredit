@@ -24,11 +24,8 @@ Image* LoadBitmapFile(char* name, Color transparent)
 		fputs("파일 열기 에러!", stderr);
 	}
 
-	image = (Image*)malloc(sizeof(Image));
+	image = NewImage(0, 0);
 
-	image->id = 0;
-	image->pivotx = 0;
-	image->pivoty = 0;
 	fseek(file, DATA_WIDTH, SEEK_SET); // 처음부터 가로길이를 나타내는 곳까지 이동
 	image->width = fgetc(file); // 가로길이 대입
 	fseek(file, DATA_HEIGHT, SEEK_SET); // 처음부터 세로길이를 나타내는 곳까지 이동
@@ -95,11 +92,8 @@ RoomInfo* LoadRoomFile(char* name)
 	char names[50] = "Map/";
 	strcat(names, name);
 	strcat(names, ".txt");
-	//printf("\"%s\"파일을 로드 중...\n", name);
-	if ((file = fopen(names, "rb")) == NULL)
-	{
-		
-	}
+	
+	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
 	room->variety = 1;
 	room->width = 0;
 	room->height = 0;
@@ -120,20 +114,34 @@ RoomInfo* LoadRoomFile(char* name)
 			room->tag[x][y] = fgetc();
 		}
 	}
-	//while (fget)
 }
 
 MonsterInfo* LoadMonsterFile(char* name)
 {
+	FILE* file = NULL;
+	char names[50] = "Monster/";
+	strcat(names, name);
+	strcat(names, ".txt");
+	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
+
 	MonsterInfo* monsterInfo = (MonsterInfo*)malloc(sizeof(MonsterInfo));
 	monsterInfo->id;
 	monsterInfo->hp;
 	monsterInfo->power;
 	monsterInfo->speed;
+	
 	monsterInfo->object.layer = 1;
+
 	monsterInfo->object.position.x = 1;
 	monsterInfo->object.position.y = 1;
-	monsterInfo->object.position.y = 1;
+
+	monsterInfo->object.direction.x = 1;
+	monsterInfo->object.direction.y = 1;
+
+	monsterInfo->object.collider.pivot.x = 0;
+	monsterInfo->object.collider.pivot.y = 0;
+	monsterInfo->object.collider.size.x = 0;
+	monsterInfo->object.collider.size.y = 0;
 	
 	return monsterInfo;
 }
