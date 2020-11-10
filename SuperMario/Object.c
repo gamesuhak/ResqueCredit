@@ -125,6 +125,9 @@ Projectile* NewProjectile()
 			return Projectiles[i];
 		}
 	}
+	// 비활성화 된 투사체를 찾지 못하였을 때
+	// realloc이용해서 배열에 추가하도록 수정하기
+	//Projectiles
 	return CreateProjectile();
 }
 

@@ -15,6 +15,7 @@ typedef enum Direction { DIRECTION_UP = 0, DIRECTION_DOWN, DIRECTION_LEFT, DIREC
 typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE } ObjectType;
 typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_MISSILE } ProjectileType;
 typedef enum AnimationType { ANIMATION_BULLET = 0 } AnimationType;
+typedef enum State { STATE_IDLE = 0, STATE_WALK, STATE_ATTACK };
 
 struct Coordination
 {
@@ -39,6 +40,12 @@ struct Object
 
 struct MonsterInfo
 {
+	short id;
+	int hp;
+	int power;
+	int speed;
+	int sprite;
+	Object object;
 	Coordination position;
 };
 
@@ -49,6 +56,7 @@ struct Creature
 	int power;
 	int speed;
 	int sprite; // 현재 스프라이트 번호
+	int state;
 	//Sprite sprite;
 	bool enable;
 	Object object;

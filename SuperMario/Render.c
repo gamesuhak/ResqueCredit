@@ -14,8 +14,10 @@ Image** Sprites;
 Bitmap Screen; // 메인 화면 이미지
 Bitmap Buffer; // 메인 화면 그리기 전에 그리는 구간
 
-Bitmap CurrentRoom;
-Bitmap BuferRoom;
+Bitmap BufferRoom;
+
+Image* CurrentRoom;
+Image* BufferRoom;
 
 extern int PlayerMapX;
 extern int PlayerMapY;
@@ -111,8 +113,16 @@ void UpdateRender()
 	}
 }
 
-void RenderMap(Room* room, Bitmap target)
+void RenderMap(Room* room, Image* target)
 {
+	for (int y; y < room->height; y++)
+	{
+		for (int x; x < room->width; x++)
+		{
+			AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], CurrentRoom)
+		}
+	}
+
 	for (int layer; layer < LAYER_COUNT; layer++)
 	{
 		AddImage(0, 0, Sprites[0], target);
@@ -132,39 +142,27 @@ void RenderMap(Room* room, Bitmap target)
 			AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], target);
 		}
 	}
-
-	for (int y = 0; y < room->height; y++)
-	{
-		for (int x = 0; x < room->width; x++)
-		{
-			room->tile[x][y];
-		}
-	}
 }
 
+// UI를 그리는 메소드
 void UpdateUI()
 {
 	// 온전한 하트의 개수는 hp에서 1의 비트를 없앤 다음에 / 2한 결과
 	int hpCount = (Player->hp ^ 1) >> 1;
 
+	// 온전한 하트의 개수만큼 좌측 상단에서부터 우측으로 그림
 	for (int i = 0; i < hpCount; i++)
 	{
-
+		AddImage(i * PIXELPERUNIT, 0, Sprites[SPRITE_HEART], Buffer);
 	}
 
-	for (int i = 0; i <	Player->hp; i++)
+	//HP가 홀수일 때
+	if (Player->hp & 1)
 	{
-		//HP가 홀수일 때
-		if (i & 1 == 1)
-		{
-			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[SPRITE_HEART_HALF], Buffer);
-		}
-		else
-		{
-			AddImage(SCREEN_WIDTH - (i >> 1) * 16, 0, Sprites[SPRITE_HEART], Buffer);
-		}
+		AddImage((hpCount + 1) * PIXELPERUNIT, 0, Sprites[SPRITE_HEART_HALF], Buffer);
 	}
 }
+
 
 void UpdateAnimation()
 {

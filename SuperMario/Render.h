@@ -1,6 +1,7 @@
 #pragma once
 #include "Image.h"
 
+#define PIXELPERUNIT		16
 #define UI_X				0
 #define UI_Y				0
 #define UI_WIDTH			48
@@ -16,6 +17,7 @@ typedef enum Sprite
 	SPRITE_MONSTER = 13,
 	SPRITE_HEART = 14, SPRITE_HEART_HALF,
 
+	SPRITE_TILE = 16,
 	SPRITE_COUNT = 20
 } Sprite;
 
@@ -25,6 +27,6 @@ void InitializeRender();
 void InitializeSprites();
 
 void AddImage(int x, int y, Image* image, Bitmap target);
-void UpdateAnimation();
+
 void UpdateUI();
-void RenderCamera();
+void UpdateAnimation();
