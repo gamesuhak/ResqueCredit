@@ -171,18 +171,6 @@ void UpdateUI()
 	}
 }
 
-// 이미지를 화면에 그리는 함수 나중에 처분할 예정
-void RenderImage(int x, int y, Image* image)
-{
-	for (int posx = 0; posx < image->width; posx++)
-	{
-		for (int posy = 0; posy < image->height; posy++)
-		{
-			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->bitmap[posx][posy]);
-		}
-	}
-}
-
 // 이미지를 이미지에 그리는 함수
 void AddImage(int x, int y, Image* image, Bitmap target)
 {
