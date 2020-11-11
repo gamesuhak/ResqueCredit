@@ -1,13 +1,14 @@
 #pragma once
 #include "Color.h"
+#include "Object.h"
+
 typedef char** Bitmap;
 typedef struct Image
 {
 	int id;
 	int width;
 	int height;
-	int pivotx;
-	int pivoty;
+	Coordination pivot;
 	Bitmap bitmap;
 } Image;
 

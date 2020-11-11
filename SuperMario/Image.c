@@ -31,8 +31,8 @@ Image* NewImage(int width, int height)
 	if (image == NULL) { return NULL; }
 
 	image->id = 0;
-	image->pivotx = 0;
-	image->pivoty = 0;
+	image->pivot.x = 0;
+	image->pivot.y = 0;
 	image->width = width;
 	image->height = height;
 	image->bitmap = NewBitmap(width, height);
@@ -96,11 +96,11 @@ void AddImage(int x, int y, Image* image, Image* target)
 		for (int posy = 0; posy < image->height; posy++)
 		{
 			if ((image->bitmap[posx][posy] < 0) || // 현재 가르키고있는 색상이 없을 때
-				((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)) ||
-				((posx + x - image->pivotx >= target->width) || (posy + y - image->pivoty > target->height))) {
+				((posx + x - image->pivot.x < 0) || (posy + y - image->pivot.y < 0)) ||
+				((posx + x - image->pivot.x >= target->width) || (posy + y - image->pivot.y > target->height))) {
 				continue;
 			}
-			target->bitmap[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
+			target->bitmap[posx + x - image->pivot.x][posy + y - image->pivot.y] = image->bitmap[posx][posy];
 		}
 	}
 }
