@@ -4,7 +4,6 @@
 #include "Screen.h" // 
 #include "FileLoader.h"
 #include "Color.h"
-#include "Object.h"
 #include "Animator.h"
 #include "Bool.h"
 
@@ -29,6 +28,8 @@ extern int ProjectileCount;
 // 스프라이트의 이름들
 const char* SPRITENAME[SPRITE_COUNT] = {
 	"Map",
+
+	// 플레이어 스프라이트, 12개나 있는 이유는 첫번째 이미지를 잘라 12개로 사용하기 때문에
 	"Finn", "Finn", "Finn",
 	"Finn", "Finn", "Finn",
 	"Finn", "Finn", "Finn",
@@ -69,13 +70,13 @@ void InitializeSprites()
 
 	Sprites[SPRITE_MAP] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
 	Sprites[SPRITE_FINN] = LoadBitmapFile(SPRITENAME[SPRITE_FINN], COLOR_GRAY);
-	ParseSprite(SPRITE_FINN, 3);
-
+	ParseSprite(SPRITE_FINN, 3, DIRECTION_COUNT);
+	SetPivot(SPRITE_FINN, 3 * DIRECTION_COUNT, DIRECTION_COUNT);
 	//Sprites[SPRITE_FINN]->pivotx = 4;
 	//Sprites[SPRITE_FINN]->pivoty = 4;
 	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
-	Sprites[SPRITE_MONSTER]->pivotx = 4;
-	Sprites[SPRITE_MONSTER]->pivoty = 4;
+	Sprites[SPRITE_MONSTER]->pivot.x = 4;
+	Sprites[SPRITE_MONSTER]->pivot.y = 4;
 
 	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
 
@@ -91,7 +92,7 @@ void InitializeSprites()
 // 참고로 레이어별 / Y축 기준으로 정렬되어야됨
 void UpdateRender()
 {
-	UpdateUI(); // UI 업데이트
+	UpdateUI(Buffer); // UI 업데이트
 	RenderMap(CurrentRoom, Buffer);
 
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
@@ -143,13 +144,13 @@ void RenderImage(int x, int y, Image* image)
 	{
 		for (int posy = 0; posy < image->height; posy++)
 		{
-			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->bitmap[posx][posy]);
+			SetPixelColor(posx + x - image->pivot.x, posy + y - image->pivot.y, 0, image->bitmap[posx][posy]);
 		}
 	}
 }
 
 // UI를 그리는 메소드
-void UpdateUI()
+void UpdateUI(Image* target)
 {
 	// 온전한 하트의 개수는 hp에서 1의 비트를 없앤 다음에 / 2한 결과
 	int hpCount = (Player->hp ^ 1) >> 1;
@@ -157,13 +158,13 @@ void UpdateUI()
 	// 온전한 하트의 개수만큼 좌측 상단에서부터 우측으로 그림
 	for (int i = 0; i < hpCount; i++)
 	{
-		AddImage(i * PIXELPERUNIT, 0, Sprites[SPRITE_HEART], Buffer);
+		AddImage(i * PIXELPERUNIT, 0, Sprites[SPRITE_HEART], target);
 	}
 
 	//HP가 홀수일 때
 	if (Player->hp & 1)
 	{
-		AddImage((hpCount + 1) * PIXELPERUNIT, 0, Sprites[SPRITE_HEART_HALF], Buffer);
+		AddImage((hpCount + 1) * PIXELPERUNIT, 0, Sprites[SPRITE_HEART_HALF], target);
 	}
 }
 
@@ -173,11 +174,31 @@ void UpdateAnimation()
 }
 
 // 스프라이트를 분할하여 Sprites에 저장하는 메소드 
-void ParseSprite(int index, int count)
+// index 분할할 스프라이트의 번호, column
+void ParseSprite(int index, int column, int row)
 {
-	Image** list = SliceImage(Sprites[index], 3, DIRECTION_COUNT);
-	for (int i = 0; i < 3 * DIRECTION_COUNT; i++)
+	Image** list = SliceImage(Sprites[index], column, row);
+	for (int i = 0; i < column * row; i++)
 	{
 		Sprites[index + i] = list[i];
+	}
+}
+
+// 일괄적으로 Sprite의 중심점을 수정하는 메소드
+// index 스프라이트의 첫 번호, count = 일괄적으로 변경할 개수, pivot = 열거형 Pivot의 값
+void SetPivot(int index, int count, int pivot)
+{
+	for (int i = 0; i < count; i++)
+	{
+		if (pivot == PIVOT_LEFTUP)
+		{
+			Sprites[index + i]->pivot.x = 0;
+			Sprites[index + i]->pivot.y = 0;
+		}
+		else if (pivot == PIVOT_MIDDLE)
+		{
+			Sprites[index + i]->pivot.x = Sprites[index + i]->width >> 1;
+			Sprites[index + i]->pivot.y = Sprites[index + i]->height >> 1;
+		}
 	}
 }

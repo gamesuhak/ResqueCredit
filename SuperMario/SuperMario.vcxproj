@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="Bool.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Coordination.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="Image.h" />

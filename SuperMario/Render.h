@@ -30,5 +30,8 @@ void InitializeSprites();
 
 void RenderMap(Room* room, Image* target);
 void RenderImage(int x, int y, Image* image);
-void UpdateUI();
+void UpdateUI(Image* target);
 void UpdateAnimation();
+
+void ParseSprite(int index, int column, int row);
+void SetPivot(int index, int count, int pivot);

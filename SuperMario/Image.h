@@ -1,16 +1,17 @@
 #pragma once
 #include "Color.h"
-#include "Object.h"
-
+#include "Coordination.h"
 typedef char** Bitmap;
-typedef struct Image
+typedef struct Image Image;
+
+struct Image
 {
 	int id;
 	int width;
 	int height;
 	Coordination pivot;
 	Bitmap bitmap;
-} Image;
+};
 
 Bitmap NewBitmap(int width, int height);
 void DestroyBitmap(Bitmap bitmap);
