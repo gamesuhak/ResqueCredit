@@ -33,11 +33,38 @@ Image* NewImage(int width, int height)
 	image->id = 0;
 	image->pivotx = 0;
 	image->pivoty = 0;
+	image->width = width;
+	image->height = height;
+	image->bitmap = NewBitmap(width, height);
 	return image;
 }
 
 // 이미지를 가로와 세로 개수로 나누어 반환하는 함수
 Image** SliceImage(Image* image, int column, int row)
+{
+	int width = image->width / column;
+	int height = image->height / row;
+	Image** images = (Image**)malloc(sizeof(Image*) * column * row);
+	if (images == NULL) { printf("SliceImage\n"); return NULL; }
+	
+	for (int y = 0; y < row; y++)
+	{
+		for (int x = 0; x < column; x++)
+		{
+			images[y * row + x] = NewImage(width, height);
+			for (int pixelX = 0; pixelX < width; pixelX++)
+			{
+				for (int pixelY = 0; pixelY < height; pixelY++)
+				{
+					images[y * row + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
+				}
+			}
+		}
+	}
+	return images;
+}
+
+Image** SliceImagePixel(Image* image, int column, int row)
 {
 	int width = image->width / column;
 	int height = image->height / row;
@@ -62,23 +89,7 @@ Image** SliceImage(Image* image, int column, int row)
 }
 
 // 이미지를 이미지에 그리는 함수
-void AddImage(int x, int y, Image* image, Bitmap target)
-{
-	for (int posx = 0; posx < image->width; posx++)
-	{
-		for (int posy = 0; posy < image->height; posy++)
-		{
-			if ((image->bitmap[posx][posy] < 0) || ((posx + x - image->pivotx < 0) || (posy + y - image->pivoty < 0)))
-			{
-				continue;
-			}
-			target[posx + x - image->pivotx][posy + y - image->pivoty] = image->bitmap[posx][posy];
-		}
-	}
-}
-
-// 이미지를 이미지에 그리는 함수
-void AddImage2(int x, int y, Image* image, Image* target)
+void AddImage(int x, int y, Image* image, Image* target)
 {
 	for (int posx = 0; posx < image->width; posx++)
 	{

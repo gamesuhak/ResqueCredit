@@ -6,13 +6,15 @@
 int RoomInfoCount = 0;
 RoomInfo** RoomInfos = NULL;
 Room** Rooms = NULL;
+Room* CurrentRoom;
 
 int PlayerMapX;
 int PlayerMapY;
 
 void InitializeMap()
 {
-	LoadMapInfos();
+	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*) * RoomInfoCount);
+	LoadRoomInfos();
 	CreateStage();
 }
 

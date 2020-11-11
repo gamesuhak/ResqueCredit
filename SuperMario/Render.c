@@ -5,22 +5,20 @@
 #include "FileLoader.h"
 #include "Color.h"
 #include "Object.h"
-#include "Map.h"
 #include "Animator.h"
 #include "Bool.h"
 
 // 게임 내에서 쓸 스프라이트 목록
 Image** Sprites;
-Bitmap Screen; // 메인 화면 이미지
-Bitmap Buffer; // 메인 화면 그리기 전에 그리는 구간
+Image* Screen; // 메인 화면 이미지
+Image* Buffer; // 메인 화면 그리기 전에 그리는 구간
 
-Bitmap BufferRoom;
-
-Image* CurrentRoom;
+//Image* CurrentRoom;
 Image* BufferRoom;
 
 extern int PlayerMapX;
 extern int PlayerMapY;
+extern Room* CurrentRoom;
 
 extern Creature* Player;
 extern Creature** Monsters;
@@ -31,14 +29,14 @@ extern int ProjectileCount;
 // 스프라이트의 이름들
 const char* SPRITENAME[SPRITE_COUNT] = {
 	"Map",
-	"FinnDown0", "FinnDown1", "FinnDown2",
-	"FinnUp0", "FinnUp1", "FinnUp2",
-	"FinnLeft0", "FinnLeft1", "FinnLeft2",
-	"FinnRight0", "FinnRight1", "FinnRight2",
+	"Finn", "Finn", "Finn",
+	"Finn", "Finn", "Finn",
+	"Finn", "Finn", "Finn",
+	"Finn", "Finn", "Finn",
+
 	"Monster",
 
-	"UI_Heart",
-	"UI_Heart_Half",
+	"UI", "UI", "UI",
 };
 
 // 화면 출력 함수
@@ -49,25 +47,18 @@ void Render()
 	InitializeSprites();
 	while (1)
 	{
-		
-		if (0)
-		{
-
-		}
-		else
-		{
-			UpdateAnimation();
-			UpdateRender();
-		}
-		
+		//RenderImage(0, 0, Sprites[SPRITE_MAP]);
+		RenderImage(0, 0, Sprites[SPRITE_FINN_DOWN_1]);
+		//UpdateAnimation();
+		//UpdateRender();
 	}
 }
 
 // Render를 초기화하는 함수
 void InitializeRender()
 {
-	Screen = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
-	Buffer = NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 // Sprites를 초기화하는 함수
@@ -76,23 +67,24 @@ void InitializeSprites()
 	Sprites = (Image**)malloc(sizeof(Image*) * SPRITE_COUNT);
 	if (Sprites == NULL) { return; }
 
-	Sprites[0] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
-	for (int i = 0; i < 1; i++)
+	Sprites[SPRITE_MAP] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
+	Sprites[SPRITE_FINN] = LoadBitmapFile(SPRITENAME[SPRITE_FINN], COLOR_GRAY);
+	ParseSprite(SPRITE_FINN, 3);
+
+	//Sprites[SPRITE_FINN]->pivotx = 4;
+	//Sprites[SPRITE_FINN]->pivoty = 4;
+	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
+	Sprites[SPRITE_MONSTER]->pivotx = 4;
+	Sprites[SPRITE_MONSTER]->pivoty = 4;
+
+	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
+
+	/*for (int i = 0; i < 1; i++)
 	{
 		Sprites[i] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
 		Sprites[i]->pivotx = 4;
 		Sprites[i]->pivoty = 4;
-	}
-	
-	Sprites[1] = LoadBitmapFile(SPRITENAME[SPRITE_FINN], COLOR_GRAY);
-	Sprites[1]->pivotx = 4;
-	Sprites[1]->pivoty = 4;
-	Sprites[2] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
-	Sprites[2]->pivotx = 4;
-	Sprites[2]->pivoty = 4;
-
-	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
-	//RenderImage(0, 0, Sprites[1]);
+	}*/
 }
 
 // 화면을 갱신하는 함수
@@ -100,32 +92,33 @@ void InitializeSprites()
 void UpdateRender()
 {
 	UpdateUI(); // UI 업데이트
-	//RenderMap(, );
+	RenderMap(CurrentRoom, Buffer);
 
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{
 		for (int posy = 0; posy < SCREEN_HEIGHT; posy++)
 		{
-			if (Screen[posx][posy] == Buffer[posx][posy]) { continue; }
-			Screen[posx][posy] = Buffer[posx][posy];
-			SetPixelColor(posx, posy, 0, Screen[posx][posy]);
+			if (Screen->bitmap[posx][posy] == Buffer->bitmap[posx][posy]) { continue; }
+			Screen->bitmap[posx][posy] = Buffer->bitmap[posx][posy];
+			SetPixelColor(posx, posy, 0, Screen->bitmap[posx][posy]);
 		}
 	}
 }
 
 void RenderMap(Room* room, Image* target)
 {
-	for (int y; y < room->height; y++)
+	AddImage(0, 0, Sprites[SPRITE_MAP], target);
+	for (int y = 0; y < room->height; y++)
 	{
-		for (int x; x < room->width; x++)
+		for (int x = 0; x < room->width; x++)
 		{
-			AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], CurrentRoom)
+			AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], target);
 		}
 	}
 
-	for (int layer; layer < LAYER_COUNT; layer++)
+	for (int layer = 0; layer < LAYER_COUNT; layer++)
 	{
-		AddImage(0, 0, Sprites[0], target);
+		
 		AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], target);
 		for (int i = 1; i < CreatureCount; i++)
 		{
@@ -140,6 +133,17 @@ void RenderMap(Room* room, Image* target)
 			if (!Projectiles[i]->enable) { continue; }
 
 			AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], target);
+		}
+	}
+}
+
+void RenderImage(int x, int y, Image* image)
+{
+	for (int posx = 0; posx < image->width; posx++)
+	{
+		for (int posy = 0; posy < image->height; posy++)
+		{
+			SetPixelColor(posx + x - image->pivotx, posy + y - image->pivoty, 0, image->bitmap[posx][posy]);
 		}
 	}
 }
@@ -163,8 +167,17 @@ void UpdateUI()
 	}
 }
 
-
 void UpdateAnimation()
 {
 
+}
+
+// 스프라이트를 분할하여 Sprites에 저장하는 메소드 
+void ParseSprite(int index, int count)
+{
+	Image** list = SliceImage(Sprites[index], 3, DIRECTION_COUNT);
+	for (int i = 0; i < 3 * DIRECTION_COUNT; i++)
+	{
+		Sprites[index + i] = list[i];
+	}
 }

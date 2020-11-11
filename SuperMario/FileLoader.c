@@ -104,14 +104,14 @@ RoomInfo* LoadRoomFile(char* name)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			room->tile[x][y] = fgetc();
+			//room->tile[x][y] = fgetc();
 		}
 	}
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			room->tag[x][y] = fgetc();
+			//room->tag[x][y] = fgetc();
 		}
 	}
 }

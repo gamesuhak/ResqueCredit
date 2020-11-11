@@ -1,8 +1,8 @@
 #pragma once
 #include "Object.h"
-#define MAP_WIDTH		10
-#define MAP_HEIGHT		10
-#define LAYER_COUNT		3
+#define MAP_WIDTH			10
+#define MAP_HEIGHT			10
+#define LAYER_COUNT			1
 typedef enum Tile { TILE_GROUND = 0, } Tile;
 
 typedef char** TileData;

@@ -11,11 +11,11 @@ typedef struct Projectile Projectile;
 typedef struct Object Object;
 typedef struct Collider Collider;
 typedef struct Coordination Coordination;
-typedef enum Direction { DIRECTION_UP = 0, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT } Direction;
-typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE } ObjectType;
-typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_MISSILE } ProjectileType;
+typedef enum Direction { DIRECTION_UP = 0, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_COUNT } Direction;
+typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE, TYPE_COUNT } ObjectType;
+typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_MISSILE, PROJECTILE_COUNT } ProjectileType;
 typedef enum AnimationType { ANIMATION_BULLET = 0 } AnimationType;
-typedef enum State { STATE_IDLE = 0, STATE_WALK, STATE_ATTACK };
+typedef enum State { STATE_IDLE = 0, STATE_WALK, STATE_ATTACK, STATE_COUNT };
 
 struct Coordination
 {
@@ -88,16 +88,18 @@ void ProcessMonster();
 void ProcessProjectile();
 
 void ShootProjectile(Coordination position, Coordination direction, ProjectileType type, int power, int speed);
-Projectile* NewProjectile();
-Projectile* CreateProjectile();
+
 void CheckProjectile(Projectile* projectile);
 void HitProjectile(Projectile* bullet, Creature* target);
 
 Creature* NewCreature();
-Creature* CreateCreature();
-Creature* GetCreature(int id);
+Creature* GetCreature();
+Creature* FindCreature(int id);
+
+Projectile* NewProjectile();
+Projectile* GetProjectile();
 
 Coordination CheckMove(int id, Object* object, Coordination direction);
 bool CheckCollider(Object* object1, Object* object2, Coordination offset);
 
-void StartTransition(Coordination direction);
+void ParseSprite(int index, int count);

@@ -15,3 +15,4 @@ Bitmap NewBitmap(int width, int height);
 void DestroyBitmap(Bitmap bitmap);
 Image* NewImage(int width, int height);
 Image** SliceImage(Image* image, int column, int row);
+void AddImage(int x, int y, Image* image, Image* target);

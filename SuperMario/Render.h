@@ -1,5 +1,6 @@
 #pragma once
 #include "Image.h"
+#include "Map.h"
 
 #define PIXELPERUNIT		16
 #define UI_X				0
@@ -13,7 +14,8 @@
 typedef enum Sprite
 {
 	SPRITE_MAP = 0,
-	SPRITE_FINN = 1, SPRITE_FIN_DOWN_1, SPRITE_FIN_DOWN_2, 
+	SPRITE_FINN = 1, SPRITE_FINN_DOWN_1, SPRITE_FINN_DOWN_2, 
+	SPRITE_FINN_LEFT_0,
 	SPRITE_MONSTER = 13,
 	SPRITE_HEART = 14, SPRITE_HEART_HALF,
 
@@ -26,7 +28,7 @@ void UpdateRender();
 void InitializeRender();
 void InitializeSprites();
 
-void AddImage(int x, int y, Image* image, Bitmap target);
-
+void RenderMap(Room* room, Image* target);
+void RenderImage(int x, int y, Image* image);
 void UpdateUI();
 void UpdateAnimation();
