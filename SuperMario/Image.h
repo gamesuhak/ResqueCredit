@@ -13,8 +13,12 @@ struct Image
 	Bitmap bitmap;
 };
 
+// 비트맵 메소드
 Bitmap NewBitmap(int width, int height);
-void DestroyBitmap(Bitmap bitmap);
+void ReleaseBitmap(Bitmap bitmap);
+
+// 이미지 메소드
 Image* NewImage(int width, int height);
+void ReleaseImage(Image* image);
 Image** SliceImage(Image* image, int column, int row);
 void AddImage(int x, int y, Image* image, Image* target);

@@ -19,7 +19,7 @@ Bitmap NewBitmap(int width, int height)
 	return bitmap;
 } // 참고 : https://codeng.tistory.com/8
 
-void DestroyBitmap(Bitmap bitmap)
+void ReleaseBitmap(Bitmap bitmap)
 {
 	free(bitmap[0]);
 	free(bitmap);
@@ -37,6 +37,12 @@ Image* NewImage(int width, int height)
 	image->height = height;
 	image->bitmap = NewBitmap(width, height);
 	return image;
+}
+
+void ReleaseImage(Image* image)
+{
+	ReleaseBitmap(image->bitmap);
+	free(image);
 }
 
 // 이미지를 가로와 세로 개수로 나누어 반환하는 함수
