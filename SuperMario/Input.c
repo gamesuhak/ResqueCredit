@@ -4,7 +4,7 @@
 #include "Bool.h"
 
 int KeyCode[KEY_COUNT]; // 현재 설정되어있는 키 코드를 저장하는 배열
-bool KeyState[KEY_COUNT] = { false, false, false, false, false, false }; // 키가 눌려있는 상태를 저장할 배열
+Bool KeyState[KEY_COUNT] = { false, false, false, false, false, false }; // 키가 눌려있는 상태를 저장할 배열
 int KeyCharge[KEY_COUNT] = { 0, 0, 0, 0, 0, 0 }; // 키가 얼마나 눌려있는지 저장하는 배열
 const char* KeyName[KEY_COUNT] = { "위", "아래", "왼쪽", "오른쪽", "A", "B" };
 
@@ -39,7 +39,7 @@ void BindKey()
 
 void PushKey()
 {
-	bool state;
+	Bool state;
 	for (int i = 0; i < KEY_COUNT; i++)
 	{
 		state = false;

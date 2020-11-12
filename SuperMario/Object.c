@@ -247,7 +247,7 @@ void CheckProjectile(Projectile* projectile)
 }
 
 // object1에 offset을 더한 위치가 object2와 충돌해있는지 판별하는 함수
-bool CheckCollider(Object* object1, Object* object2, Coordination offset)
+Bool CheckCollider(Object* object1, Object* object2, Coordination offset)
 {
 	float pivotx1 = object1->position.x - object1->collider.pivot.x + (object1->collider.size.x * 0.5f) + offset.x;
 	float pivoty1 = object1->position.y - object1->collider.pivot.y + (object1->collider.size.y * 0.5f) + offset.y;
@@ -257,7 +257,7 @@ bool CheckCollider(Object* object1, Object* object2, Coordination offset)
 	pivoty2 -= pivoty1;
 	pivotx2 = (pivotx2 < 0) ? -pivotx2 : pivotx2;
 	pivoty2 = (pivoty2 < 0) ? -pivoty2 : pivoty2;
-	bool vertical = (pivotx2 < object1->collider.size.x * 0.5f + object2->collider.size.x * 0.5f);
-	bool horizontal = (pivoty2 < object1->collider.size.y * 0.5f + object2->collider.size.y * 0.5f);
+	Bool vertical = (pivotx2 < object1->collider.size.x * 0.5f + object2->collider.size.x * 0.5f);
+	Bool horizontal = (pivoty2 < object1->collider.size.y * 0.5f + object2->collider.size.y * 0.5f);
 	return (vertical && horizontal);
 }

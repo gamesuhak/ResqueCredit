@@ -10,7 +10,7 @@
 
 extern Creature** Monsters;
 extern Creature* Player;
-extern bool KeyState[KEY_COUNT];
+extern Bool KeyState[KEY_COUNT];
 extern int KeyCharge[KEY_COUNT];
 extern char ASCIIMODE;
 

@@ -56,7 +56,7 @@ struct Creature
 	int sprite; // 현재 스프라이트 번호
 	int state;
 	//Sprite sprite;
-	bool enable;
+	Bool enable;
 	Object object;
 	Animator* animator;
 };
@@ -67,8 +67,8 @@ struct Projectile
 	short speed;
 	short distance; // 나아갈 수 있는 거리
 	short penetration; // 몇번 관통할 수 있는지
-	bool throughWall;
-	bool enable;
+	Bool throughWall;
+	Bool enable;
 	Object object;
 };
 
@@ -98,4 +98,4 @@ Projectile* NewProjectile();
 Projectile* GetProjectile();
 
 Coordination CheckMove(int id, Object* object, Coordination direction);
-bool CheckCollider(Object* object1, Object* object2, Coordination offset);
+Bool CheckCollider(Object* object1, Object* object2, Coordination offset);

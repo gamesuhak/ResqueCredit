@@ -52,7 +52,7 @@ void Render()
 		{
 			for (int x = 0; x < 3; x++)
 			{
-				RenderImage(x * 8, y * 8, Sprites[SPRITE_FINN + (y * 3) + x]);
+				RenderImage(x * 8 + 4, y * 8 + 4, Sprites[SPRITE_FINN + (y * 3) + x]);
 			}
 		}
 		
