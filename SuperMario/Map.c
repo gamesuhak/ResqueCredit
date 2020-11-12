@@ -3,6 +3,7 @@
 #include <stdlib.h> // NULL, malloc
 #include "Function.h"
 
+extern const Coordination DIRECTIONS[DIRECTION_COUNT];
 Stage* Stage1 = NULL;
 RoomInfo** RoomInfos = NULL;
 int RoomInfoCount = 0;
@@ -23,6 +24,28 @@ void InitializeRoomInfo()
 	LoadRoomInfos();
 }
 
+
+int CheckStageInvalidRoom()
+{
+
+}
+
+// 해당 좌표의 대각선에 방이 있는지 확인
+int CheckStageDiagonalRoom(Stage* stage, Coordination position)
+{
+	Coordination temp = position;
+	if (stage->roomData[position.x - 1])
+	{
+
+	}
+}
+
+// 해당 좌표가 유효한지 확인
+int CheckStageInvalidPosition()
+{
+
+}
+
 void NewStage(Stage* stage)
 {
 	stage = (Stage*)malloc(sizeof(Stage));
@@ -31,6 +54,63 @@ void NewStage(Stage* stage)
 	stage->roomData = NewArray(STAGE_SIZE, STAGE_SIZE);
 	stage->width = STAGE_SIZE;
 	stage->height = STAGE_SIZE;
+
+	int roomMax = 10;
+	int roomCount = 0;
+	Coordination position =
+	{
+		Random(stage->width),
+		Random(stage->height)
+	};
+
+	stage->roomData = 0;
+
+	while (roomCount < roomMax - 1)
+	{
+		Bool createRoom = False;
+		// 방이 생설될 때까지 반복
+		while (createRoom == False)
+		{
+			// 방향 + 1로 만드는 이유는 탐색한 방향의 개수를 저장하기 위함
+			int directionCheck[DIRECTION_COUNT + 1];
+			for (int i = 0; i <= DIRECTION_COUNT; i++) { directionCheck[i] = 0; }
+			// 랜덤으로 방향을 설정
+			while (True)
+			{
+				int random = Random(DIRECTION_COUNT);
+				// 4방향 전부 체크했을 때 반복문 탈출
+				if (directionCheck[DIRECTION_COUNT] >= DIRECTION_COUNT) { break; }
+				// 현재 방향을 이미 체크했을 때
+				if (directionCheck[random] == 1) { continue; }
+
+				Coordination temp = position;
+				Coordination direction = DIRECTIONS[random];
+				temp.x += direction.x;
+				temp.y += direction.y;
+
+				// 이동 불가능할 때
+				if (temp.x < 0 || temp.y < 0 || temp.x >= stage->width - 1 || temp.y >= stage->height - 1)
+				{
+					continue;
+				}
+				// 방이 이미 있을 때
+				if (stage->roomData[temp.x][temp.y] > ROOM_NOT)
+				{
+					continue;
+				}
+
+				if (temp.x > 1 && temp.x < stage->width + 1 && temp.y > 0 && temp.y < stage->height)
+				{
+					stage->roomData[temp.x - 1][temp.y] ;
+				}
+				break;
+			}
+			createRoom = True;
+		}
+		++roomCount;
+	}
+
+	
 
 	// 여기에 맵 틀 생성하는 부분 추가하기
 

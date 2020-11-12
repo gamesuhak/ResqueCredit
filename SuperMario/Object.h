@@ -11,6 +11,8 @@ typedef struct Creature Creature;
 typedef struct Projectile Projectile;
 typedef struct Object Object;
 typedef struct Collider Collider;
+typedef struct Animator Animator;
+typedef struct Animation Animation;
 
 typedef enum Direction { DIRECTION_UP = 0, DIRECTION_DOWN, DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_COUNT } Direction;
 typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE, TYPE_COUNT } ObjectType;
@@ -52,7 +54,6 @@ struct Creature
 	int speed;
 	int sprite; // 현재 스프라이트 번호
 	int state;
-	//Sprite sprite;
 	Bool enable;
 	Object object;
 	Animator* animator;
@@ -74,6 +75,13 @@ struct Animation
 	char currentFrame;
 	AnimationType type;
 	Object object;
+};
+
+struct Animator
+{
+	char currentFrame;
+	char state;
+	char currentState;
 };
 
 void InitializeObject();

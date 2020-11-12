@@ -8,6 +8,11 @@
 Creature* Player; // 플레이어 객체를 저장할 포인터
 Creature** Monsters; // 몬스터를 저장할 이중 포인터
 Projectile** Projectiles; // 발사체 포인터 배열
+const Coordination DIRECTIONS[DIRECTION_COUNT] = 
+{ 
+	{0, -1}, {0, 1}, {-1, 0}, {1, 0}
+};
+
 int MonsterInfoCount = 0;
 int CreatureCount = 0;
 int ProjectileCount = 0;
@@ -259,4 +264,10 @@ Bool CheckCollider(Object* object1, Object* object2, Coordination offset)
 	Bool vertical = (pivotx2 < object1->collider.size.x * 0.5f + object2->collider.size.x * 0.5f);
 	Bool horizontal = (pivoty2 < object1->collider.size.y * 0.5f + object2->collider.size.y * 0.5f);
 	return (vertical && horizontal);
+}
+
+Animator* NewAnimator()
+{
+	Animator* animator = (Animator*)malloc(sizeof(Animator));
+	if (animator == NULL) { return NULL; }
 }
