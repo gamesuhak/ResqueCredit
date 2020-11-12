@@ -16,8 +16,8 @@ typedef enum Direction { DIRECTION_UP = 0, DIRECTION_DOWN, DIRECTION_LEFT, DIREC
 typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE, TYPE_COUNT } ObjectType;
 typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_MISSILE, PROJECTILE_COUNT } ProjectileType;
 typedef enum AnimationType { ANIMATION_BULLET = 0 } AnimationType;
-typedef enum State { STATE_IDLE = 0, STATE_WALK, STATE_ATTACK, STATE_COUNT };
-typedef enum Pivot { PIVOT_LEFTUP = 0, PIVOT_MIDDLE};
+typedef enum State { STATE_IDLE = 0, STATE_WALK, STATE_ATTACK, STATE_COUNT } State;
+typedef enum Pivot { PIVOT_LEFTUP = 0, PIVOT_MIDDLE} Pivot;
 
 
 

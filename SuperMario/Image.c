@@ -2,27 +2,27 @@
 #include <stdlib.h> // malloc
 #include "Image.h"
 
-Bitmap NewBitmap(int width, int height)
+Array NewArray(int width, int height)
 {
-	Bitmap bitmap = NULL;
-	bitmap = (Bitmap)malloc(sizeof(char*) * width);
-	if (bitmap == NULL) { printf("NewBitmap2\n"); return NULL; }
-	bitmap[0] = (char*)malloc(sizeof(char) * width * height);
-	if (bitmap[0] == NULL) { printf("NewBitmap3\n"); return NULL; }
+	Array array = NULL;
+	array = (Array)malloc(sizeof(char*) * width);
+	if (array == NULL) { printf("NewBitmap2\n"); return NULL; }
+	array[0] = (char*)malloc(sizeof(char) * width * height);
+	if (array[0] == NULL) { printf("NewBitmap3\n"); return NULL; }
 	for (int i = 1; i < width; i++)
 	{
-		bitmap[i] = bitmap[i - 1] + height;
-		if (bitmap[i] == NULL) { printf("NewBitmap : %d\n", i); return NULL; }
+		array[i] = array[i - 1] + height;
+		if (array[i] == NULL) { printf("NewArray : %d\n", i); return NULL; }
 	}
 	
-	memset(bitmap[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
-	return bitmap;
+	memset(array[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
+	return array;
 } // Âü°í : https://codeng.tistory.com/8
 
-void ReleaseBitmap(Bitmap bitmap)
+void ReleaseArray(Array array)
 {
-	free(bitmap[0]);
-	free(bitmap);
+	free(array[0]);
+	free(array);
 }
 
 Image* NewImage(int width, int height)
@@ -35,13 +35,13 @@ Image* NewImage(int width, int height)
 	image->pivot.y = 0;
 	image->width = width;
 	image->height = height;
-	image->bitmap = NewBitmap(width, height);
+	image->bitmap = NewArray(width, height);
 	return image;
 }
 
 void ReleaseImage(Image* image)
 {
-	ReleaseBitmap(image->bitmap);
+	ReleaseArray(image->bitmap);
 	free(image);
 }
 
@@ -81,7 +81,7 @@ Image** SliceImagePixel(Image* image, int column, int row)
 	{
 		for (int y = 0; y < row; y++)
 		{
-			images[x][y].bitmap = NewBitmap(width, height);
+			images[x][y].bitmap = NewArray(width, height);
 			for (int pixelX = 0; pixelX < width; pixelX++)
 			{
 				for (int pixelY = 0; pixelY < height; pixelY++)
@@ -109,4 +109,9 @@ void AddImage(int x, int y, Image* image, Image* target)
 			target->bitmap[posx + x - image->pivot.x][posy + y - image->pivot.y] = image->bitmap[posx][posy];
 		}
 	}
+}
+
+void FillImage(Image* image, )
+{
+	memset(image->bitmap[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
 }

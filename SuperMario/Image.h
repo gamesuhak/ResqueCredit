@@ -2,6 +2,7 @@
 #include "Color.h"
 #include "Coordination.h"
 typedef char** Bitmap;
+typedef char** Array;
 typedef struct Image Image;
 
 struct Image
@@ -14,7 +15,7 @@ struct Image
 };
 
 // 비트맵 메소드
-Bitmap NewBitmap(int width, int height);
+Bitmap NewArray(int width, int height);
 void ReleaseBitmap(Bitmap bitmap);
 
 // 이미지 메소드

@@ -58,8 +58,8 @@ void Render()
 // Render를 초기화하는 함수
 void InitializeRender()
 {
-	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
-	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewBitmap(SCREEN_WIDTH, SCREEN_HEIGHT);
+	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewArray(SCREEN_WIDTH, SCREEN_HEIGHT);
+	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewArray(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 // Sprites를 초기화하는 함수
@@ -77,12 +77,6 @@ void InitializeSprites()
 
 	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
 
-	/*for (int i = 0; i < 1; i++)
-	{
-		Sprites[i] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
-		Sprites[i]->pivotx = 4;
-		Sprites[i]->pivoty = 4;
-	}*/
 }
 
 // 화면을 갱신하는 함수

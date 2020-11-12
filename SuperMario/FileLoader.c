@@ -11,9 +11,8 @@ extern int MonsterInfoCount;
 Image* LoadBitmapFile(char* name, Color transparent)
 {
 	Image* image;
-	Bitmap bitmap;
 	FILE* file = NULL;
-	int data;
+	int data, width, height;
 	char padding;
 	char names[50] = "Image/";
 	strcat(names, name);
@@ -24,13 +23,13 @@ Image* LoadBitmapFile(char* name, Color transparent)
 		fputs("파일 열기 에러!", stderr);
 	}
 
-	image = NewImage(0, 0);
-
 	fseek(file, DATA_WIDTH, SEEK_SET); // 처음부터 가로길이를 나타내는 곳까지 이동
-	image->width = fgetc(file); // 가로길이 대입
+	width = fgetc(file); // 가로길이 대입
 	fseek(file, DATA_HEIGHT, SEEK_SET); // 처음부터 세로길이를 나타내는 곳까지 이동
-	image->height = fgetc(file); // 세로길이 대입
-	bitmap = NewBitmap(image->width, image->height);
+	height = fgetc(file); // 세로길이 대입
+	image = NewImage(width, height);
+
+	//bitmap = NewArray(image->width, image->height);
 	fseek(file, DATA_START, SEEK_SET);
 	// (w & 1)? (w>>1)+1:w>>1;//홀수라면 나누고 나머지 반쪽을 위해 +1,짝수라면 나누기
 	padding = (4 - (((image->width & 1) ? (image->width >> 1) + 1 : image->width >> 1) % 4)) % 4;
@@ -40,35 +39,35 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	{
 		for (char x = 0; x < image->width && (data = fgetc(file)) != EOF; x++)
 		{
-			bitmap[x][y] = data >> 4;
+			image->bitmap[x][y] = data >> 4;
 
-			if (bitmap[x][y] == COLOR_DARKBLUE) { bitmap[x][y] = COLOR_DARKRED; }
-			else if (bitmap[x][y] == COLOR_DARKSKY) { bitmap[x][y] = COLOR_DARKYELLOW; }
-			else if (bitmap[x][y] == COLOR_DARKRED) { bitmap[x][y] = COLOR_DARKBLUE; }
-			else if (bitmap[x][y] == COLOR_DARKYELLOW) { bitmap[x][y] = COLOR_DARKSKY; }
-			else if (bitmap[x][y] == COLOR_DARKWHITE) { bitmap[x][y] = COLOR_GRAY; }
-			else if (bitmap[x][y] == COLOR_GRAY) { bitmap[x][y] = COLOR_DARKWHITE; }
-			else if (bitmap[x][y] == COLOR_BLUE) { bitmap[x][y] = COLOR_RED; }
-			else if (bitmap[x][y] == COLOR_SKY) { bitmap[x][y] = COLOR_YELLOW; }
-			else if (bitmap[x][y] == COLOR_RED) { bitmap[x][y] = COLOR_BLUE; }
-			else if (bitmap[x][y] == COLOR_YELLOW) { bitmap[x][y] = COLOR_SKY; }
+			if (image->bitmap[x][y] == COLOR_DARKBLUE) { image->bitmap[x][y] = COLOR_DARKRED; }
+			else if (image->bitmap[x][y] == COLOR_DARKSKY) { image->bitmap[x][y] = COLOR_DARKYELLOW; }
+			else if (image->bitmap[x][y] == COLOR_DARKRED) { image->bitmap[x][y] = COLOR_DARKBLUE; }
+			else if (image->bitmap[x][y] == COLOR_DARKYELLOW) { image->bitmap[x][y] = COLOR_DARKSKY; }
+			else if (image->bitmap[x][y] == COLOR_DARKWHITE) { image->bitmap[x][y] = COLOR_GRAY; }
+			else if (image->bitmap[x][y] == COLOR_GRAY) { image->bitmap[x][y] = COLOR_DARKWHITE; }
+			else if (image->bitmap[x][y] == COLOR_BLUE) { image->bitmap[x][y] = COLOR_RED; }
+			else if (image->bitmap[x][y] == COLOR_SKY) { image->bitmap[x][y] = COLOR_YELLOW; }
+			else if (image->bitmap[x][y] == COLOR_RED) { image->bitmap[x][y] = COLOR_BLUE; }
+			else if (image->bitmap[x][y] == COLOR_YELLOW) { image->bitmap[x][y] = COLOR_SKY; }
 			
 			if (x >= image->width)
 			{
 				break;
 			}
-			bitmap[++x][y] = data % 16;
+			image->bitmap[++x][y] = data % 16;
 
-			if (bitmap[x][y] == COLOR_DARKBLUE) { bitmap[x][y] = COLOR_DARKRED; }
-			else if (bitmap[x][y] == COLOR_DARKSKY) { bitmap[x][y] = COLOR_DARKYELLOW; }
-			else if (bitmap[x][y] == COLOR_DARKRED) { bitmap[x][y] = COLOR_DARKBLUE; }
-			else if (bitmap[x][y] == COLOR_DARKYELLOW) { bitmap[x][y] = COLOR_DARKSKY; }
-			else if (bitmap[x][y] == COLOR_DARKWHITE) { bitmap[x][y] = COLOR_GRAY; }
-			else if (bitmap[x][y] == COLOR_GRAY) { bitmap[x][y] = COLOR_DARKWHITE; }
-			else if (bitmap[x][y] == COLOR_BLUE) { bitmap[x][y] = COLOR_RED; }
-			else if (bitmap[x][y] == COLOR_SKY) { bitmap[x][y] = COLOR_YELLOW; }
-			else if (bitmap[x][y] == COLOR_RED) { bitmap[x][y] = COLOR_BLUE; }
-			else if (bitmap[x][y] == COLOR_YELLOW) { bitmap[x][y] = COLOR_SKY; }
+			if (image->bitmap[x][y] == COLOR_DARKBLUE) { image->bitmap[x][y] = COLOR_DARKRED; }
+			else if (image->bitmap[x][y] == COLOR_DARKSKY) { image->bitmap[x][y] = COLOR_DARKYELLOW; }
+			else if (image->bitmap[x][y] == COLOR_DARKRED) { image->bitmap[x][y] = COLOR_DARKBLUE; }
+			else if (image->bitmap[x][y] == COLOR_DARKYELLOW) { image->bitmap[x][y] = COLOR_DARKSKY; }
+			else if (image->bitmap[x][y] == COLOR_DARKWHITE) { image->bitmap[x][y] = COLOR_GRAY; }
+			else if (image->bitmap[x][y] == COLOR_GRAY) { image->bitmap[x][y] = COLOR_DARKWHITE; }
+			else if (image->bitmap[x][y] == COLOR_BLUE) { image->bitmap[x][y] = COLOR_RED; }
+			else if (image->bitmap[x][y] == COLOR_SKY) { image->bitmap[x][y] = COLOR_YELLOW; }
+			else if (image->bitmap[x][y] == COLOR_RED) { image->bitmap[x][y] = COLOR_BLUE; }
+			else if (image->bitmap[x][y] == COLOR_YELLOW) { image->bitmap[x][y] = COLOR_SKY; }
 		}
 		fseek(file, padding, SEEK_CUR);
 	}
@@ -77,16 +76,15 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	{
 		for (char x = 0; x < image->width; x++)
 		{
-			(bitmap[x][y] == transparent) ? bitmap[x][y] = COLOR_TRANSPARENT : 0; // 해당 색상이 인자로 받은 배경색과 일치하면 COLOR_TRANSPARENT를 대입
+			(image->bitmap[x][y] == transparent) ? image->bitmap[x][y] = COLOR_TRANSPARENT : 0; // 해당 색상이 인자로 받은 배경색과 일치하면 COLOR_TRANSPARENT를 대입
 		}
 	}
-	image->bitmap = bitmap;
 	return image;
 }
 
 RoomInfo* LoadRoomFile(char* name)
 {
-	RoomInfo* room = (Map*)malloc(sizeof(Map));
+	RoomInfo* room = (Stage*)malloc(sizeof(Stage));
 	FILE* file = NULL;
 
 	char names[50] = "Map/";
@@ -94,7 +92,7 @@ RoomInfo* LoadRoomFile(char* name)
 	strcat(names, ".txt");
 	
 	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
-	room->variety = 1;
+	room->type = 1;
 	room->width = 0;
 	room->height = 0;
 	room->percentage = 0;
@@ -145,4 +143,3 @@ MonsterInfo* LoadMonsterFile(char* name)
 	
 	return monsterInfo;
 }
-
