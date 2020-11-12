@@ -84,20 +84,22 @@ Image* LoadBitmapFile(char* name, Color transparent)
 
 RoomInfo* LoadRoomFile(char* name)
 {
-	RoomInfo* room = (Stage*)malloc(sizeof(Stage));
-	FILE* file = NULL;
-
+	RoomInfo* room;	
+	FILE* file;
 	char names[50] = "Map/";
 	strcat(names, name);
 	strcat(names, ".txt");
-	
 	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
+	
+	room = (Stage*)malloc(sizeof(Stage));
+	if (room == NULL) { return NULL; }
+
 	room->type = 1;
 	room->width = 0;
 	room->height = 0;
 	room->percentage = 0;
-	room->tile = NewTileData(room->width, room->height);
-	room->tag = NewTileData(room->width, room->height);
+	room->tile = NewArray(room->width, room->height);
+	room->tag = NewArray(room->width, room->height);
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
@@ -116,7 +118,7 @@ RoomInfo* LoadRoomFile(char* name)
 
 MonsterInfo* LoadMonsterFile(char* name)
 {
-	FILE* file = NULL;
+	FILE* file;
 	char names[50] = "Monster/";
 	strcat(names, name);
 	strcat(names, ".txt");

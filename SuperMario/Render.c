@@ -17,7 +17,6 @@ Image* BufferRoom;
 
 extern int PlayerMapX;
 extern int PlayerMapY;
-extern Room* CurrentRoom;
 
 extern Creature* Player;
 extern Creature** Monsters;
@@ -46,10 +45,17 @@ void Render()
 	InitializeScreen();
 	InitializeRender();
 	InitializeSprites();
+	RenderImage(0, 0, Sprites[SPRITE_MAP]);
 	while (1)
 	{
-		//RenderImage(0, 0, Sprites[SPRITE_MAP]);
-		RenderImage(0, 0, Sprites[SPRITE_FINN_DOWN_1]);
+		for (int y = 0; y < 4; y++)
+		{
+			for (int x = 0; x < 3; x++)
+			{
+				RenderImage(x * 8, y * 8, Sprites[SPRITE_FINN + (y * 3) + x]);
+			}
+		}
+		
 		//UpdateAnimation();
 		//UpdateRender();
 	}
@@ -84,7 +90,7 @@ void InitializeSprites()
 void UpdateRender()
 {
 	UpdateUI(Buffer); // UI 업데이트
-	RenderMap(CurrentRoom, Buffer);
+	//RenderMap(CurrentRoom, Buffer);
 
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{
@@ -168,11 +174,12 @@ void UpdateAnimation()
 // index 분할할 스프라이트의 번호, column
 void ParseSprite(int index, int column, int row)
 {
-	Image** list = SliceImage(Sprites[index], column, row);
+	Image** images = SliceImage(Sprites[index], column, row);
 	for (int i = 0; i < column * row; i++)
 	{
-		Sprites[index + i] = list[i];
+		Sprites[index + i] = images[i];
 	}
+	free(images);
 }
 
 // 일괄적으로 Sprite의 중심점을 수정하는 메소드

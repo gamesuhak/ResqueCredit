@@ -25,6 +25,19 @@ void ReleaseArray(Array array)
 	free(array);
 }
 
+Array DuplicateArray(Array array, int width, int height)
+{
+	Array data = NewArray(width, height);
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			data[x][y] = array[x][y];
+		}
+	}
+	return data;
+}
+
 Image* NewImage(int width, int height)
 {
 	Image* image = (Image*)malloc(sizeof(Image));
@@ -57,12 +70,12 @@ Image** SliceImage(Image* image, int column, int row)
 	{
 		for (int x = 0; x < column; x++)
 		{
-			images[y * row + x] = NewImage(width, height);
+			images[y * (row - 1) + x] = NewImage(width, height);
 			for (int pixelX = 0; pixelX < width; pixelX++)
 			{
 				for (int pixelY = 0; pixelY < height; pixelY++)
 				{
-					images[y * row + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
+					images[y * (row - 1) + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
 				}
 			}
 		}
@@ -111,7 +124,7 @@ void AddImage(int x, int y, Image* image, Image* target)
 	}
 }
 
-void FillImage(Image* image, )
+void FillImage(Image* image, Color color)
 {
-	memset(image->bitmap[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
+	memset(image->bitmap[0], color, sizeof(char) * image->width * image->height);
 }

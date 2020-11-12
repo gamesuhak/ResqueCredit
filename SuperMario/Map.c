@@ -28,7 +28,7 @@ void NewStage(Stage* stage)
 	stage = (Stage*)malloc(sizeof(Stage));
 	if (stage == NULL) { return NULL; }
 	stage->id = 0;
-	stage->roomData = NewTileData(STAGE_SIZE, STAGE_SIZE);
+	stage->roomData = NewArray(STAGE_SIZE, STAGE_SIZE);
 	stage->width = STAGE_SIZE;
 	stage->height = STAGE_SIZE;
 
@@ -110,17 +110,4 @@ void LoadRoomInfos()
 		++RoomInfoCount;
 		RoomInfos[i] = roomInfo;
 	}
-}
-
-TileData DuplicateData(TileData data, int width, int height)
-{
-	TileData newData = NewTileData(width, height);
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			newData[x][y] = data[x][y];
-		}
-	}
-	return newData;
 }

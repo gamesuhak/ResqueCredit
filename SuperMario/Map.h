@@ -53,4 +53,3 @@ Room* NewRoom(int index);
 void NewStage(Stage* stage);
 int RandomRoom(int sumPercentage);
 void LoadRoomInfos();
-TileData DuplicateData(TileData data, int width, int height);
