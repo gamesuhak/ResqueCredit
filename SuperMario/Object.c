@@ -104,7 +104,6 @@ void ProcessProjectile()
 	}
 }
 
-
 void ShootProjectile(Coordination position, Coordination direction, ProjectileType type, int power, int speed)
 {
 	Projectile* projectile;

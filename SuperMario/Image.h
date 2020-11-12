@@ -1,8 +1,11 @@
 #pragma once
 #include "Color.h"
 #include "Coordination.h"
+#include <stdlib.h> // NULL
+
 typedef char** Bitmap;
 typedef char** Array;
+typedef enum Pivot { PIVOT_LEFTUP = 0, PIVOT_MIDDLE } Pivot;
 typedef struct Image Image;
 
 struct Image

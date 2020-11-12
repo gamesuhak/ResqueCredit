@@ -5,7 +5,7 @@
 // 화면 정보를 가지고 있는 핸들을 저장할 변수
 HANDLE Handle;
 
-char ASCIIMODE = false;
+char ASCIIMODE = False;
 const char* ASCIIColor[COLOR_COUNT] = { "  ", "■", "♣", "＠", "▒", "▤", "▥", "▨", "▩", "♨", "☏", "♥", "♠", "★", "▣", "◈" };
 
 void InitializeScreen()

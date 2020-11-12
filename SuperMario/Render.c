@@ -3,20 +3,20 @@
 
 #include "Screen.h" // 
 #include "FileLoader.h"
+#include "Sprite.h"
 #include "Color.h"
 #include "Animator.h"
 #include "Bool.h"
+#include "Map.h"
 
-// 게임 내에서 쓸 스프라이트 목록
-Image** Sprites;
 Image* Screen; // 메인 화면 이미지
 Image* Buffer; // 메인 화면 그리기 전에 그리는 구간
 
-//Image* CurrentRoom;
 Image* BufferRoom;
 
-extern int PlayerMapX;
-extern int PlayerMapY;
+extern Coordination PlayerRoom;
+
+extern Image** Sprites;
 
 extern Creature* Player;
 extern Creature** Monsters;
@@ -24,65 +24,31 @@ extern Projectile** Projectiles;
 extern int CreatureCount;
 extern int ProjectileCount;
 
-// 스프라이트의 이름들
-const char* SPRITENAME[SPRITE_COUNT] = {
-	"Map",
-
-	// 플레이어 스프라이트, 12개나 있는 이유는 첫번째 이미지를 잘라 12개로 사용하기 때문에
-	"Finn", "Finn", "Finn",
-	"Finn", "Finn", "Finn",
-	"Finn", "Finn", "Finn",
-	"Finn", "Finn", "Finn",
-
-	"Monster",
-
-	"UI", "UI", "UI",
-};
-
 // 화면 출력 함수
 void Render()
 {
 	InitializeScreen();
-	InitializeRender();
 	InitializeSprites();
-	RenderImage(0, 0, Sprites[SPRITE_MAP]);
+	InitializeRender();
 	while (1)
 	{
-		for (int y = 0; y < 4; y++)
+		/*for (int y = 0; y < 4; y++)
 		{
 			for (int x = 0; x < 3; x++)
 			{
 				RenderImage(x * 8 + 4, y * 8 + 4, Sprites[SPRITE_FINN + (y * 3) + x]);
 			}
-		}
-		
+		}*/
 		//UpdateAnimation();
-		//UpdateRender();
+		UpdateRender();
 	}
 }
 
 // Render를 초기화하는 함수
 void InitializeRender()
 {
-	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewArray(SCREEN_WIDTH, SCREEN_HEIGHT);
-	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);//NewArray(SCREEN_WIDTH, SCREEN_HEIGHT);
-}
-
-// Sprites를 초기화하는 함수
-void InitializeSprites()
-{
-	Sprites = (Image**)malloc(sizeof(Image*) * SPRITE_COUNT);
-	if (Sprites == NULL) { return; }
-
-	Sprites[SPRITE_MAP] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
-	Sprites[SPRITE_FINN] = LoadBitmapFile(SPRITENAME[SPRITE_FINN], COLOR_GRAY);
-	ParseSprite(SPRITE_FINN, 3, DIRECTION_COUNT);
-	SetPivot(SPRITE_FINN, 3 * DIRECTION_COUNT, PIVOT_MIDDLE);
-
-	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
-
-	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
-
+	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
+	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 // 화면을 갱신하는 함수
@@ -98,7 +64,7 @@ void UpdateRender()
 		{
 			if (Screen->bitmap[posx][posy] == Buffer->bitmap[posx][posy]) { continue; }
 			Screen->bitmap[posx][posy] = Buffer->bitmap[posx][posy];
-			SetPixelColor(posx, posy, 0, Screen->bitmap[posx][posy]);
+			SetPixelColor(posx, posy, COLOR_BLACK, Screen->bitmap[posx][posy]);
 		}
 	}
 }
@@ -168,35 +134,4 @@ void UpdateUI(Image* target)
 void UpdateAnimation()
 {
 
-}
-
-// 스프라이트를 분할하여 Sprites에 저장하는 메소드 
-// index 분할할 스프라이트의 번호, column
-void ParseSprite(int index, int column, int row)
-{
-	Image** images = SliceImage(Sprites[index], column, row);
-	for (int i = 0; i < column * row; i++)
-	{
-		Sprites[index + i] = images[i];
-	}
-	free(images);
-}
-
-// 일괄적으로 Sprite의 중심점을 수정하는 메소드
-// index 스프라이트의 첫 번호, count = 일괄적으로 변경할 개수, pivot = 열거형 Pivot의 값
-void SetPivot(int index, int count, int pivot)
-{
-	for (int i = 0; i < count; i++)
-	{
-		if (pivot == PIVOT_LEFTUP)
-		{
-			Sprites[index + i]->pivot.x = 0;
-			Sprites[index + i]->pivot.y = 0;
-		}
-		else if (pivot == PIVOT_MIDDLE)
-		{
-			Sprites[index + i]->pivot.x = Sprites[index + i]->width >> 1;
-			Sprites[index + i]->pivot.y = Sprites[index + i]->height >> 1;
-		}
-	}
 }
