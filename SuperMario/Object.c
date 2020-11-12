@@ -26,7 +26,7 @@ void ProcessObject()
 void InitializeObject()
 {
 	Player = NewCreature();
-	Player->enable = true;
+	Player->enable = True;
 	Player->object.position.x = 40;
 	Player->object.position.y = 32;
 
@@ -40,12 +40,12 @@ void InitializeObject()
 	}
 	Monsters[1]->object.position.x = 16;
 	Monsters[1]->object.position.y = 32;
-	Monsters[1]->enable = true;
+	Monsters[1]->enable = True;
 	Monsters[1]->hp = 5;
 
 	Monsters[2]->object.position.x = 48;
 	Monsters[2]->object.position.y = 32;
-	Monsters[2]->enable = true;
+	Monsters[2]->enable = True;
 	Monsters[1]->hp = 10;
 
 	Projectiles = (Projectile**)malloc(sizeof(Projectile*) * MONSTER_COUNT);
@@ -87,7 +87,7 @@ void ProcessProjectile()
 {
 	for (int i = 0; i < ProjectileCount; i++)
 	{
-		if (Projectiles[i]->enable == true)
+		if (Projectiles[i]->enable == True)
 		{
 			Coordination temp = { 0,0 };
 			temp = Projectiles[i]->object.direction;
@@ -98,7 +98,7 @@ void ProcessProjectile()
 			CheckProjectile(Projectiles[i]);
 			if (--Projectiles[i]->distance == 0)
 			{
-				Projectiles[i]->enable = false;
+				Projectiles[i]->enable = False;
 			}
 		}
 	}
@@ -115,7 +115,7 @@ void ShootProjectile(Coordination position, Coordination direction, ProjectileTy
 	projectile->speed = speed;
 	projectile->penetration = 1;
 	projectile->distance = 15;
-	projectile->enable = true;
+	projectile->enable = True;
 }
 
 Projectile* NewProjectile()
@@ -124,7 +124,7 @@ Projectile* NewProjectile()
 	if (projectile == NULL) { return NULL; }
 	memset(projectile, 0, sizeof(Projectile));
 	ProjectileCount++;
-	projectile->enable = false;
+	projectile->enable = False;
 	projectile->object.layer = 0;
 	projectile->object.collider.pivot.x = 4;
 	projectile->object.collider.pivot.y = 4;
@@ -137,7 +137,7 @@ Projectile* GetProjectile()
 {
 	for (int i = 0; i < ProjectileCount; i++)
 	{
-		if (Projectiles[i]->enable == false)
+		if (Projectiles[i]->enable == False)
 		{
 			return Projectiles[i];
 		}
@@ -157,7 +157,7 @@ Creature* NewCreature()
 	if (creature == NULL) { return NULL; }
 	memset(creature, 0, sizeof(Creature));
 	creature->id = CreatureCount++;
-	creature->enable = false;
+	creature->enable = False;
 	creature->object.layer = 0;
 	creature->object.collider.pivot.x = 4;
 	creature->object.collider.pivot.y = 4;
@@ -171,7 +171,7 @@ Creature* GetCreature()
 {
 	for (int i = 0; i < CreatureCount; i++)
 	{
-		if (Monsters[i]->enable == false)
+		if (Monsters[i]->enable == False)
 		{
 			return Monsters[i];
 		}
@@ -223,11 +223,11 @@ void HitProjectile(Projectile* bullet, Creature* target)
 	target->hp -= bullet->power;
 	if (--bullet->penetration == 0)
 	{
-		bullet->enable = false;
+		bullet->enable = False;
 	}
 	if (target->hp <= 0)
 	{
-		target->enable = false;
+		target->enable = False;
 	}
 }
 
@@ -236,9 +236,9 @@ void CheckProjectile(Projectile* projectile)
 	Coordination zero = { 0,0 };
 	for (int i = 1; i < CreatureCount; i++)
 	{
-		if (Monsters[i]->enable == true)
+		if (Monsters[i]->enable == True)
 		{
-			if (CheckCollider(&projectile->object, &Monsters[i]->object, zero) == true)
+			if (CheckCollider(&projectile->object, &Monsters[i]->object, zero) == True)
 			{
 				HitProjectile(projectile, Monsters[i]);
 			}

@@ -5,8 +5,8 @@
 #define STAGE_SIZE			6
 #define LAYER_COUNT			1
 #define ROOMINFO_COUNT		5
-typedef enum Tile { TILE_GROUND = 0, } Tile;
-typedef enum RoomType { ROOM_NOT, ROOM_START = 0, ROOM_BOSS, ROOM_MONSTER, ROOM_ITEM, ROOM_SECRET, ROOM_COUNT } Tile;
+typedef enum Tile { TILE_GROUND = 0 } Tile;
+typedef enum RoomType { ROOM_NOT, ROOM_START = 0, ROOM_BOSS, ROOM_MONSTER, ROOM_ITEM, ROOM_SECRET, ROOM_COUNT } RoomType;
 
 typedef char** MapData;
 typedef char** TileData;
