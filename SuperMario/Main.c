@@ -26,7 +26,6 @@ int RandomRange(int start, int end)
 
 void Move()
 {
-	srand(time(NULL));
 	int cooltime = 0;
 	while (1)
 	{
@@ -87,12 +86,14 @@ void Move()
 int main()
 {
 	srand(time(NULL));
-	
 	Thread(Input);
 	Thread(ProcessObject);
 	Thread(Move);
 	Thread(Render);
-	InitializeStage();
+	if (InitializeStage())
+	{
+		
+	}
 	while (1)
 	{
 

@@ -89,12 +89,12 @@ RoomInfo* LoadRoomFile(char* name)
 	char names[50] = "Map/";
 	strcat(names, name);
 	strcat(names, ".txt");
-	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
+	if ((file = fopen(names, "rt")) == NULL) { return NULL; }
 	
 	room = (Stage*)malloc(sizeof(Stage));
 	if (room == NULL) { return NULL; }
 
-	room->type = 1;
+	fscanf(file, "Type : %d\n", &room->type);
 	room->width = 0;
 	room->height = 0;
 	room->percentage = 0;
@@ -114,6 +114,17 @@ RoomInfo* LoadRoomFile(char* name)
 			//room->tag[x][y] = fgetc();
 		}
 	}
+
+
+	for (int i = 0; i < room->height; i++)
+	{
+		for (int j = 0; j < room->width; j++)
+		{
+			fscanf(file, "%d ", room->tile[i][j]);
+		}
+	}
+
+	fclose(file);
 }
 
 MonsterInfo* LoadMonsterFile(char* name)

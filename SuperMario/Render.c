@@ -1,5 +1,5 @@
 #include "Render.h"
-#include <stdio.h> // 
+//#include <stdio.h> // 
 
 #include "Screen.h" // 
 #include "FileLoader.h"
@@ -42,10 +42,10 @@ void Render()
 		}*/
 		//UpdateAnimation();
 
-		/*Stage1 = NewStage();
-		RenderStage(0, 0, Stage1);
-		Sleep(1000);*/
-		UpdateRender();
+		//Stage1 = NewStage();
+		//RenderStage(0, 0, Stage1);
+		//Sleep(1000);
+		//UpdateRender();
 	}
 }
 
@@ -124,9 +124,9 @@ void RenderStage(int x, int y, Stage* stage)
 		for (int posy = 0; posy < stage->height; posy++)
 		{
 			if (stage->roomData[posx][posy] > -1)
-				SetPixelColor(posx + x, posy + y, 0, stage->roomData[posx][posy] + 6);
+				SetPixelColor(posx + x, posy + y, COLOR_WHITE, stage->roomData[posx][posy] + 6);
 			else
-				SetPixelColor(posx + x, posy + y, 0, COLOR_BLACK);
+				SetPixelColor(posx + x, posy + y, COLOR_WHITE, COLOR_BLACK);
 		}
 	}
 }

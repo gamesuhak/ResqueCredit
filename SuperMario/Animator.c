@@ -5,6 +5,6 @@ void UpdateAnimator()
 {
 	for (int i = 0; i < CreatureCount; i++)
 	{
-		Monster
+		//Monster
 	}
 }

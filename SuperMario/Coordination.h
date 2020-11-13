@@ -7,6 +7,7 @@ struct Coordination
 	short y;
 };
 
+Coordination ToCoordination(int x, int y);
 Coordination AddCoordination(Coordination coordination1, Coordination coordination2);
 Coordination InverseCoordination(Coordination coordination);
 Bool CompareCoordination(Coordination coordination1, Coordination coordination2);

@@ -56,6 +56,9 @@
     <ClCompile Include="Coordination.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Animator.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileLoader.h">
@@ -92,6 +95,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

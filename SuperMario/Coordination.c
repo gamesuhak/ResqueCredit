@@ -1,5 +1,12 @@
 #include "Coordination.h"
 
+// 두 좌표를 받아 Coordination으로 반환하는 메소드
+Coordination ToCoordination(int x, int y)
+{
+	Coordination coordination = { x, y };
+	return coordination;
+}
+
 // 두 좌표의 합을 반환하는 메소드
 Coordination AddCoordination(Coordination coordination1, Coordination coordination2)
 {

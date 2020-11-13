@@ -6,16 +6,28 @@
 #include "Render.h"
 
 extern const Coordination DIRECTIONS[DIRECTION_COUNT];
+const int DOORS[DIRECTION_COUNT] = { 1, 2, 4, 8 };
 Stage* Stage1 = NULL;
 RoomInfo** RoomInfos = NULL;
 int RoomInfoCount = 0;
 
 Coordination PlayerRoom = { 0, 0 };
 
-void InitializeStage()
+// 스테이지를 생성하고 여부를 반환하는 메소드
+Bool InitializeStage()
 {
 	InitializeRoomInfo();
-	Stage1 = NewStage(Stage1);
+	for (int count = 0; count < LOOP_COUNT; count++)
+	{
+		Stage1 = NewStage(Stage1);
+		
+		if (Stage1 != NULL)
+		{
+			return True;
+		}
+	}
+	printf("방 생성 불가능");
+	return False;
 }
 
 void PrintStage(Stage* stage)
@@ -92,120 +104,232 @@ Bool CheckStageValidPosition(Stage* stage, Coordination position)
 	return False;
 }
 
+// door2의 문이 door1의 모든 문을 포함하고 있을 때
+// door1이 필요한 문, door2가 확인하고싶은 문
+Bool CheckDoor(int door1, int door2)
+{
+	for (int direction = 0; direction < DIRECTION_COUNT; direction++)
+	{
+		printf("%d, %d\n", (door1 & (1 << direction)), (door2 & (1 << direction)));
+		// door1에 있는 문이 door2에 없다면 아래 식은 -1이 됨
+		if (((door1 & (1 << direction)) - (door2 & (1 << direction))) < 0)
+		{
+			return False;
+		}
+	}
+	return True;
+}
+
+int CountDoor(int value)
+{
+	int count = 0;
+	for (int direction = 0; direction < DIRECTION_COUNT; direction++)
+	{
+		if (value & (1 << direction))
+		{
+			++count;
+		}
+	}
+	return count;
+}
+
+int CountNeighbor(Stage* stage, Coordination position)
+{
+	int count = 0;
+	for (int direction = 0; direction < DIRECTION_COUNT; direction++)
+	{
+		Coordination temp = AddCoordination(position, DIRECTIONS[direction]);
+		if (CheckStageValidPosition(stage, temp) && stage->roomData[temp.x][temp.y] > ROOM_NOT)
+		{
+			count = count | (1 << direction);
+		}
+	}
+	return count;
+}
+
 Stage* NewStage()
 {
 	Stage* stage = (Stage*)malloc(sizeof(Stage));
 	if (stage == NULL) { return NULL; }
 	stage->id = 0;
-	stage->roomData = NewArray(STAGE_SIZE, STAGE_SIZE);
 	stage->width = STAGE_SIZE;
 	stage->height = STAGE_SIZE;
-	SetArray(stage->roomData, stage->width, stage->height, ROOM_NOT);
+	stage->roomData = NewArray(stage->width, stage->height);
+	stage->rooms = NULL;
+	stage->roomCount = 0;
 
-	int roomMax = 10;
-	int roomCount = 0;
-	Coordination position =
+	// 스테이지가 제대로 생성될 때 까지
+	while (True)
 	{
-		Random(stage->width),
-		Random(stage->height)
-	};
-
-	stage->roomData[position.x][position.y] = DIRECTION_COUNT;
-
-	// 현재 방이 roomMax보다 작으면 반복
-	while (roomCount < roomMax)
-	{
-		// 방을 만들 위치를 저장할 변수, (-1, -1)로 초기화
-		char direction = DIRECTION_COUNT;
-		// 탐색한 방향의 여부를 저장하는 directionCheck
-		// 방향 + 1로 만드는 이유는 directionCheck[DIRECTION_COUNT]에 탐색한 방향의 개수를 저장하기 위함
-		int directionCheck[DIRECTION_COUNT + 1];
-		for (int i = 0; i <= DIRECTION_COUNT; i++) { directionCheck[i] = 0; }
-
-		// 랜덤으로 방향을 설정 // 4방향 전부 체크했을 때 반복문 탈출
-		while (directionCheck[DIRECTION_COUNT] < DIRECTION_COUNT)
+		for (int i = 0; i < ROOM_COUNT; i++)
 		{
-			int random = Random(DIRECTION_COUNT);
+			stage->roomInfo[i] = 0;
+		}
+		SetArray(stage->roomData, stage->width, stage->height, ROOM_NOT);
 
-			// 현재 방향을 이미 체크했을 때
-			if (directionCheck[random] == 1) { continue; }
+		int roomMax = STAGE_SIZE * STAGE_SIZE * 0.4;
+		int roomCount = 0;
+		int bossRoom = 1;
+		int itemRoom = 1;
+		Coordination position =
+		{
+			Random(stage->width),
+			Random(stage->height)
+		};
 
-			// 탐색용 좌표를 temp에 대입
-			Coordination temp = AddCoordination(position, DIRECTIONS[random]);
+		stage->roomData[position.x][position.y] = DIRECTION_COUNT;
 
-			// 이동 가능하고 방이 없을 때
-			if (CheckStageValidPosition(stage, temp) && stage->roomData[temp.x][temp.y] == ROOM_NOT)
+		// 랜덤으로 방의 위치를 생성하는 부분
+		// 현재 방의 개수가 roomMax보다 작으면 반복
+		while (roomCount < roomMax) //(True)
+		{
+			// 방을 만들 위치를 저장할 변수, (-1, -1)로 초기화
+			char direction = DIRECTION_COUNT;
+			// 탐색한 방향의 여부를 저장하는 directionCheck
+			// 방향 + 1로 만드는 이유는 directionCheck[DIRECTION_COUNT]에 탐색한 방향의 개수를 저장하기 위함
+			int directionCheck[DIRECTION_COUNT + 1];
+			for (int i = 0; i <= DIRECTION_COUNT; i++) { directionCheck[i] = 0; }
+
+			// 랜덤으로 방향을 설정 // 4방향 전부 체크했을 때 반복문 탈출
+			while (directionCheck[DIRECTION_COUNT] < DIRECTION_COUNT)
 			{
-				// 방을 생성할 수 있을 때
-				if (CheckStageValidRoom(stage, temp))
+				int random = Random(DIRECTION_COUNT);
+
+				// 현재 방향을 이미 체크했을 때
+				if (directionCheck[random] == 1) { continue; }
+
+				// 탐색용 좌표를 temp에 대입
+				Coordination temp = AddCoordination(position, DIRECTIONS[random]);
+
+				// 이동 가능하고 방이 없을 때
+				if (CheckStageValidPosition(stage, temp) && stage->roomData[temp.x][temp.y] == ROOM_NOT)
 				{
-					// 탐색한 방향을 direction에 저장
-					direction = random;
+					// 방을 생성할 수 있을 때
+					if (CheckStageValidRoom(stage, temp))
+					{
+						// 탐색한 방향을 direction에 저장
+						direction = random;
+						break;
+					}
+				}
+
+				directionCheck[random] = 1;
+				++directionCheck[DIRECTION_COUNT];
+			}
+			// 방을 만들 수 없을 때
+			if (direction == DIRECTION_COUNT)
+			{
+				// 현재 위치가 시작지점이면 더 이상은 방을 만들 수 없음
+				if (stage->roomData[position.x][position.y] == DIRECTION_COUNT)
+				{
 					break;
 				}
+				else
+				{
+					// 현재 위치로 이동한 반대방향을 direction에 대입
+					direction = (stage->roomData[position.x][position.y] + 2) % DIRECTION_COUNT;
+					// direction방향으로 이동
+					position = AddCoordination(position, DIRECTIONS[direction]);
+				}
 			}
-
-			directionCheck[random] = 1;
-			++directionCheck[DIRECTION_COUNT];
-		}
-		// 방을 만들 수 없을 때
-		if (direction == DIRECTION_COUNT)
-		{
-			// 현재 위치가 시작지점이면 더 이상은 방을 만들 수 없음
-			if (stage->roomData[position.x][position.y] == DIRECTION_COUNT)
-			{
-				break;
-			}
+			// 방을 만들 수 있을 때
 			else
 			{
-				// 현재 위치로 이동한 반대방향을 direction에 대입
-				direction = (stage->roomData[position.x][position.y] + 2) % DIRECTION_COUNT;
 				// direction방향으로 이동
 				position = AddCoordination(position, DIRECTIONS[direction]);
+				stage->roomData[position.x][position.y] = direction;
+				++roomCount;
 			}
 		}
-		// 방을 만들 수 있을 때
-		else
-		{
-			// direction방향으로 이동
-			position = AddCoordination(position, DIRECTIONS[direction]);
-			stage->roomData[position.x][position.y] = direction;
-			++roomCount;
-		}
-	}
 
-	for (int y = 0; y < stage->height; y++)
-	{
-		for (int x = 0; x < stage->width; x++)
+		for (int y = 0; y < stage->height; y++)
 		{
-			if (stage->roomData[x][y] == ROOM_NOT) { continue; }
-			int type = stage->roomData[x][y];
-			int id = RandomRoom(type);
-			int door[DIRECTION_COUNT] = { 0, 0, 0, 0 };
-			if (y > 0)
+			for (int x = 0; x < stage->width; x++)
 			{
-				door[DIRECTION_UP] = stage->roomData[x][y - 1] > ROOM_NOT;
+				if (stage->roomData[x][y] > ROOM_NOT)
+				{
+					if (stage->roomData[x][y] == DIRECTION_COUNT)
+					{
+						stage->roomData[x][y] = ROOM_START;
+					}
+					else
+					{
+						stage->roomData[x][y] = ROOM_MONSTER;
+						// 현재 방에 이웃한 방이 1개 일 때
+						if (CountDoor(CountNeighbor(stage, ToCoordination(x, y))) == 1)
+						{
+							if (bossRoom > 0)
+							{
+								stage->roomData[x][y] = ROOM_BOSS;
+								--bossRoom;
+							}
+							else if (itemRoom > 0)
+							{
+								stage->roomData[x][y] = ROOM_ITEM;
+								--itemRoom;
+							}
+						}
+					}
+				}
 			}
-			if (y < stage->height - 1)
-			{
-				door[DIRECTION_DOWN] = stage->roomData[x][y + 1] > ROOM_NOT;
-			}
-			if (x > 0)
-			{
-				door[DIRECTION_LEFT] = stage->roomData[x - 1][y] > ROOM_NOT;
-			}
-			if (x < stage->width - 1)
-			{
-				door[DIRECTION_RIGHT] = stage->roomData[x + 1][y] > ROOM_NOT;
-			}
-
-			//stage->roomData[x][y] = NewRoom(id);
 		}
+		RenderStage(0, 0, stage);
+		// 보스방과 아이템 방이 기준 미달일 때
+		if (bossRoom > 0 || itemRoom > 0)
+		{
+			continue;
+		}
+		
+
+		for (int y = 0; y < stage->height; y++)
+		{
+			for (int x = 0; x < stage->width; x++)
+			{
+				if (stage->roomData[x][y] == ROOM_NOT) { continue; }
+				RoomType type = stage->roomData[x][y];
+				Door neighborRoom = CountNeighbor(stage, ToCoordination(x, y)); // 주변의 필수 문
+				for (int i = 0; i < roomCount; i++)
+				{
+					int id = RandomRoom(type);
+					if (id < 0) { continue; }
+					if (CheckDoor(neighborRoom, RoomInfos[id]->door))
+					{
+						Room* room = NewRoom(id, neighborRoom);
+						AddRoom(stage, room);
+						break;
+					}
+				}
+			}
+		}
+
+		// 생성된 방 보다 채워진 방의 개수가 작을 때
+		if (roomCount > stage->roomCount)
+		{
+			printf("방이 없어요\n");
+			Sleep(100);
+			for (int i = 0; i < stage->roomCount; i++)
+			{
+				free(stage->rooms[i]);
+			}
+			free(stage->rooms);
+			stage->roomCount = 0;
+			return NULL;
+		}
+		break;
 	}
 	return stage;
 }
 
-Room* NewRoom(int index)
+// 스테이지에 방을 추가하는 메소드
+void AddRoom(Stage* stage, Room* room)
+{
+	stage->rooms = (Room**)realloc(stage->rooms, sizeof(Room*) * stage->roomCount);
+	if (stage->rooms == NULL) { return; }
+	stage->rooms[++stage->roomCount - 1] = room;
+}
+
+// RoomInfos의 인덱스와 문 정보를 파라미터로 방을 생성한 뒤 반환하는 메소드
+Room* NewRoom(int index, Door door)
 {
 	Room* room = (Room*)malloc(sizeof(Room));
 	if (room == NULL) { return; }
@@ -215,7 +339,7 @@ Room* NewRoom(int index)
 }
 
 // 맵 정보의 인덱스를 랜덤으로 생성해주는 메소드
-int RandomRoom(int type)
+int RandomRoom(RoomType type)
 {
 	int sumPercentage = 0; // 모든 방의 등장 퍼센테이지
 	for (int i = 0; i < RoomInfoCount; i++) // 모든 방의 등장 퍼센테이지를 합산
