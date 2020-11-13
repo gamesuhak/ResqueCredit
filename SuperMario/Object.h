@@ -37,13 +37,11 @@ struct Object
 
 struct MonsterInfo
 {
-	short id;
 	int hp;
 	int power;
 	int speed;
 	int sprite;
 	Object object;
-	Coordination position;
 };
 
 struct Creature

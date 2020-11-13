@@ -7,6 +7,7 @@
 
 Creature* Player; // 플레이어 객체를 저장할 포인터
 Creature** Monsters; // 몬스터를 저장할 이중 포인터
+MonsterInfo** MonsterInfos = NULL;
 Projectile** Projectiles; // 발사체 포인터 배열
 const Coordination DIRECTIONS[DIRECTION_COUNT] =
 {
@@ -16,6 +17,25 @@ const Coordination DIRECTIONS[DIRECTION_COUNT] =
 int MonsterInfoCount = 0;
 int CreatureCount = 0;
 int ProjectileCount = 0;
+
+void LoadMonsterInfos()
+{
+	if (MonsterInfos == NULL)
+	{
+		MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*) * 1);
+		if (MonsterInfos == NULL) { return NULL; }
+	}
+	char name[10] = "";
+	for (int i = 0; 1; i++)
+	{
+		sprintf(name, "%d", i);
+		MonsterInfo* monsterInfo = LoadMonsterFile(name);
+		if (monsterInfo == NULL) { return; }
+		++MonsterInfoCount;
+		monsterInfo->object.direction = DIRECTIONS[DIRECTION_DOWN];
+		MonsterInfos[i] = monsterInfo;
+	}
+}
 
 void ProcessObject()
 {

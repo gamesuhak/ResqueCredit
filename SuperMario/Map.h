@@ -24,7 +24,8 @@ typedef struct RoomInfo
 	TileData tile;
 	TileTag tag;
 	Door door; // ¹® Á¤º¸
-	CreatureData** monsters;
+	int monsterCount;
+	CreatureData monsters;
 } RoomInfo;
 
 typedef struct Room

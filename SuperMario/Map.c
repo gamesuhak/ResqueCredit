@@ -55,7 +55,6 @@ void InitializeRoomInfo()
 {
 	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*) * ROOMINFO_COUNT);
 	if (RoomInfos == NULL) { return; }
-
 	LoadRoomInfos();
 }
 
@@ -280,7 +279,7 @@ Stage* NewStage()
 			continue;
 		}
 		
-
+		stage->rooms = (Room**)malloc(sizeof(Room*) * roomCount);
 		for (int y = 0; y < stage->height; y++)
 		{
 			for (int x = 0; x < stage->width; x++)
@@ -296,6 +295,7 @@ Stage* NewStage()
 					{
 						Room* room = NewRoom(id, neighborRoom);
 						AddRoom(stage, room);
+						stage->roomData[x][y] = stage->roomCount - 1;
 						break;
 					}
 				}
@@ -362,6 +362,14 @@ int RandomRoom(RoomType type)
 		sumPercentage -= RoomInfos[i]->percentage;
 	}
 	return -1;
+}
+
+// 방정보에 방을 추가하는 메소드
+void AddRoomInfo(Stage* stage, Room* room)
+{
+	RoomInfos = (Room**)realloc(RoomInfos, sizeof(Room*) * RoomInfoCount);
+	if (stage->rooms == NULL) { return; }
+	stage->rooms[++stage->roomCount - 1] = room;
 }
 
 void LoadRoomInfos()

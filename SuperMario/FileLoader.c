@@ -95,36 +95,39 @@ RoomInfo* LoadRoomFile(char* name)
 	if (room == NULL) { return NULL; }
 
 	fscanf(file, "Type : %d\n", &room->type);
-	room->width = 0;
-	room->height = 0;
-	room->percentage = 0;
+	fscanf(file, "Width : %d\n", &room->width);
+	fscanf(file, "Height : %d\n", &room->height);
+	fscanf(file, "Percentage : %d\n", &room->percentage);
+	fscanf(file, "Door : %d\n", &room->door);
+	fscanf(file, "MonsterCount : %d\n", &room->monsterCount);
+
 	room->tile = NewArray(room->width, room->height);
 	room->tag = NewArray(room->width, room->height);
+	room->monsters = NewArray(room->width, room->height);
+	
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			//room->tile[x][y] = fgetc();
+			fscanf(file, "%d ", &room->tile[x][y]);
 		}
 	}
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			//room->tag[x][y] = fgetc();
+			fscanf(file, "%d ", &room->tag[x][y]);
 		}
 	}
-
-
-	for (int i = 0; i < room->height; i++)
+	for (int y = 0; y < room->height; y++)
 	{
-		for (int j = 0; j < room->width; j++)
+		for (int x = 0; x < room->width; x++)
 		{
-			fscanf(file, "%d ", &room->tile[i][j]);
+			fscanf(file, "%d ", &room->monsters[x][y]);
 		}
 	}
-
 	fclose(file);
+	return room;
 }
 
 MonsterInfo* LoadMonsterFile(char* name)
@@ -136,23 +139,13 @@ MonsterInfo* LoadMonsterFile(char* name)
 	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
 
 	MonsterInfo* monsterInfo = (MonsterInfo*)malloc(sizeof(MonsterInfo));
-	monsterInfo->id;
-	monsterInfo->hp;
-	monsterInfo->power;
-	monsterInfo->speed;
-	
-	monsterInfo->object.layer = 1;
-
-	monsterInfo->object.position.x = 1;
-	monsterInfo->object.position.y = 1;
-
-	monsterInfo->object.direction.x = 1;
-	monsterInfo->object.direction.y = 1;
-
-	monsterInfo->object.collider.pivot.x = 0;
-	monsterInfo->object.collider.pivot.y = 0;
-	monsterInfo->object.collider.size.x = 0;
-	monsterInfo->object.collider.size.y = 0;
-	
+	if (monsterInfo == NULL) { return NULL; }
+	fscanf(file, "HP : %d\n", &monsterInfo->hp);
+	fscanf(file, "Power : %d\n", &monsterInfo->power);
+	fscanf(file, "Speed : %d\n", &monsterInfo->speed);
+	fscanf(file, "Layer : %d\n", &monsterInfo->object.layer);
+	fscanf(file, "Pivot : {%d, %d}\n", &monsterInfo->object.collider.pivot.x, &monsterInfo->object.collider.pivot.y);
+	fscanf(file, "Size : {%d, %d}\n", &monsterInfo->object.collider.size.x, &monsterInfo->object.collider.size.y);
+	fclose(file);
 	return monsterInfo;
 }
