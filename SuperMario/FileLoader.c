@@ -120,7 +120,7 @@ RoomInfo* LoadRoomFile(char* name)
 	{
 		for (int j = 0; j < room->width; j++)
 		{
-			fscanf(file, "%d ", room->tile[i][j]);
+			fscanf(file, "%d ", &room->tile[i][j]);
 		}
 	}
 
