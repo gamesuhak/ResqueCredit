@@ -4,8 +4,7 @@ typedef struct Animator Animator;
 
 struct Animator
 {
-	char* name;
-	int currentFrame;
-
-	int* spriteNumber;
+	char currentFrame;
+	char state;
+	char currentState;
 };

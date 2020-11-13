@@ -2,11 +2,11 @@
 #include "Object.h"
 #define MAP_WIDTH			10
 #define MAP_HEIGHT			10
-#define STAGE_SIZE			6
+#define STAGE_SIZE			10
 #define LAYER_COUNT			1
 #define ROOMINFO_COUNT		5
 typedef enum Tile { TILE_GROUND = 0 } Tile;
-typedef enum RoomType { ROOM_NOT, ROOM_START = 0, ROOM_BOSS, ROOM_MONSTER, ROOM_ITEM, ROOM_SECRET, ROOM_COUNT } RoomType;
+typedef enum RoomType { ROOM_NOT = -1, ROOM_START = 0, ROOM_BOSS, ROOM_MONSTER, ROOM_ITEM, ROOM_SECRET, ROOM_COUNT } RoomType;
 
 typedef char** MapData;
 typedef char** TileData;
@@ -46,10 +46,14 @@ typedef struct Stage
 	MapData roomData;
 } Stage;
 
-void InitializeMap();
+void InitializeStage();
 void InitializeRoomInfo();
 
+Bool CheckStageLoop(Stage* stage, Coordination start, char direction, Coordination position);
+Bool CheckStageValidRoom(Stage* stage, Coordination position);
+Bool CheckStageValidPosition(Stage* stage, Coordination position);
+
 Room* NewRoom(int index);
-void NewStage(Stage* stage);
+Stage* NewStage();
 int RandomRoom(int sumPercentage);
 void LoadRoomInfos();

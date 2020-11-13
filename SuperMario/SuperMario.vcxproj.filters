@@ -53,6 +53,9 @@
     <ClCompile Include="Sprite.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Coordination.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileLoader.h">

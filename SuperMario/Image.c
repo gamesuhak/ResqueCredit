@@ -19,6 +19,11 @@ Array NewArray(int width, int height)
 	return array;
 } // Âü°í : https://codeng.tistory.com/8
 
+void SetArray(Array array, int width, int height, int data)
+{
+	memset(array[0], data, sizeof(char) * width * height);
+}
+
 void ReleaseArray(Array array)
 {
 	free(array[0]);

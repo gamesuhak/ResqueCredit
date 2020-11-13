@@ -19,6 +19,7 @@ struct Image
 
 // 비트맵 메소드
 Bitmap NewArray(int width, int height);
+void SetArray(Array array, int width, int height, int data);
 void ReleaseArray(Array array);
 Array DuplicateArray(Array array, int width, int height);
 

@@ -14,6 +14,7 @@ Image* Buffer; // 메인 화면 그리기 전에 그리는 구간
 
 Image* BufferRoom;
 
+extern Stage* Stage1;
 extern Coordination PlayerRoom;
 
 extern Image** Sprites;
@@ -40,6 +41,10 @@ void Render()
 			}
 		}*/
 		//UpdateAnimation();
+
+		/*Stage1 = NewStage();
+		RenderStage(0, 0, Stage1);
+		Sleep(1000);*/
 		UpdateRender();
 	}
 }
@@ -108,6 +113,20 @@ void RenderImage(int x, int y, Image* image)
 		for (int posy = 0; posy < image->height; posy++)
 		{
 			SetPixelColor(posx + x - image->pivot.x, posy + y - image->pivot.y, 0, image->bitmap[posx][posy]);
+		}
+	}
+}
+
+void RenderStage(int x, int y, Stage* stage)
+{
+	for (int posx = 0; posx < stage->width; posx++)
+	{
+		for (int posy = 0; posy < stage->height; posy++)
+		{
+			if (stage->roomData[posx][posy] > -1)
+				SetPixelColor(posx + x, posy + y, 0, stage->roomData[posx][posy] + 6);
+			else
+				SetPixelColor(posx + x, posy + y, 0, COLOR_BLACK);
 		}
 	}
 }

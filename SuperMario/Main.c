@@ -86,10 +86,13 @@ void Move()
 
 int main()
 {
+	srand(time(NULL));
+	
 	Thread(Input);
 	Thread(ProcessObject);
 	Thread(Move);
 	Thread(Render);
+	InitializeStage();
 	while (1)
 	{
 

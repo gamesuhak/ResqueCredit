@@ -8,9 +8,9 @@
 Creature* Player; // 플레이어 객체를 저장할 포인터
 Creature** Monsters; // 몬스터를 저장할 이중 포인터
 Projectile** Projectiles; // 발사체 포인터 배열
-const Coordination DIRECTIONS[DIRECTION_COUNT] = 
-{ 
-	{0, -1}, {0, 1}, {-1, 0}, {1, 0}
+const Coordination DIRECTIONS[DIRECTION_COUNT] =
+{
+	{0, 1}, {-1, 0}, {0, -1}, {1, 0}
 };
 
 int MonsterInfoCount = 0;
