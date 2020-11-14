@@ -1,10 +1,17 @@
 #include "Animator.h"
+#include <stdlib.h> // NULL
+#include "Image.h" // Image
 
-extern int CreatureCount;
-void UpdateAnimator()
+extern Image** Sprite;
+
+Animator* NewAnimator(int index)
 {
-	for (int i = 0; i < CreatureCount; i++)
-	{
-		//Monster
-	}
+	Animator* animator = (Animator*)malloc(sizeof(Animator));
+	if (animator == NULL) { return NULL; }
+	return animator;
+}
+
+void CreateAnimator()
+{
+
 }

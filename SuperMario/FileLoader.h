@@ -8,5 +8,8 @@
 #include "Map.h"
 
 Image* LoadBitmapFile(char* name, Color transparent);
-RoomInfo* LoadRoomFile(char* name);
-MonsterInfo* LoadMonsterFile(char* name);
+void SaveRoomInfoFile(char* name, RoomInfo* room);
+RoomInfo* LoadRoomInfoFile(char* name);
+
+void SaveMonsterInfoFile(char* name, MonsterInfo* monsterInfo);
+MonsterInfo* LoadMonsterInfoFile(char* name);

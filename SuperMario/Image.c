@@ -57,6 +57,17 @@ Image* NewImage(int width, int height)
 	return image;
 }
 
+Image* DuplicateImage(Image* image)
+{
+	Image* newImage = (Image*)malloc(sizeof(Image));
+	if (newImage == NULL) { return NULL; }
+	newImage->id = image->id;
+	newImage->pivot.x = image->pivot.x;
+	newImage->pivot.x = image->pivot.x;
+	newImage->bitmap = DuplicateArray(image->bitmap, image->width, image->height);
+	return newImage;
+}
+
 void ReleaseImage(Image* image)
 {
 	ReleaseArray(image->bitmap);

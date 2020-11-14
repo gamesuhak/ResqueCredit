@@ -82,7 +82,49 @@ Image* LoadBitmapFile(char* name, Color transparent)
 	return image;
 }
 
-RoomInfo* LoadRoomFile(char* name)
+void SaveRoomInfoFile(char* name, RoomInfo* roomInfo)
+{
+	FILE* file;
+	char names[50] = "Map/";
+	strcat(names, name);
+	strcat(names, ".txt");
+	file = fopen(names, "wt");
+	if (file == NULL) { return NULL; }
+	fprintf(file, "Type : %d\n", roomInfo->type);
+	fprintf(file, "Width : %d\n", roomInfo->width);
+	fprintf(file, "Height : %d\n", roomInfo->height);
+	fprintf(file, "Percentage : %d\n", roomInfo->percentage);
+	fprintf(file, "Door : %d\n", roomInfo->door);
+	fprintf(file, "MonsterCount : %d\n", roomInfo->monsterCount);
+
+	for (int y = 0; y < roomInfo->height; y++)
+	{
+		for (int x = 0; x < roomInfo->width; x++)
+		{
+			fprintf(file, "%d ", roomInfo->tile[x][y]);
+		}
+		fprintf(file, "\n");
+	}
+	for (int y = 0; y < roomInfo->height; y++)
+	{
+		for (int x = 0; x < roomInfo->width; x++)
+		{
+			fprintf(file, "%d ", roomInfo->tag[x][y]);
+		}
+		fprintf(file, "\n");
+	}
+	for (int y = 0; y < roomInfo->height; y++)
+	{
+		for (int x = 0; x < roomInfo->width; x++)
+		{
+			fprintf(file, "%d ", roomInfo->monsters[x][y]);
+		}
+		fprintf(file, "\n");
+	}
+	return;
+}
+
+RoomInfo* LoadRoomInfoFile(char* name)
 {
 	RoomInfo* room;	
 	FILE* file;
@@ -130,7 +172,25 @@ RoomInfo* LoadRoomFile(char* name)
 	return room;
 }
 
-MonsterInfo* LoadMonsterFile(char* name)
+void SaveMonsterInfoFile(char* name, MonsterInfo* monsterInfo)
+{
+	FILE* file;
+	char names[50] = "Monster/";
+	strcat(names, name);
+	strcat(names, ".txt");
+	file = fopen(names, "wt");
+	if (file == NULL) { return NULL; }
+
+	fprintf(file, "HP : %d\n", monsterInfo->hp);
+	fprintf(file, "Power : %d\n", monsterInfo->power);
+	fprintf(file, "Speed : %d\n", monsterInfo->speed);
+	fprintf(file, "Layer : %d\n", monsterInfo->object.layer);
+	fprintf(file, "Pivot : {%d, %d}\n", monsterInfo->object.collider.pivot.x, monsterInfo->object.collider.pivot.y);
+	fprintf(file, "Size : {%d, %d}\n", monsterInfo->object.collider.size.x, monsterInfo->object.collider.size.y);
+	return;
+}
+
+MonsterInfo* LoadMonsterInfoFile(char* name)
 {
 	FILE* file;
 	char names[50] = "Monster/";

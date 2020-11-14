@@ -9,3 +9,4 @@ void Input();
 void InitializeKey();
 void BindKey();
 void PushKey();
+void SetInputHandler(void (*method)());

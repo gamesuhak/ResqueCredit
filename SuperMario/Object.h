@@ -1,9 +1,11 @@
 #pragma once
+//#include "Map.h" // Room
 #include "Bool.h"
 #include "Image.h"
 #include "Animator.h"
 #include "Coordination.h"
-#define MONSTER_COUNT		10
+
+#define OBJECTPOOL_COUNT	10
 #define PLAYER_HP_MAX		6
 
 typedef struct MonsterInfo MonsterInfo;
@@ -31,7 +33,7 @@ struct Object
 	int type;
 	char layer; // 오브젝트가 존재하는 레이어
 	Coordination position; // 오브젝트의 위치
-	Coordination direction; // 오브젝트의 방향
+	Direction direction; // 오브젝트의 방향
 	Collider collider; // 오브젝트의 콜라이더
 };
 
@@ -50,7 +52,7 @@ struct Creature
 	int hp;
 	int power;
 	int speed;
-	int sprite; // 현재 스프라이트 번호
+	//int sprite; // 현재 스프라이트 번호
 	int state;
 	Bool enable;
 	Object object;
@@ -75,25 +77,19 @@ struct Animation
 	Object object;
 };
 
-
-
 void InitializeObject();
 
-void ProcessObject();
-void ProcessMonster();
-void ProcessProjectile();
-
-void ShootProjectile(Coordination position, Coordination direction, ProjectileType type, int power, int speed);
-
-void CheckProjectile(Projectile* projectile);
-void HitProjectile(Projectile* bullet, Creature* target);
+void InitializeMonsterInfo();
+void AddMonsterInfo(Creature* monster);
 
 Creature* NewCreature();
-Creature* GetCreature();
-Creature* FindCreature(int id);
+Creature* NewMonster(int id);
 
+void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed);
+void HitProjectile(Projectile* bullet, Creature* target);
 Projectile* NewProjectile();
 Projectile* GetProjectile();
 
-Coordination CheckMove(int id, Object* object, Coordination direction);
 Bool CheckCollider(Object* object1, Object* object2, Coordination offset);
+
+void UpdateAnimator(Creature* creature);

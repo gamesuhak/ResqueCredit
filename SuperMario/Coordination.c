@@ -1,7 +1,7 @@
 #include "Coordination.h"
 
 // 두 좌표를 받아 Coordination으로 반환하는 메소드
-Coordination ToCoordination(int x, int y)
+Coordination NewCoordination(int x, int y)
 {
 	Coordination coordination = { x, y };
 	return coordination;
@@ -13,6 +13,13 @@ Coordination AddCoordination(Coordination coordination1, Coordination coordinati
 	coordination1.x += coordination2.x;
 	coordination1.y += coordination2.y;
 	return coordination1;
+}
+
+Coordination MultiplyCoordination(Coordination coordination, int scalar)
+{
+	coordination.x *= scalar;
+	coordination.y *= scalar;
+	return coordination;
 }
 
 // 좌표의 반대를 반환하는 메소드

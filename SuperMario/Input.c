@@ -1,5 +1,5 @@
 #include "Input.h"
-#include <stdio.h>
+//#include <stdio.h>
 #include <windows.h>
 #include "Bool.h"
 
@@ -7,13 +7,17 @@ int KeyCode[KEY_COUNT]; // 현재 설정되어있는 키 코드를 저장하는 배열
 Bool KeyState[KEY_COUNT] = { False, False, False, False, False, False }; // 키가 눌려있는 상태를 저장할 배열
 int KeyCharge[KEY_COUNT] = { 0, 0, 0, 0, 0, 0 }; // 키가 얼마나 눌려있는지 저장하는 배열
 const char* KeyName[KEY_COUNT] = { "위", "아래", "왼쪽", "오른쪽", "A", "B" };
+void (*InputHandler)(); // 키를 눌렀을 때 실행할 메소드를 저장하는 포인터
 
 void Input()
 {
 	InitializeKey();
+	InputHandler = NULL;
 	while (1)
 	{
 		PushKey();
+		if (InputHandler == NULL) { continue; }
+		InputHandler();
 	}
 }
 
@@ -58,4 +62,9 @@ void PushKey()
 			++KeyCharge[i];
 		}
 	}
+}
+
+void SetInputHandler(void (*method)())
+{
+	InputHandler = method;
 }

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef RENDER_H
+#define RENDER_H
 #include "Image.h"
 #include "Map.h"
 
@@ -14,8 +16,9 @@ void Render();
 void UpdateRender();
 void InitializeRender();
 
-void RenderMap(Room* room, Image* target);
+void RenderRoom(Room* room, Image* target);
 void RenderImage(int x, int y, Image* image);
 void RenderStage(int x, int y, Stage* stage);
 void UpdateUI(Image* target);
 void UpdateAnimation();
+#endif

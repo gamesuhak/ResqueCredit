@@ -1,4 +1,6 @@
 #pragma once
+#ifndef IMAGE_H
+#define IMAGE_H
 #include "Color.h"
 #include "Coordination.h"
 #include <stdlib.h> // NULL
@@ -25,6 +27,8 @@ Array DuplicateArray(Array array, int width, int height);
 
 // 이미지 메소드
 Image* NewImage(int width, int height);
+Image* DuplicateImage(Image* image);
 void ReleaseImage(Image* image);
 Image** SliceImage(Image* image, int column, int row);
 void AddImage(int x, int y, Image* image, Image* target);
+#endif

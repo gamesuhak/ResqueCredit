@@ -4,19 +4,28 @@
 #include <stdlib.h> // NULL, malloc
 #include "Function.h"
 #include "Render.h"
+#include "FileLoader.h" // LoadRoomFile
 
 extern const Coordination DIRECTIONS[DIRECTION_COUNT];
 const int DOORS[DIRECTION_COUNT] = { 1, 2, 4, 8 };
+
+extern Projectile** Projectiles;
+extern int ProjectileCount;
+
 Stage* Stage1 = NULL;
 RoomInfo** RoomInfos = NULL;
 int RoomInfoCount = 0;
-
-Coordination PlayerRoom = { 0, 0 };
 
 // 스테이지를 생성하고 여부를 반환하는 메소드
 Bool InitializeStage()
 {
 	InitializeRoomInfo();
+	printf("입력된 파일 개수 : %d\n", RoomInfoCount);
+	for (int i = 0; i < RoomInfoCount; i++)
+	{
+		printf("%d의 타입 : %d\n", i, RoomInfos[i]->type);
+	}
+
 	for (int count = 0; count < LOOP_COUNT; count++)
 	{
 		Stage1 = NewStage(Stage1);
@@ -28,34 +37,6 @@ Bool InitializeStage()
 	}
 	printf("방 생성 불가능");
 	return False;
-}
-
-void PrintStage(Stage* stage)
-{
-	system("cls");
-	for (int y = 0; y < stage->height; y++)
-	{
-		for (int x = 0; x < stage->width; x++)
-		{
-			if (stage->roomData[x][y] == ROOM_NOT)
-			{
-				printf("-");
-			}
-			else
-			{
-				printf("%d", stage->roomData[x][y]);
-			}
-
-		}
-		printf("\n");
-	}
-}
-
-void InitializeRoomInfo()
-{
-	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*) * ROOMINFO_COUNT);
-	if (RoomInfos == NULL) { return; }
-	LoadRoomInfos();
 }
 
 Bool CheckStageLoop(Stage* stage, Coordination start, char direction, Coordination position)
@@ -109,9 +90,8 @@ Bool CheckDoor(int door1, int door2)
 {
 	for (int direction = 0; direction < DIRECTION_COUNT; direction++)
 	{
-		printf("%d, %d\n", (door1 & (1 << direction)), (door2 & (1 << direction)));
-		// door1에 있는 문이 door2에 없다면 아래 식은 -1이 됨
-		if (((door1 & (1 << direction)) - (door2 & (1 << direction))) < 0)
+		// door1에 있는 문이 door2에 없을 때
+		if ((door1 & (1 << direction)) > (door2 & (1 << direction)))
 		{
 			return False;
 		}
@@ -176,6 +156,7 @@ Stage* NewStage()
 			Random(stage->height)
 		};
 
+		stage->start = position;
 		stage->roomData[position.x][position.y] = DIRECTION_COUNT;
 
 		// 랜덤으로 방의 위치를 생성하는 부분
@@ -255,7 +236,7 @@ Stage* NewStage()
 					{
 						stage->roomData[x][y] = ROOM_MONSTER;
 						// 현재 방에 이웃한 방이 1개 일 때
-						if (CountDoor(CountNeighbor(stage, ToCoordination(x, y))) == 1)
+						if (CountDoor(CountNeighbor(stage, NewCoordination(x, y))) == 1)
 						{
 							if (bossRoom > 0)
 							{
@@ -286,7 +267,7 @@ Stage* NewStage()
 			{
 				if (stage->roomData[x][y] == ROOM_NOT) { continue; }
 				RoomType type = stage->roomData[x][y];
-				Door neighborRoom = CountNeighbor(stage, ToCoordination(x, y)); // 주변의 필수 문
+				Door neighborRoom = CountNeighbor(stage, NewCoordination(x, y)); // 주변의 필수 문
 				for (int i = 0; i < roomCount; i++)
 				{
 					int id = RandomRoom(type);
@@ -305,8 +286,8 @@ Stage* NewStage()
 		// 생성된 방 보다 채워진 방의 개수가 작을 때
 		if (roomCount > stage->roomCount)
 		{
-			printf("방이 없어요\n");
-			Sleep(100);
+			printf("방이 없어요 %d, %d\n",roomCount, stage->roomCount);
+			Sleep(1000);
 			for (int i = 0; i < stage->roomCount; i++)
 			{
 				free(stage->rooms[i]);
@@ -315,27 +296,61 @@ Stage* NewStage()
 			stage->roomCount = 0;
 			return NULL;
 		}
+		printf("스테이지 생성 성공\n");
+		Sleep(1000);
 		break;
 	}
 	return stage;
 }
 
-// 스테이지에 방을 추가하는 메소드
-void AddRoom(Stage* stage, Room* room)
+void InitializeRoomInfo()
 {
-	stage->rooms = (Room**)realloc(stage->rooms, sizeof(Room*) * stage->roomCount);
-	if (stage->rooms == NULL) { return; }
-	stage->rooms[++stage->roomCount - 1] = room;
+	/*Room* room = NewRoomInfo();
+	SaveRoomFile("001", room);*/
+	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*));
+	if (RoomInfos == NULL) { return; }
+
+	char name[10] = "";
+	for (int i = 0; 1; i++)
+	{
+		sprintf(name, "%03d", i);
+		RoomInfo* roomInfo = LoadRoomFile(name);
+		if (roomInfo == NULL) { return; }
+		printf("%s 파일 입력 성공\n", name);
+		Sleep(100);
+		++RoomInfoCount;
+		AddRoomInfo(roomInfo);
+	}
 }
 
-// RoomInfos의 인덱스와 문 정보를 파라미터로 방을 생성한 뒤 반환하는 메소드
-Room* NewRoom(int index, Door door)
+// 초기화된 방 정보를 생성
+RoomInfo* NewRoomInfo()
 {
-	Room* room = (Room*)malloc(sizeof(Room));
+	RoomInfo* room = (RoomInfo*)malloc(sizeof(RoomInfo));
 	if (room == NULL) { return; }
-
-	room->type = RoomInfos[index]->type;
+	room->type = ROOM_START;
+	room->width = ROOM_WIDTH;
+	room->height = ROOM_HEIGHT;
+	room->percentage = 10;
+	room->tile = NewArray(room->width, room->height);
+	room->tag = NewArray(room->width, room->height);
+	room->monsterCount = 0;
+	room->monsters = NewArray(room->width, room->height);
+	room->door = 0;
+	for (int direction = 0; direction < DIRECTION_COUNT; direction++)
+	{
+		room->door = room->door | (1 << direction);
+	}
 	return room;
+}
+
+// 방정보에 방을 추가하는 메소드
+void AddRoomInfo(RoomInfo* room)
+{
+	if (RoomInfos == NULL) { return; }
+	RoomInfos = (RoomInfo**)realloc(RoomInfos, sizeof(RoomInfo*) * RoomInfoCount);
+	if (RoomInfos == NULL) { return; }
+	RoomInfos[RoomInfoCount - 1] = room;
 }
 
 // 맵 정보의 인덱스를 랜덤으로 생성해주는 메소드
@@ -355,7 +370,7 @@ int RandomRoom(RoomType type)
 	for (int i = 0; i < RoomInfoCount; i++)
 	{
 		if (RoomInfos[i]->type != type) { continue; }
-		if (RoomInfos[i]->percentage < sumPercentage)
+		if (sumPercentage < RoomInfos[i]->percentage)
 		{
 			return i;
 		}
@@ -364,23 +379,117 @@ int RandomRoom(RoomType type)
 	return -1;
 }
 
-// 방정보에 방을 추가하는 메소드
-void AddRoomInfo(Stage* stage, Room* room)
+// RoomInfos의 인덱스와 문 정보를 파라미터로 방을 생성한 뒤 반환하는 메소드
+Room* NewRoom(int index, Door door)
 {
-	RoomInfos = (Room**)realloc(RoomInfos, sizeof(Room*) * RoomInfoCount);
-	if (stage->rooms == NULL) { return; }
-	stage->rooms[++stage->roomCount - 1] = room;
+	Room* room = (Room*)malloc(sizeof(Room));
+	if (room == NULL) { return NULL; }
+
+	room->type = RoomInfos[index]->type;
+	room->width = RoomInfos[index]->width;
+	room->height = RoomInfos[index]->height;
+	room->door = RoomInfos[index]->door;
+	room->tile = DuplicateArray(RoomInfos[index]->tile, room->width, room->height);
+	room->tag = DuplicateArray(RoomInfos[index]->tag, room->width, room->height);
+	room->monsters = (Creature**)malloc(sizeof(Creature*) * RoomInfos[index]->monsterCount);
+	//for (int id = 0; id < RoomInfos[index]->monsterCount; id++)
+
+	for (int y = 0; y < room->height; y++)
+	{
+		for (int x = 0; x < room->width; x++)
+		{
+			int id;
+			if (id = RoomInfos[index]->monsters[x][y] < 0)
+			{
+				continue;
+			}
+			Creature* monster = NewMonster(id);
+			monster->object.position.x = x;
+			monster->object.position.y = y;
+			room->monsters[i] = monster;
+		}
+	}
+
+	return room;
 }
 
-void LoadRoomInfos()
+// 스테이지에 방을 추가하는 메소드
+void AddRoom(Stage* stage, Room* room)
 {
-	char name[ROOMINFO_COUNT] = "";
- 	for (int i = 0; 1; i++)
+	stage->rooms = (Room**)realloc(stage->rooms, sizeof(Room*) * stage->roomCount);
+	if (stage->rooms == NULL) { return; }
+	stage->rooms[(++stage->roomCount) - 1] = room;
+}
+
+void CheckProjectile(Room* room, Projectile* projectile)
+{
+	Coordination zero = { 0,0 };
+	for (int i = 1; i < room->monsterCount; i++)
 	{
-		sprintf(name, "%d", i);
-		RoomInfo* roomInfo = LoadRoomFile(name);
-		if (roomInfo == NULL) { return; }
-		++RoomInfoCount;
-		RoomInfos[i] = roomInfo;
+		if (room->monsters[i]->enable == True)
+		{
+			if (CheckCollider(&projectile->object, &room->monsters[i]->object, zero) == True)
+			{
+				HitProjectile(projectile, room->monsters[i]);
+			}
+		}
 	}
+}
+
+void ProcessMonster(Room* room)
+{
+	for (int i = 0; i < room->monsterCount; i++)
+	{
+		if (room->monsters[i]->enable)
+		{
+			Coordination direction = NewCoordination(RandomRange(-1, 1), RandomRange(-1, 1));
+			direction = MultiplyCoordination(direction, room->monsters[i]->speed);
+			direction = CheckMove(room, room->monsters[i]->id, &(room->monsters[i]->object), direction);
+			room->monsters[i]->object.position = AddCoordination(room->monsters[i]->object.position, direction);
+		}
+	}
+}
+
+void ProcessProjectile(Room* room)
+{
+	for (int i = 0; i < ProjectileCount; i++)
+	{
+		if (Projectiles[i]->enable == True)
+		{
+			Coordination temp = DIRECTIONS[Projectiles[i]->object.direction];
+			temp = MultiplyCoordination(temp, Projectiles[i]->speed);
+			Projectiles[i]->object.position = AddCoordination(Projectiles[i]->object.position, temp);
+			CheckProjectile(room, Projectiles[i]);
+			if (--Projectiles[i]->distance == 0)
+			{
+				Projectiles[i]->enable = False;
+			}
+		}
+	}
+}
+
+Coordination CheckMove(Room* room, int id, Object* object, Coordination direction)
+{
+	Coordination temp = { 0, 0 };
+	for (int i = 0; i < room->monsterCount; i++)
+	{
+		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
+		if (room->monsters[i]->id == id || !room->monsters[i]->enable || (object->layer != room->monsters[i]->object.layer))
+		{
+			continue;
+		}
+		temp.x = direction.x;
+		temp.y = 0;
+		if (CheckCollider(object, &(room->monsters[i]->object), temp))
+		{
+			direction.x = 0;
+		}
+		temp.x = 0;
+		temp.y = direction.y;
+		if (CheckCollider(object, &(room->monsters[i]->object), temp))
+		{
+			direction.y = 0;
+		}
+	}
+	return direction;
 }

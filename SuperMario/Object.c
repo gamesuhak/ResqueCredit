@@ -4,55 +4,61 @@
 #include <stdlib.h>
 #include <string.h> // memset
 #include "Function.h"
+#include "FileLoader.h" // LoadMonsterFile
 
-Creature* Player; // 플레이어 객체를 저장할 포인터
-Creature** Monsters; // 몬스터를 저장할 이중 포인터
-MonsterInfo** MonsterInfos = NULL;
-Projectile** Projectiles; // 발사체 포인터 배열
 const Coordination DIRECTIONS[DIRECTION_COUNT] =
 {
 	{0, 1}, {-1, 0}, {0, -1}, {1, 0}
 };
 
-int MonsterInfoCount = 0;
-int CreatureCount = 0;
-int ProjectileCount = 0;
+extern Creature* Player; // 플레이어 객체를 저장할 포인터
 
-void LoadMonsterInfos()
+MonsterInfo** MonsterInfos = NULL; // 몬스터 정보들을 저장할 MonsterInfo 2차원 포인터
+Projectile** Projectiles = NULL; // 발사체 포인터 배열
+int MonsterInfoCount = 0; // 몬스터 정보들 개수를 저장할 변수
+int ProjectileCount = 0; // 발사체 개수를 저장할 변수
+
+void ProcessObject()
+{
+	InitializeObject();
+	
+	/*while (1)
+	{
+		ProcessMonster(PlayerRoom);
+		ProcessProjectile(PlayerRoom);
+		Sleep(100);
+	}*/
+}
+
+void InitializeMonsterInfo()
 {
 	if (MonsterInfos == NULL)
 	{
-		MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*) * 1);
+		MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*));
 		if (MonsterInfos == NULL) { return NULL; }
 	}
 	char name[10] = "";
 	for (int i = 0; 1; i++)
 	{
-		sprintf(name, "%d", i);
+		sprintf(name, "%03d", i);
 		MonsterInfo* monsterInfo = LoadMonsterFile(name);
 		if (monsterInfo == NULL) { return; }
 		++MonsterInfoCount;
-		monsterInfo->object.direction = DIRECTIONS[DIRECTION_DOWN];
-		MonsterInfos[i] = monsterInfo;
+		monsterInfo->object.direction = DIRECTION_DOWN;
+		AddMonsterInfo(monsterInfo);
 	}
 }
 
-void ProcessObject()
+void AddMonsterInfo(Creature* monster)
 {
-	InitializeObject();
-	while (1)
-	{
-		ProcessMonster();
-		ProcessProjectile();
-		Sleep(100);
-	}
+	MonsterInfos = (Creature**)realloc(MonsterInfos, sizeof(Creature*) * MonsterInfoCount);
+	if (MonsterInfos == NULL) { return NULL; }
+	MonsterInfos[MonsterInfoCount - 1] = monster;
 }
 
 void InitializeObject()
 {
-	Player = NewCreature();
-	Player->enable = True;
-	Player->object.position.x = 40;
+	/*Player->object.position.x = 40;
 	Player->object.position.y = 32;
 
 	Monsters = (Creature**)malloc(sizeof(Creature*) * MONSTER_COUNT);
@@ -71,65 +77,25 @@ void InitializeObject()
 	Monsters[2]->object.position.x = 48;
 	Monsters[2]->object.position.y = 32;
 	Monsters[2]->enable = True;
-	Monsters[1]->hp = 10;
+	Monsters[1]->hp = 10;*/
 
-	Projectiles = (Projectile**)malloc(sizeof(Projectile*) * MONSTER_COUNT);
+	Projectiles = (Projectile**)malloc(sizeof(Projectile*) * OBJECTPOOL_COUNT);
 	if (Projectiles == NULL) { return; }
-
-	for (int i = 0; i < MONSTER_COUNT; i++)
+	for (int i = 0; i < OBJECTPOOL_COUNT; i++)
 	{
 		Projectiles[i] = NewProjectile();
 	}
 }
 
-void ProcessMonster()
-{
-	for (int i = 1; i < CreatureCount; i++)
-	{
-		if (Monsters[i]->enable)
-		{
-			Coordination temp = { 0,0 };
-			if (Random(2))
-			{
-				temp.x = RandomRange(-1, 1);
-			}
-			else
-			{
-				temp.y = RandomRange(-1, 1);
-			}
-			temp = CheckMove(Monsters[i]->id, &Monsters[i]->object, temp);
-			if (temp.x == 0 && temp.y == 0)
-			{
-
-			}
-			Monsters[i]->object.position.x += temp.x;
-			Monsters[i]->object.position.y += temp.y;
-		}
-	}
-}
-
-void ProcessProjectile()
+void DisableProjectile()
 {
 	for (int i = 0; i < ProjectileCount; i++)
 	{
-		if (Projectiles[i]->enable == True)
-		{
-			Coordination temp = { 0,0 };
-			temp = Projectiles[i]->object.direction;
-			temp.x *= Projectiles[i]->speed;
-			temp.y *= Projectiles[i]->speed;
-			Projectiles[i]->object.position.x += temp.x;
-			Projectiles[i]->object.position.y += temp.y;
-			CheckProjectile(Projectiles[i]);
-			if (--Projectiles[i]->distance == 0)
-			{
-				Projectiles[i]->enable = False;
-			}
-		}
+		Projectiles[i]->enable == False;
 	}
 }
 
-void ShootProjectile(Coordination position, Coordination direction, ProjectileType type, int power, int speed)
+void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed)
 {
 	Projectile* projectile;
 	projectile = GetProjectile();
@@ -150,11 +116,27 @@ Projectile* NewProjectile()
 	ProjectileCount++;
 	projectile->enable = False;
 	projectile->object.layer = 0;
+	projectile->object.direction = DIRECTION_DOWN;
 	projectile->object.collider.pivot.x = 4;
 	projectile->object.collider.pivot.y = 4;
 	projectile->object.collider.size.x = 8;
 	projectile->object.collider.size.y = 8;
 	return projectile;
+}
+
+Creature* NewCreature()
+{
+	Creature* creature = (Creature*)malloc(sizeof(Creature));
+	if (creature == NULL) { return NULL; }
+	memset(creature, 0, sizeof(Creature));
+	creature->object.direction = DIRECTION_DOWN;
+	creature->enable = False;
+	creature->object.layer = 0;
+	creature->object.collider.pivot.x = 4;
+	creature->object.collider.pivot.y = 4;
+	creature->object.collider.size.x = 8;
+	creature->object.collider.size.y = 8;
+	return creature;
 }
 
 Projectile* GetProjectile()
@@ -174,72 +156,18 @@ Projectile* GetProjectile()
 	return projectile;
 }
 
-// 크리쳐를 생성하는 메소드
-Creature* NewCreature()
+// id로 몬스터를 생성하는 메소드
+Creature* NewMonster(int id)
 {
 	Creature* creature = (Creature*)malloc(sizeof(Creature));
 	if (creature == NULL) { return NULL; }
 	memset(creature, 0, sizeof(Creature));
-	creature->id = CreatureCount++;
+	//creature->id = CreatureCount++;
 	creature->enable = False;
-	creature->object.layer = 0;
-	creature->object.collider.pivot.x = 4;
-	creature->object.collider.pivot.y = 4;
-	creature->object.collider.size.x = 8;
-	creature->object.collider.size.y = 8;
+	creature->power = MonsterInfos[id]->power;
+	creature->speed = MonsterInfos[id]->speed;
+	creature->object = MonsterInfos[id]->object;
 	return creature;
-}
-
-// 
-Creature* GetCreature()
-{
-	for (int i = 0; i < CreatureCount; i++)
-	{
-		if (Monsters[i]->enable == False)
-		{
-			return Monsters[i];
-		}
-	}
-	return NewCreature();
-}
-
-// id값으로 크리쳐 찾기
-Creature* FindCreature(int id)
-{
-	for (int i = 0; i < CreatureCount; i++)
-	{
-		if (Monsters[i]->id == id)
-		{
-			return Monsters[i];
-		}
-	}
-	return NULL;
-}
-
-Coordination CheckMove(int id, Object* object, Coordination direction)
-{
-	Coordination temp = { 0, 0 };
-	for (int i = 0; i < CreatureCount; i++)
-	{
-		// 몬스터의 id가 자신이거나 비활성화 돼있을 때 스킵
-		if (Monsters[i]->id == id || !Monsters[i]->enable || (object->layer != Monsters[i]->object.layer))
-		{
-			continue;
-		}
-		temp.x = direction.x;
-		temp.y = 0;
-		if (CheckCollider(object, &Monsters[i]->object, temp))
-		{
-			direction.x = 0;
-		}
-		temp.x = 0;
-		temp.y = direction.y;
-		if (CheckCollider(object, &Monsters[i]->object, temp))
-		{
-			direction.y = 0;
-		}
-	}
-	return direction;
 }
 
 void HitProjectile(Projectile* bullet, Creature* target)
@@ -252,21 +180,6 @@ void HitProjectile(Projectile* bullet, Creature* target)
 	if (target->hp <= 0)
 	{
 		target->enable = False;
-	}
-}
-
-void CheckProjectile(Projectile* projectile)
-{
-	Coordination zero = { 0,0 };
-	for (int i = 1; i < CreatureCount; i++)
-	{
-		if (Monsters[i]->enable == True)
-		{
-			if (CheckCollider(&projectile->object, &Monsters[i]->object, zero) == True)
-			{
-				HitProjectile(projectile, Monsters[i]);
-			}
-		}
 	}
 }
 
@@ -286,8 +199,7 @@ Bool CheckCollider(Object* object1, Object* object2, Coordination offset)
 	return (vertical && horizontal);
 }
 
-Animator* NewAnimator()
+void UpdateAnimator(Creature* creature)
 {
-	Animator* animator = (Animator*)malloc(sizeof(Animator));
-	if (animator == NULL) { return NULL; }
+
 }

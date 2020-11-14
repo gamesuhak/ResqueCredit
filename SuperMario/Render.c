@@ -9,21 +9,21 @@
 #include "Bool.h"
 #include "Map.h"
 
+extern Stage* Stage1; // Map.c
+extern Creature* Player; // Player.c
+extern Room* PlayerRoom; // Player.c
+
+extern Image** Sprites; // Sprite.c
+
+extern Projectile** Projectiles; // Object.c
+extern int ProjectileCount; // Object.c
+
 Image* Screen; // 메인 화면 이미지
 Image* Buffer; // 메인 화면 그리기 전에 그리는 구간
 
-Image* BufferRoom;
-
-extern Stage* Stage1;
-extern Coordination PlayerRoom;
-
-extern Image** Sprites;
-
-extern Creature* Player;
-extern Creature** Monsters;
-extern Projectile** Projectiles;
-extern int CreatureCount;
-extern int ProjectileCount;
+Image* CurrentRoom;
+Image* Temp; // 트랜지션용 이미지
+Bool IsTransition = False;
 
 // 화면 출력 함수
 void Render()
@@ -33,20 +33,15 @@ void Render()
 	InitializeRender();
 	while (1)
 	{
-		/*for (int y = 0; y < 4; y++)
-		{
-			for (int x = 0; x < 3; x++)
-			{
-				RenderImage(x * 8 + 4, y * 8 + 4, Sprites[SPRITE_FINN + (y * 3) + x]);
-			}
-		}*/
 		//UpdateAnimation();
-
-		//Stage1 = NewStage();
-		//RenderStage(0, 0, Stage1);
-		//Sleep(1000);
 		//UpdateRender();
 	}
+}
+
+void StartTransition(Direction direction)
+{
+	IsTransition = True;
+	DuplicateImage(CurrentRoom);
 }
 
 // Render를 초기화하는 함수
@@ -54,6 +49,7 @@ void InitializeRender()
 {
 	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
 	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
+	CurrentRoom = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT - PIXELPERUNIT);
 }
 
 // 화면을 갱신하는 함수
@@ -61,7 +57,7 @@ void InitializeRender()
 void UpdateRender()
 {
 	UpdateUI(Buffer); // UI 업데이트
-	//RenderMap(CurrentRoom, Buffer);
+	RenderRoom(PlayerRoom, CurrentRoom);
 
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{
@@ -74,7 +70,7 @@ void UpdateRender()
 	}
 }
 
-void RenderMap(Room* room, Image* target)
+void RenderRoom(Room* room, Image* target)
 {
 	AddImage(0, 0, Sprites[SPRITE_MAP], target);
 	for (int y = 0; y < room->height; y++)
@@ -87,22 +83,26 @@ void RenderMap(Room* room, Image* target)
 
 	for (int layer = 0; layer < LAYER_COUNT; layer++)
 	{
-		
 		AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], target);
-		for (int i = 1; i < CreatureCount; i++)
+		for (int i = 1; i < room->monsterCount; i++)
 		{
 			// 몬스터가 비활성화 돼있을 때 생략
-			if (!Monsters[i]->enable) { continue; }
-
-			AddImage(Monsters[i]->object.position.x, Monsters[i]->object.position.y, Sprites[2], target);
+			if (!room->monsters[i]->enable) { continue; }
+			AddImage(room->monsters[i]->object.position.x, room->monsters[i]->object.position.y, Sprites[2], target);
 		}
 		for (int i = 0; i < ProjectileCount; i++)
 		{
 			// 투사체가 비활성화 돼있을 때 생략
 			if (!Projectiles[i]->enable) { continue; }
-
 			AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], target);
 		}
+	}
+
+	// 문을 출력하는 부분
+
+	if (!room->clear)
+	{
+
 	}
 }
 
