@@ -23,7 +23,7 @@ void InitializePlayer()
 	PlayerRoomPosition = Stage1->start;
 	Player->object.position = NewCoordination(4 * PIXELPERUNIT , 2 * PIXELPERUNIT);
 	int frame[4] = { 4, 4, 4, 4 };
-	Player->object.animator = NewAnimator(SPRITE_PLAYER, STATE_WALK + 1, DIRECTION_COUNT, 10, frame);
+	Player->object.animator = NewAnimator(SPRITE_PLAYER, STATE_WALK + 1, DIRECTION_COUNT, 20, frame);
 	PlayerRoom = Stage1->rooms[Stage1->roomData[PlayerRoomPosition.x][PlayerRoomPosition.y]];
 }
 
