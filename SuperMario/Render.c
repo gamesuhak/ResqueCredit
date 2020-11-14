@@ -34,7 +34,7 @@ void Render()
 	while (1)
 	{
 		//UpdateAnimation();
-		//UpdateRender();
+		UpdateRender();
 	}
 }
 
@@ -58,7 +58,7 @@ void UpdateRender()
 {
 	UpdateUI(Buffer); // UI 업데이트
 	RenderRoom(PlayerRoom, CurrentRoom);
-
+	AddImage(0, PIXELPERUNIT, CurrentRoom, Buffer);
 	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
 	{
 		for (int posy = 0; posy < SCREEN_HEIGHT; posy++)
@@ -77,7 +77,7 @@ void RenderRoom(Room* room, Image* target)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], target);
+			//AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], target);
 		}
 	}
 

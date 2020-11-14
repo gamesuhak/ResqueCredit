@@ -21,16 +21,16 @@ int RandomRange(int start, int end)
 int main()
 {
 	srand(time(NULL));
-	Thread(Input);
-	
 	InitializeMonsterInfo();
 
-	if (InitializeStage())
+	Thread(Input);
+
+	//if (InitializeStage())
 	{
 		InitializePlayer();
 		SetInputHandler(PlayerMove);
-		Thread(ProcessObject);
-		Thread(Render);
+		//Thread(ProcessObject);
+		//Thread(Render);
 	}
 	while (1)
 	{

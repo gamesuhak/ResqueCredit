@@ -4,10 +4,11 @@ typedef struct Animator Animator;
 struct Animator
 {
 	char currentFrame;
+	char maxFrame;
 	char state;
-	char asd;
+	char*** sprites;
 };
 
-Animator* NewAnimator(int index);
+Animator* NewAnimator(int index, int stateCount, int directionCount, int frameCount);
 
 void CreateAnimator();

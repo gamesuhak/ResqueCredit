@@ -4,6 +4,7 @@
 #include "Input.h" // Key
 #include "Object.h" // Creature, CheckMove
 #include "Map.h" // CheckMove
+#include "Sprite.h" // PIXELPERUNIT
 
 extern char ASCIIMODE; // Render.c
 extern Bool KeyState[KEY_COUNT]; // Input.c
@@ -19,8 +20,8 @@ void InitializePlayer()
 {
 	Player = NewCreature();
 	Player->enable = True;
-	Player->object.direction = DIRECTION_DOWN;
 	PlayerRoomPosition = Stage1->start;
+	Player->object.position = NewCoordination(4 * PIXELPERUNIT , 2 * PIXELPERUNIT);
 	PlayerRoom = Stage1->rooms[Stage1->roomData[PlayerRoomPosition.x][PlayerRoomPosition.y]];
 }
 
@@ -77,8 +78,11 @@ void PlayerMove()
 		if (move.x != 0 || move.y != 0)
 		{
 			move = CheckMove(PlayerRoom, 0, &Player->object, move);
+			printf("%d, %d\n", move.x, move.y);
+			Sleep(1000);
 			Player->object.position = AddCoordination(Player->object.position, move);
 		}
-		Sleep(50);
+		printf("%d, %d\n", move.x, move.y);
+		Sleep(500);
 	}
 }

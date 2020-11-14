@@ -32,11 +32,9 @@ void ProcessObject()
 
 void InitializeMonsterInfo()
 {
-	if (MonsterInfos == NULL)
-	{
-		MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*));
-		if (MonsterInfos == NULL) { return NULL; }
-	}
+	MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*));
+	if (MonsterInfos == NULL) { return NULL; }
+
 	char name[10] = "";
 	for (int i = 0; 1; i++)
 	{

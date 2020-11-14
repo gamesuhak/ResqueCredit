@@ -316,7 +316,6 @@ void InitializeRoomInfo()
 		sprintf(name, "%03d", i);
 		RoomInfo* roomInfo = LoadRoomInfoFile(name);
 		if (roomInfo == NULL) { return; }
-		printf("%s 파일 입력 성공\n", name);
 		Sleep(100);
 		++RoomInfoCount;
 		AddRoomInfo(roomInfo);
@@ -391,9 +390,9 @@ Room* NewRoom(int index, Door door)
 	room->door = RoomInfos[index]->door;
 	room->tile = DuplicateArray(RoomInfos[index]->tile, room->width, room->height);
 	room->tag = DuplicateArray(RoomInfos[index]->tag, room->width, room->height);
+	room->clear = RoomInfos[index]->monsterCount == 0;
 	room->monsters = (Creature**)malloc(sizeof(Creature*) * RoomInfos[index]->monsterCount);
-	//for (int id = 0; id < RoomInfos[index]->monsterCount; id++)
-
+	room->monsterCount = 0;
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
@@ -406,7 +405,7 @@ Room* NewRoom(int index, Door door)
 			Creature* monster = NewMonster(id);
 			monster->object.position.x = x;
 			monster->object.position.y = y;
-			room->monsters[i] = monster;
+			room->monsters[room->monsterCount++] = monster;
 		}
 	}
 
@@ -416,9 +415,9 @@ Room* NewRoom(int index, Door door)
 // 스테이지에 방을 추가하는 메소드
 void AddRoom(Stage* stage, Room* room)
 {
-	stage->rooms = (Room**)realloc(stage->rooms, sizeof(Room*) * stage->roomCount);
+	stage->rooms = (Room**)realloc(stage->rooms, sizeof(Room*) * ++stage->roomCount);
 	if (stage->rooms == NULL) { return; }
-	stage->rooms[(++stage->roomCount) - 1] = room;
+	stage->rooms[stage->roomCount - 1] = room;
 }
 
 void CheckProjectile(Room* room, Projectile* projectile)

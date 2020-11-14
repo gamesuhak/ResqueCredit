@@ -1,5 +1,5 @@
 #pragma once
-#define PIXELPERUNIT		16
+#define PIXELPERUNIT		8
 
 typedef enum Sprite
 {
