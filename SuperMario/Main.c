@@ -25,12 +25,12 @@ int main()
 
 	Thread(Input);
 
-	//if (InitializeStage())
+	if (InitializeStage())
 	{
 		InitializePlayer();
 		SetInputHandler(PlayerMove);
-		//Thread(ProcessObject);
-		//Thread(Render);
+		Thread(ProcessObject);
+		Thread(Render);
 	}
 	while (1)
 	{

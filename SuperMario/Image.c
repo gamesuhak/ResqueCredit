@@ -86,12 +86,12 @@ Image** SliceImage(Image* image, int column, int row)
 	{
 		for (int x = 0; x < column; x++)
 		{
-			images[y * (row - 1) + x] = NewImage(width, height);
+			images[y * (row) + x] = NewImage(width, height);
 			for (int pixelX = 0; pixelX < width; pixelX++)
 			{
 				for (int pixelY = 0; pixelY < height; pixelY++)
 				{
-					images[y * (row - 1) + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
+					images[y * (row) + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
 				}
 			}
 		}

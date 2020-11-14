@@ -31,6 +31,14 @@ void Render()
 	InitializeScreen();
 	InitializeSprites();
 	InitializeRender();
+	/*for (int y = 0; y < 4; y++)
+	{
+		for (int x = 0; x < 4; x++)
+		{
+			RenderImage(PIXELPERUNIT * x, PIXELPERUNIT * y, Sprites[SPRITE_PLAYER + (y * 4) + x]);
+			printf("%d==\n", SPRITE_PLAYER + (y * 4) + x);
+		}
+	}*/
 	while (1)
 	{
 		//UpdateAnimation();
@@ -83,7 +91,8 @@ void RenderRoom(Room* room, Image* target)
 
 	for (int layer = 0; layer < LAYER_COUNT; layer++)
 	{
-		AddImage(Player->object.position.x, Player->object.position.y, Sprites[1], target);
+		AddImage(Player->object.position.x, Player->object.position.y, Sprites[Player->object.sprite], target);
+
 		for (int i = 1; i < room->monsterCount; i++)
 		{
 			// 몬스터가 비활성화 돼있을 때 생략

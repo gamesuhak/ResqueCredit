@@ -2,6 +2,7 @@
 //#include <stdio.h>
 #include <windows.h>
 #include "Bool.h"
+#include "Player.h"
 
 int KeyCode[KEY_COUNT]; // 현재 설정되어있는 키 코드를 저장하는 배열
 Bool KeyState[KEY_COUNT] = { False, False, False, False, False, False }; // 키가 눌려있는 상태를 저장할 배열
@@ -66,5 +67,6 @@ void PushKey()
 void SetInputHandler(void (*method)())
 {
 	InputHandler = method;
+	InputHandler(); // 왜인지는 모르겠지만 한번 호출해주지 않으면 영원히 실행되지 않음
 	return;
 }

@@ -4,6 +4,7 @@
 #include "Image.h"
 #include "Animator.h"
 #include "Coordination.h"
+#include "State.h"
 
 #define OBJECTPOOL_COUNT	10
 #define PLAYER_HP_MAX		6
@@ -14,12 +15,9 @@ typedef struct Projectile Projectile;
 typedef struct Object Object;
 typedef struct Collider Collider;
 
-typedef struct Animation Animation;
-
 typedef enum Direction { DIRECTION_DOWN = 0, DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, DIRECTION_COUNT } Direction;
 typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE, TYPE_COUNT } ObjectType;
 typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_MISSILE, PROJECTILE_COUNT } ProjectileType;
-typedef enum AnimationType { ANIMATION_BULLET = 0 } AnimationType;
 
 struct Collider
 {
@@ -30,10 +28,13 @@ struct Collider
 struct Object
 {
 	int type;
+	int sprite; // 스프라이트 번호
+	State state;
 	char layer; // 오브젝트가 존재하는 레이어
 	Coordination position; // 오브젝트의 위치
 	Direction direction; // 오브젝트의 방향
 	Collider collider; // 오브젝트의 콜라이더
+	Animator* animator; // 애니메이터
 };
 
 struct MonsterInfo
@@ -51,11 +52,8 @@ struct Creature
 	int hp;
 	int power;
 	int speed;
-	//int sprite; // 현재 스프라이트 번호
-	int state;
 	Bool enable;
 	Object object;
-	Animator* animator;
 };
 
 struct Projectile
@@ -66,13 +64,6 @@ struct Projectile
 	short penetration; // 몇번 관통할 수 있는지
 	Bool throughWall;
 	Bool enable;
-	Object object;
-};
-
-struct Animation
-{
-	char currentFrame;
-	AnimationType type;
 	Object object;
 };
 

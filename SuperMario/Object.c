@@ -22,12 +22,13 @@ void ProcessObject()
 {
 	InitializeObject();
 	
-	/*while (1)
+	while (1)
 	{
-		ProcessMonster(PlayerRoom);
-		ProcessProjectile(PlayerRoom);
-		Sleep(100);
-	}*/
+		UpdateAnimator(&Player->object);
+		//ProcessMonster(PlayerRoom);
+		//ProcessProjectile(PlayerRoom);
+		Sleep(10);
+	}
 }
 
 void InitializeMonsterInfo()
@@ -127,13 +128,15 @@ Creature* NewCreature()
 	Creature* creature = (Creature*)malloc(sizeof(Creature));
 	if (creature == NULL) { return NULL; }
 	memset(creature, 0, sizeof(Creature));
-	creature->object.direction = DIRECTION_DOWN;
 	creature->enable = False;
+	creature->object.direction = DIRECTION_DOWN;
 	creature->object.layer = 0;
+	creature->object.state = STATE_IDLE;
 	creature->object.collider.pivot.x = 4;
 	creature->object.collider.pivot.y = 4;
 	creature->object.collider.size.x = 8;
 	creature->object.collider.size.y = 8;
+	creature->object.animator = NULL;
 	return creature;
 }
 
@@ -197,7 +200,21 @@ Bool CheckCollider(Object* object1, Object* object2, Coordination offset)
 	return (vertical && horizontal);
 }
 
-void UpdateAnimator(Creature* creature)
+void UpdateAnimator(Object* object)
 {
-
+	// 오브젝트의 상태가 변했을 때
+	if (object->state != object->animator->state)
+	{
+		// 애니메이터의 상태를 변경, 재생 시간 초기화
+		object->animator->state = object->state;
+		object->animator->time = 0;
+	}
+	int state = (object->state < object->animator->stateCount) ? object->state : object->animator->stateCount - 1;
+	int direction = (object->direction < object->animator->animation[state]->directionCount) ? object->direction : 0;//object->animator->animation[state]->directionCount - 1;
+	int frame = (object->animator->time / object->animator->frameTime) % (object->animator->animation[state]->frameCount);
+	object->sprite = object->animator->animation[state]->clips[frame][direction];
+	if (++object->animator->time > object->animator->frameTime * object->animator->animation[state]->frameCount)
+	{
+		object->animator->time = 0;
+	}
 }

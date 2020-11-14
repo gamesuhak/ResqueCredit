@@ -22,13 +22,15 @@ void InitializePlayer()
 	Player->enable = True;
 	PlayerRoomPosition = Stage1->start;
 	Player->object.position = NewCoordination(4 * PIXELPERUNIT , 2 * PIXELPERUNIT);
+	int frame[4] = { 4, 4, 4, 4 };
+	Player->object.animator = NewAnimator(SPRITE_PLAYER, STATE_WALK + 1, DIRECTION_COUNT, 10, frame);
 	PlayerRoom = Stage1->rooms[Stage1->roomData[PlayerRoomPosition.x][PlayerRoomPosition.y]];
 }
 
 void PlayerMove()
 {
 	int cooltime = 0;
-	while (1)
+	//while (1)
 	{
 		Coordination move = { 0,0 };
 		if (KeyState[KEY_C])
@@ -78,11 +80,16 @@ void PlayerMove()
 		if (move.x != 0 || move.y != 0)
 		{
 			move = CheckMove(PlayerRoom, 0, &Player->object, move);
-			printf("%d, %d\n", move.x, move.y);
-			Sleep(1000);
+			//printf("%d, %d\n", move.x, move.y);
+			//Sleep(1000);
 			Player->object.position = AddCoordination(Player->object.position, move);
+			Player->object.state = STATE_WALK;
 		}
-		printf("%d, %d\n", move.x, move.y);
-		Sleep(500);
+		else
+		{
+			Player->object.state = STATE_IDLE;
+		}
+		//printf("%d, %d\n", move.x, move.y);
+		Sleep(50);
 	}
 }

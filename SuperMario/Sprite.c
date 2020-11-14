@@ -1,5 +1,6 @@
 #include "Sprite.h"
 
+#include <stdio.h>
 #include "Image.h"
 #include "Object.h" // DIRECTION
 #include "FileLoader.h" // LoadBitmapFile
@@ -13,10 +14,15 @@ const char* SPRITENAME[SPRITE_COUNT] =
 	"Map",
 
 	// 플레이어 스프라이트, 12개나 있는 이유는 첫번째 이미지를 잘라 12개로 사용하기 때문에
-	"Finn", "Finn", "Finn",
-	"Finn", "Finn", "Finn",
-	"Finn", "Finn", "Finn",
-	"Finn", "Finn", "Finn",
+	"Player_Idle", "", "", "",
+	"", "", "", "",
+	"", "", "", "",
+	"", "", "", "",
+
+	"Player_Walk", "", "", "",
+	"", "", "", "",
+	"", "", "", "",
+	"", "", "", "",
 
 	"Monster",
 
@@ -31,9 +37,13 @@ void InitializeSprites()
 
 	Sprites[SPRITE_MAP] = LoadBitmapFile(SPRITENAME[SPRITE_MAP], COLOR_WHITE);
 
-	Sprites[SPRITE_FINN] = LoadBitmapFile(SPRITENAME[SPRITE_FINN], COLOR_GRAY);
-	ParseSprite(SPRITE_FINN, 3, DIRECTION_COUNT);
-	SetPivot(SPRITE_FINN, 3 * DIRECTION_COUNT, PIVOT_MIDDLE);
+	Sprites[SPRITE_PLAYER] = LoadBitmapFile(SPRITENAME[SPRITE_PLAYER], COLOR_GRAY);
+	ParseSprite(SPRITE_PLAYER, 4, DIRECTION_COUNT);
+	SetPivot(SPRITE_PLAYER, 4 * DIRECTION_COUNT, PIVOT_MIDDLE);
+
+	Sprites[SPRITE_PLAYER_WALK] = LoadBitmapFile(SPRITENAME[SPRITE_PLAYER_WALK], COLOR_GRAY);
+	ParseSprite(SPRITE_PLAYER_WALK, 4, DIRECTION_COUNT);
+	SetPivot(SPRITE_PLAYER_WALK, 4 * DIRECTION_COUNT, PIVOT_MIDDLE);
 
 	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
 
@@ -48,6 +58,7 @@ void ParseSprite(int index, int column, int row)
 	for (int i = 0; i < column * row; i++)
 	{
 		Sprites[index + i] = images[i];
+		//printf("%d : %d\n", i, Sprites[index + i]->height);
 	}
 	free(images);
 }
@@ -60,13 +71,13 @@ void SetPivot(int index, int count, int pivot)
 	{
 		if (pivot == PIVOT_LEFTUP)
 		{
-			Sprites[index + i]->pivot.x = 0;
-			Sprites[index + i]->pivot.y = 0;
+			Sprites[index + i]->pivot = NewCoordination(0, 0);
 		}
 		else if (pivot == PIVOT_MIDDLE)
 		{
-			Sprites[index + i]->pivot.x = Sprites[index + i]->width >> 1;
-			Sprites[index + i]->pivot.y = Sprites[index + i]->height >> 1;
+			Sprites[index + i]->pivot = NewCoordination(Sprites[index + i]->width >> 1, Sprites[index + i]->height >> 1);
+			/*Sprites[index + i]->pivot.x = Sprites[index + i]->width >> 1;
+			Sprites[index + i]->pivot.y = Sprites[index + i]->height >> 1;*/
 		}
 	}
 }
