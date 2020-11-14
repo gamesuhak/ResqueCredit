@@ -4,7 +4,7 @@
 #include <stdlib.h> // NULL, malloc
 #include "Function.h"
 #include "Render.h"
-#include "FileLoader.h" // LoadRoomFile
+#include "FileLoader.h" // LoadRoomInfoFile
 
 extern const Coordination DIRECTIONS[DIRECTION_COUNT];
 const int DOORS[DIRECTION_COUNT] = { 1, 2, 4, 8 };
@@ -306,7 +306,7 @@ Stage* NewStage()
 void InitializeRoomInfo()
 {
 	/*Room* room = NewRoomInfo();
-	SaveRoomFile("001", room);*/
+	SaveRoomInfoFile("001", room);*/
 	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*));
 	if (RoomInfos == NULL) { return; }
 
@@ -314,7 +314,7 @@ void InitializeRoomInfo()
 	for (int i = 0; 1; i++)
 	{
 		sprintf(name, "%03d", i);
-		RoomInfo* roomInfo = LoadRoomFile(name);
+		RoomInfo* roomInfo = LoadRoomInfoFile(name);
 		if (roomInfo == NULL) { return; }
 		printf("%s 파일 입력 성공\n", name);
 		Sleep(100);

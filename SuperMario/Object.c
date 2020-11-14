@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h> // memset
 #include "Function.h"
-#include "FileLoader.h" // LoadMonsterFile
+#include "FileLoader.h" // LoadMonsterInfoFile
 
 const Coordination DIRECTIONS[DIRECTION_COUNT] =
 {
@@ -41,7 +41,7 @@ void InitializeMonsterInfo()
 	for (int i = 0; 1; i++)
 	{
 		sprintf(name, "%03d", i);
-		MonsterInfo* monsterInfo = LoadMonsterFile(name);
+		MonsterInfo* monsterInfo = LoadMonsterInfoFile(name);
 		if (monsterInfo == NULL) { return; }
 		++MonsterInfoCount;
 		monsterInfo->object.direction = DIRECTION_DOWN;
