@@ -10,9 +10,8 @@ int KeyCharge[KEY_COUNT] = { 0, 0, 0, 0, 0, 0 }; // Å°°¡ ¾ó¸¶³ª ´­·ÁÀÖ´ÂÁö ÀúÀåÇ
 const char* KeyName[KEY_COUNT] = { "À§", "¾Æ·¡", "¿ŞÂÊ", "¿À¸¥ÂÊ", "A", "B" };
 void (*InputHandler)() = NULL; // Å°¸¦ ´­·¶À» ¶§ ½ÇÇàÇÒ ¸Ş¼Òµå¸¦ ÀúÀåÇÏ´Â Æ÷ÀÎÅÍ
 
-void Input()
+void InputProcess()
 {
-	InitializeKey();
 	while (1)
 	{
 		PushKey();

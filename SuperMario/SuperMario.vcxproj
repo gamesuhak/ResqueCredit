@@ -146,11 +146,12 @@
     <ClCompile Include="Image.c" />
     <ClCompile Include="Input.c" />
     <ClCompile Include="Main.c" />
-    <ClCompile Include="Map.c" />
+    <ClCompile Include="Stage.c" />
     <ClCompile Include="Object.c" />
     <ClCompile Include="Player.c" />
     <ClCompile Include="Render.c" />
     <ClCompile Include="Render.h" />
+    <ClCompile Include="Room.c" />
     <ClCompile Include="Screen.c" />
     <ClCompile Include="Sprite.c" />
     <ClCompile Include="Thread.c" />
@@ -164,9 +165,10 @@
     <ClInclude Include="Function.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="Map.h" />
+    <ClInclude Include="Stage.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Room.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="State.h" />

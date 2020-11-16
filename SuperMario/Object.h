@@ -1,5 +1,4 @@
 #pragma once
-//#include "Map.h" // Room
 #include "Bool.h"
 #include "Image.h"
 #include "Animator.h"
@@ -75,11 +74,11 @@ void AddMonsterInfo(Creature* monster);
 Creature* NewCreature();
 Creature* NewMonster(int id);
 
+void DisableProjectile();
 void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed);
 void HitProjectile(Projectile* bullet, Creature* target);
 Projectile* NewProjectile();
 Projectile* GetProjectile();
 
 Bool CheckCollider(Object* object1, Object* object2, Coordination offset);
-
-void UpdateAnimator(Creature* creature);
+void UpdateAnimator(Object* object);

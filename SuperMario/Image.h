@@ -1,6 +1,4 @@
 #pragma once
-#ifndef IMAGE_H
-#define IMAGE_H
 #include "Color.h"
 #include "Coordination.h"
 #include <stdlib.h> // NULL
@@ -31,4 +29,3 @@ Image* DuplicateImage(Image* image);
 void ReleaseImage(Image* image);
 Image** SliceImage(Image* image, int column, int row);
 void AddImage(int x, int y, Image* image, Image* target);
-#endif

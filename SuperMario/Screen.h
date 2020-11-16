@@ -3,8 +3,8 @@
 #include "Color.h"
 
 // 화면 크기
-#define SCREEN_WIDTH		176
-#define SCREEN_HEIGHT		64
+#define SCREEN_WIDTH		88 // 화면 가로 픽셀 수
+#define SCREEN_HEIGHT		64 // 화면 세로 픽셀 수
 
 #define BUFFER_MAX			4
 #define COMMAND_MAX			30

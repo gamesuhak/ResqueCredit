@@ -47,9 +47,6 @@
     <ClCompile Include="Thread.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Map.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -60,6 +57,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Player.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,9 +88,6 @@
     <ClInclude Include="Bool.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Function.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -107,6 +107,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Room.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

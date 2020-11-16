@@ -85,7 +85,7 @@ Image* LoadBitmapFile(char* name, Color transparent)
 void SaveRoomInfoFile(char* name, RoomInfo* roomInfo)
 {
 	FILE* file;
-	char names[50] = "Map/";
+	char names[50] = "Room/";
 	strcat(names, name);
 	strcat(names, ".txt");
 	file = fopen(names, "wt");
@@ -128,12 +128,12 @@ RoomInfo* LoadRoomInfoFile(char* name)
 {
 	RoomInfo* room;	
 	FILE* file;
-	char names[50] = "Map/";
+	char names[50] = "Room/";
 	strcat(names, name);
 	strcat(names, ".txt");
 	if ((file = fopen(names, "rt")) == NULL) { return NULL; }
 	
-	room = (Stage*)malloc(sizeof(Stage));
+	room = (RoomInfo*)malloc(sizeof(RoomInfo));
 	if (room == NULL) { return NULL; }
 
 	fscanf(file, "Type : %d\n", &room->type);

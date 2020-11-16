@@ -13,7 +13,7 @@ void InitializeScreen()
 	Handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	//SetConsoleTitle("Title");
 	//system("cls");
-	SetScreenSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	SetScreenSize(SCREEN_WIDTH << 1, SCREEN_HEIGHT); // 가로의 실제 크기는 픽셀 * 2이다
 	RemoveScrollbar();
 	ViewCursor(0);
 }

@@ -7,9 +7,9 @@
 #include "Color.h"
 #include "Animator.h"
 #include "Bool.h"
-#include "Map.h"
+#include "Room.h"
 
-extern Stage* Stage1; // Map.c
+extern Stage* Stage1; // Stage.c
 extern Creature* Player; // Player.c
 extern Room* PlayerRoom; // Player.c
 
@@ -41,7 +41,6 @@ void Render()
 	}*/
 	while (1)
 	{
-		//UpdateAnimation();
 		UpdateRender();
 	}
 }
@@ -56,8 +55,8 @@ void StartTransition(Direction direction)
 void InitializeRender()
 {
 	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
-	Buffer = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
-	CurrentRoom = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT - PIXELPERUNIT);
+	Buffer = NewImage(Screen->width, Screen->height);
+	CurrentRoom = NewImage(Screen->width, Screen->height - UI_HEIGHT);
 }
 
 // 화면을 갱신하는 함수
@@ -67,9 +66,10 @@ void UpdateRender()
 	UpdateUI(Buffer); // UI 업데이트
 	RenderRoom(PlayerRoom, CurrentRoom);
 	AddImage(0, PIXELPERUNIT, CurrentRoom, Buffer);
-	for (int posx = 0; posx < SCREEN_WIDTH; posx++)
+	
+	for (int posy = 0; posy < Screen->height; posy++)
 	{
-		for (int posy = 0; posy < SCREEN_HEIGHT; posy++)
+		for (int posx = 0; posx < Screen->width; posx++)
 		{
 			if (Screen->bitmap[posx][posy] == Buffer->bitmap[posx][posy]) { continue; }
 			Screen->bitmap[posx][posy] = Buffer->bitmap[posx][posy];

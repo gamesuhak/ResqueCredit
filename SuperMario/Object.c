@@ -11,25 +11,10 @@ const Coordination DIRECTIONS[DIRECTION_COUNT] =
 	{0, 1}, {-1, 0}, {0, -1}, {1, 0}
 };
 
-extern Creature* Player; // 플레이어 객체를 저장할 포인터
-
 MonsterInfo** MonsterInfos = NULL; // 몬스터 정보들을 저장할 MonsterInfo 2차원 포인터
 Projectile** Projectiles = NULL; // 발사체 포인터 배열
 int MonsterInfoCount = 0; // 몬스터 정보들 개수를 저장할 변수
 int ProjectileCount = 0; // 발사체 개수를 저장할 변수
-
-void ProcessObject()
-{
-	InitializeObject();
-	
-	while (1)
-	{
-		UpdateAnimator(&Player->object);
-		//ProcessMonster(PlayerRoom);
-		//ProcessProjectile(PlayerRoom);
-		Sleep(10);
-	}
-}
 
 void InitializeMonsterInfo()
 {
@@ -57,27 +42,6 @@ void AddMonsterInfo(Creature* monster)
 
 void InitializeObject()
 {
-	/*Player->object.position.x = 40;
-	Player->object.position.y = 32;
-
-	Monsters = (Creature**)malloc(sizeof(Creature*) * MONSTER_COUNT);
-	if (Monsters == NULL) { return; }
-	Monsters[0] = Player;
-
-	for (int i = 1; i < MONSTER_COUNT; i++)
-	{
-		Monsters[i] = NewCreature();
-	}
-	Monsters[1]->object.position.x = 16;
-	Monsters[1]->object.position.y = 32;
-	Monsters[1]->enable = True;
-	Monsters[1]->hp = 5;
-
-	Monsters[2]->object.position.x = 48;
-	Monsters[2]->object.position.y = 32;
-	Monsters[2]->enable = True;
-	Monsters[1]->hp = 10;*/
-
 	Projectiles = (Projectile**)malloc(sizeof(Projectile*) * OBJECTPOOL_COUNT);
 	if (Projectiles == NULL) { return; }
 	for (int i = 0; i < OBJECTPOOL_COUNT; i++)

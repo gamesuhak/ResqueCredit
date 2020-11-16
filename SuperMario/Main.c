@@ -1,12 +1,15 @@
 //#include <Windows.h>
 #include <time.h> // time
 #include "Render.h" // Render
-#include "Object.h" // ProcessObject
-#include "Input.h" // Input
+#include "Object.h" // ProcessRoom
+#include "Input.h" // InputProcess
 #include "Thread.h" // Thread
-#include "Map.h" // InitializeStage
+#include "Stage.h" // InitializeStage
+#include "Room.h"
 #include "Function.h" // Random, RandomRange
 #include "Player.h" // InitializePlayer, PlayerMove
+
+Bool Pause = False;
 
 int Random(int value)
 {
@@ -21,15 +24,18 @@ int RandomRange(int start, int end)
 int main()
 {
 	srand(time(NULL));
-	InitializeMonsterInfo();
 
-	Thread(Input);
+	InitializeKey(); // 키를 초기화
+	InitializeMonsterInfo(); // 몬스터 정보를 초기화
+	InitializeRoomInfo(); // 방 정보를 초기화
+
+	Thread(InputProcess); // 입력 프로세스를 스레드로 실행
 
 	if (InitializeStage())
 	{
-		InitializePlayer();
-		SetInputHandler(PlayerMove);
-		Thread(ProcessObject);
+		InitializePlayer(); // 플레이어를 초기화
+		SetInputHandler(PlayerMove); // 입력 핸들러에 플레이어 이동 메소드를 연결
+		Thread(ProcessRoom);
 		Thread(Render);
 	}
 	while (1)

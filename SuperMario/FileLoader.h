@@ -3,9 +3,9 @@
 #define DATA_HEIGHT			22
 #define DATA_START			118
 
-#include "Color.h"
-#include "Image.h"
-#include "Map.h"
+#include "Color.h" // Color
+#include "Image.h" // Image
+#include "Room.h" // RoomInfo
 
 Image* LoadBitmapFile(char* name, Color transparent);
 void SaveRoomInfoFile(char* name, RoomInfo* room);

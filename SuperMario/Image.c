@@ -132,9 +132,11 @@ void AddImage(int x, int y, Image* image, Image* target)
 		{
 			if ((image->bitmap[posx][posy] < 0) || // 현재 가르키고있는 색상이 없을 때
 				((posx + x - image->pivot.x < 0) || (posy + y - image->pivot.y < 0)) ||
-				((posx + x - image->pivot.x >= target->width) || (posy + y - image->pivot.y > target->height))) {
+				(posx + x - image->pivot.x >= target->width) || (posy + y - image->pivot.y >= target->height))
+			{
 				continue;
 			}
+
 			target->bitmap[posx + x - image->pivot.x][posy + y - image->pivot.y] = image->bitmap[posx][posy];
 		}
 	}

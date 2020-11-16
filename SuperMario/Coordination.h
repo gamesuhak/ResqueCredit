@@ -10,5 +10,6 @@ struct Coordination
 Coordination NewCoordination(int x, int y);
 Coordination AddCoordination(Coordination coordination1, Coordination coordination2);
 Coordination MultiplyCoordination(Coordination coordination, int scalar);
+Coordination DivideCoordination(Coordination coordination, int scalar);
 Coordination InverseCoordination(Coordination coordination);
 Bool CompareCoordination(Coordination coordination1, Coordination coordination2);

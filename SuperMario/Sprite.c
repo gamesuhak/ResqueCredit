@@ -11,7 +11,7 @@ Image** Sprites;
 // 스프라이트의 이름들
 const char* SPRITENAME[SPRITE_COUNT] =
 {
-	"Map",
+	"Room",
 
 	// 플레이어 스프라이트, 12개나 있는 이유는 첫번째 이미지를 잘라 12개로 사용하기 때문에
 	"Player_Idle", "", "", "",

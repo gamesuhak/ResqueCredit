@@ -5,7 +5,7 @@ typedef enum Key
 	KEY_A, KEY_B, KEY_C, KEY_COUNT
 } Key;
 
-void Input();
+void InputProcess();
 void InitializeKey();
 void BindKey();
 void PushKey();
