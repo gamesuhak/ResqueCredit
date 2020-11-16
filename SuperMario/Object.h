@@ -76,7 +76,7 @@ void InitializeObject();
 
 void InitializeMonsterInfo();
 MonsterInfo* NewMonsterInfo();
-void AddMonsterInfo(Creature* monster);
+void AddMonsterInfo(MonsterInfo* monster);
 
 Creature* NewCreature();
 Creature* NewMonster(int id);

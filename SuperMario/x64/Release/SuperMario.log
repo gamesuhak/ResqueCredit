@@ -1,11 +1,24 @@
-﻿  Player.c
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Player.c(127,7): warning C4013: 'Sleep'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
-  Render.c
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Render.c(60,22): warning C4013: 'Random'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+﻿  Sprite.c
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(67,61): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(69,67): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(73,77): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(77,67): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(80,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(84,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(90,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(93,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(95,63): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(98,63): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(100,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(102,69): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(103,63): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(104,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(107,65): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Sprite.c(108,71): warning C4090: '함수': 'const' 한정자가 서로 다릅니다.
 x64\Release\Render.obj : warning LNK4042: 개체가 두 번 이상 지정되었습니다. 나머지는 무시됩니다.
   코드를 생성하고 있습니다.
-  7 of 95 functions ( 7.4%) were compiled, the rest were copied from previous compilation.
+  2 of 95 functions ( 2.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   SuperMario.vcxproj -> C:\Users\Coremos\Documents\GitHub\SuperMarioBros\x64\Release\SuperMario.exe

@@ -128,7 +128,7 @@ Room* NewRoom(int index, Door door)
 				room->tag[x][y] = TILETAG_WALL;
 			}
 			int id;
-			if (id = RoomInfos[index]->monsters[x][y] < 0)
+			if ((id = RoomInfos[index]->monsters[x][y]) < 0) // 여기서 오류떴음
 			{
 				continue;
 			}

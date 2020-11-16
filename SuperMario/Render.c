@@ -35,8 +35,6 @@ extern const Coordination DIRECTIONS[DIRECTION_COUNT]; // Object.c
 // 화면 출력 함수
 void Render()
 {
-	RenderImage(0, 0, Sprites[SPRITE_CLEAR]);
-	exit(0);
 	while (1)
 	{
 		if (IsTransition)
