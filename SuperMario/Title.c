@@ -8,16 +8,13 @@
 #include <stdio.h>
 
 TitleMenuType TitleMenu = TITLEMENU_NONE;
-const char* TitleMenuText[TITLEMENU_COUNT] = { "◀ 게임 시작 ▶", "◀ 에디터 ▶", "◀ 종료 ▶" };
+const char* TitleMenuText[TITLEMENU_COUNT] = { "◀ 게임 시작 ▶", "◀ 에디터 ▶", "◀ 설명 ▶", "◀ 종료 ▶" };
 const Color TITLEMENU_COLOR = COLOR_BLACK;
-
-extern Bool IsProcess; // GameData.c
 
 extern Bool KeyState[KEY_COUNT]; // InputProcess.c
 extern int KeyCharge[KEY_COUNT]; // InputProcess.c
 
 extern Image* Buffer; // Render.c
-
 extern Image** Sprites; // Sprite.c
 
 void TitleProcess()
@@ -33,31 +30,29 @@ void TitleProcess()
 				if (TitleMenu == TITLEMENU_NONE)
 				{
 					TitleMenu = 0;
-					EraseText(TITLEMENU_X, TITLEMENU_Y, SCREEN_WIDTH);
-					PrintText(TITLEMENU_X, TITLEMENU_Y, TitleMenuText[TitleMenu], TITLEMENU_COLOR);
-					continue;
 				}
-				if (KeyState[KEY_A])
+				else
 				{
-					IsProcess = False;
-					return;
-				}
-				if (KeyState[KEY_LEFT])
-				{
-					--TitleMenu;
-					if (TitleMenu < 0)
+					if (KeyState[KEY_A])
 					{
-						TitleMenu = TITLEMENU_COUNT - 1;
+						return;
+					}
+					if ((KeyState[KEY_LEFT]) && (KeyCharge[KEY_LEFT] < KeyCharge[KEY_RIGHT] || !KeyState[KEY_RIGHT]))
+					{
+						--TitleMenu;
+						if (TitleMenu < 0)
+						{
+							TitleMenu = TITLEMENU_COUNT - 1;
+						}
+					}
+					if ((KeyState[KEY_RIGHT]) && (KeyCharge[KEY_RIGHT] < KeyCharge[KEY_LEFT] || !KeyState[KEY_LEFT]))
+					{
+						++TitleMenu;
+						TitleMenu %= TITLEMENU_COUNT;
 					}
 				}
-				if (KeyState[KEY_RIGHT])
-				{
-					++TitleMenu;
-					TitleMenu %= TITLEMENU_COUNT;
-				}
-				
 				EraseText(TITLEMENU_X, TITLEMENU_Y, SCREEN_WIDTH);
-				PrintText(TITLEMENU_X, TITLEMENU_Y, TitleMenuText[TitleMenu], TITLEMENU_COLOR);
+				PrintText(TITLEMENU_X, TITLEMENU_Y, TitleMenuText[TitleMenu], TITLEMENU_COLOR, TEXT_MIDDLE);
 			}
 		}
 		++time;
@@ -69,5 +64,5 @@ void InitilizeTitle()
 {
 	AddImage(0, 0, Sprites[SPRITE_TITLE], Buffer);
 	UpdateRender();
-	PrintText(TITLEMENU_X, TITLEMENU_Y, "Press Any Key", TITLEMENU_COLOR);
+	PrintText(TITLEMENU_X, TITLEMENU_Y, "Press Any Key", TITLEMENU_COLOR, TEXT_MIDDLE);
 }

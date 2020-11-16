@@ -1,8 +1,12 @@
 #include "Room.h"
 
+#include <stdio.h>
 #include "Sprite.h" // PIXELPERUNIT
 #include "FileLoader.h" // LoadRoomInfoFile
+#include "Function.h"
 
+
+extern Bool IsTransition; // Render.c
 extern Bool Pause; // Main.c
 
 extern const Coordination DIRECTIONS[DIRECTION_COUNT]; // Object.c
@@ -12,6 +16,7 @@ extern int ProjectileCount; // Object.c
 extern Creature* Player; // Player.c
 extern Room* PlayerRoom; // Player.c
 
+
 const int DOORS[DIRECTION_COUNT] = { 1, 2, 4, 8 };
 
 RoomInfo** RoomInfos = NULL; // 방 정보를 저장할 2차원 포인터
@@ -19,8 +24,13 @@ int RoomInfoCount = 0; // 방 정보의 개수를 저장할 변수
 
 void InitializeRoomInfo()
 {
-	//Room* room = NewRoomInfo();
-	//SaveRoomInfoFile("001", room);
+	/*RoomInfo* room = NewRoomInfo();
+	SetArray(room->monsters, ROOM_WIDTH, ROOM_HEIGHT, -1);
+	room->monsters[1][1] = 0;
+	room->monsters[ROOM_WIDTH - 2][1] = 0;
+	room->monsters[ROOM_WIDTH - 2][ROOM_HEIGHT - 2] = 0;
+	SaveRoomInfoFile("002", room);
+	exit(0);*/
 	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*));
 	if (RoomInfos == NULL) { return; }
 
@@ -30,11 +40,12 @@ void InitializeRoomInfo()
 		sprintf(name, "%03d", i);
 		RoomInfo* roomInfo = LoadRoomInfoFile(name);
 		if (roomInfo == NULL) { return; }
-		Sleep(100);
 		++RoomInfoCount;
 		AddRoomInfo(roomInfo);
 	}
 }
+
+
 
 // 초기화된 방 정보를 생성
 RoomInfo* NewRoomInfo()
@@ -104,14 +115,14 @@ Room* NewRoom(int index, Door door)
 	room->door = door;
 	room->tile = DuplicateArray(RoomInfos[index]->tile, room->width, room->height);
 	room->tag = DuplicateArray(RoomInfos[index]->tag, room->width, room->height);
-
-	room->clear = RoomInfos[index]->monsterCount == 0;
-	room->monsters = (Creature**)malloc(sizeof(Creature*) * RoomInfos[index]->monsterCount);
 	room->monsterCount = 0;
+	
+	room->monsters = (Creature**)malloc(sizeof(Creature*));
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
+			//printf("%02d", RoomInfos[index]->monsters[x][y]);
 			if (x == 0 || x == ROOM_WIDTH - 1 || y == 0 || y == ROOM_HEIGHT - 1)
 			{
 				room->tag[x][y] = TILETAG_WALL;
@@ -121,12 +132,17 @@ Room* NewRoom(int index, Door door)
 			{
 				continue;
 			}
+			room->monsters = (Creature**)realloc(room->monsters, sizeof(Creature*) * ++room->monsterCount);
+			if (room->monsters == NULL) { printf("Monster할당오류"); exit(1); }
 			Creature* monster = NewMonster(id);
-			monster->object.position.x = x;
-			monster->object.position.y = y;
-			room->monsters[room->monsterCount++] = monster;
+			monster->object.position.x = x * PIXELPERUNIT + monster->object.collider.pivot.x;
+			monster->object.position.y = y * PIXELPERUNIT + monster->object.collider.pivot.y;
+			monster->enable = True;
+			room->monsters[room->monsterCount - 1] = monster;
+			
 		}
 	}
+	room->clear = room->monsterCount == 0;
 	if (door & 1 << DIRECTION_DOWN)
 	{
 		room->tag[5][ROOM_HEIGHT - 1] = TILETAG_DOOR;
@@ -184,11 +200,32 @@ void ProcessRoom()
 	while (1)
 	{
 		if (Pause) { continue; }
+		if (IsTransition)
+		{
+			continue;
+		}
 		UpdateAnimator(&Player->object);
 		UpdateMonster(PlayerRoom);
 		UpdateProjectile(PlayerRoom);
-		Sleep(10);
+		Sleep(20);
+		if (!PlayerRoom->clear)
+		{
+			PlayerRoom->clear = IsRoomClear(PlayerRoom);
+		}
+
 	}
+}
+
+Bool IsRoomClear(Room* room)
+{
+	for (int i = 0; i < room->monsterCount; i++)
+	{
+		if (room->monsters[i]->enable)
+		{
+			return False;
+		}
+	}
+	return True;
 }
 
 void UpdateMonster(Room* room)
@@ -197,11 +234,18 @@ void UpdateMonster(Room* room)
 	{
 		if (room->monsters[i]->enable)
 		{
-			Coordination direction = DIRECTIONS[Random(DIRECTION_COUNT)];//NewCoordination(RandomRange(-1, 1), RandomRange(-1, 1));
+			room->monsters[i]->object.direction = Random(DIRECTION_COUNT);
+			Coordination direction = DIRECTIONS[room->monsters[i]->object.direction];
 			direction = MultiplyCoordination(direction, room->monsters[i]->speed);
 			direction = CheckMove(room, &(room->monsters[i]->object), direction);
 			room->monsters[i]->object.position = AddCoordination(room->monsters[i]->object.position, direction);
 			UpdateAnimator(&room->monsters[i]->object);
+			if (++room->monsters[i]->cooltime > 50)
+			{
+				room->monsters[i]->cooltime = 0;
+				ShootProjectile(1, room->monsters[i]->object.position, room->monsters[i]->object.direction, room->monsters[i]->projectile, room->monsters[i]->power, 1);
+
+			}
 		}
 	}
 }
@@ -229,6 +273,23 @@ void UpdateProjectile(Room* room)
 Coordination CheckMove(Room* room, Object* object, Coordination coordination)
 {
 	Coordination temp = { 0, 0 };
+
+	if (object != &Player->object)
+	{
+		temp.x = coordination.x;
+		temp.y = 0;
+		if (CheckCollider(object, &Player->object, temp))
+		{
+			coordination.x = 0;
+		}
+		temp.x = 0;
+		temp.y = coordination.y;
+		if (CheckCollider(object, &Player->object, temp))
+		{
+			coordination.y = 0;
+		}
+	}
+
 	// 방에 존재하는 몬스터의 수 만큼 반복
 	for (int i = 0; i < room->monsterCount; i++)
 	{
@@ -256,14 +317,16 @@ Coordination CheckMove(Room* room, Object* object, Coordination coordination)
 	temp.x = coordination.x;
 	temp.y = 0;
 
-	if (GetTileTag(room, AddCoordination(object->position, temp)) == TILETAG_WALL)// || (GetTileTag(room, temp) == TILETAG_DOOR && !room->clear))
+	TileTag tag = GetTileTag(room, AddCoordination(object->position, temp));
+	if (tag == TILETAG_WALL || (tag == TILETAG_DOOR && !room->clear))
 	{ 
 		coordination.x = 0;
 	}
 
 	temp.x = 0;
 	temp.y = coordination.y;
-	if (GetTileTag(room, AddCoordination(object->position, temp)) == TILETAG_WALL)// || (GetTileTag(room, temp) == TILETAG_DOOR && !room->clear))
+	tag = GetTileTag(room, AddCoordination(object->position, temp));
+	if (tag == TILETAG_WALL || (tag == TILETAG_DOOR && !room->clear)) 
 	{
 		coordination.y = 0;
 	}
@@ -294,7 +357,15 @@ int CountMonster(Room* room)
 
 void CheckProjectile(Room* room, Projectile* projectile)
 {
-	Coordination zero = { 0,0 };
+	Coordination zero = NewCoordination(0, 0);
+	if (projectile->from == 1)
+	{
+		if (CheckCollider(&projectile->object, &Player->object, zero) == True)
+		{
+			HitProjectile(projectile, Player);
+		}
+		return;
+	}
 	for (int i = 0; i < room->monsterCount; i++)
 	{
 		if (room->monsters[i]->enable == True)
@@ -304,5 +375,10 @@ void CheckProjectile(Room* room, Projectile* projectile)
 				HitProjectile(projectile, room->monsters[i]);
 			}
 		}
+	}
+	TileTag tag = GetTileTag(room, projectile->object.position);
+	if (tag == TILETAG_WALL || tag == TILETAG_DOOR)
+	{
+		projectile->enable = False;
 	}
 }

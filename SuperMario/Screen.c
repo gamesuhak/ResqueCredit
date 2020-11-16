@@ -86,9 +86,13 @@ void SetPixelColor(int x, int y, Color textColor, Color backColor)
 	}
 }
 
-void PrintText(int x, int y, char* string, Color textColor)
+void PrintText(int x, int y, char* string, Color textColor, TextAlign align)
 {
 	char text[3] = "";//유니코드는 2개의 코드값으로 이루어져 있으므로 2개 저장, 1개는 널문자를 담기위함
+	if (align == TEXT_MIDDLE)
+	{
+		x += (SCREEN_WIDTH - ((strlen(string) - 1) >> 1) >> 1);
+	}
 	SetPoint(x, y);
 	for (int i = 0; i < strlen(string); i++)//총 길이만큼 반복
 	{

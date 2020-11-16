@@ -17,7 +17,7 @@ typedef struct Collider Collider;
 typedef enum Direction { DIRECTION_DOWN = 0, DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, DIRECTION_COUNT } Direction;
 typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE, TYPE_COUNT } ObjectType;
 typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_SWORD, PROJECTILE_MISSILE, PROJECTILE_COUNT } ProjectileType;
-typedef enum MonsterType { MONSTER_BUBBLUN = 0, MONSTER_CREW = 0 };
+typedef enum MonsterType { MONSTER_BUBBLUN = 0, MONSTER_CREW, MONSTER_GHOST, MONSTER_KIRBY } MonsterType;
 
 
 struct Collider
@@ -40,27 +40,29 @@ struct Object
 
 struct MonsterInfo
 {
+	MonsterType type;
 	int hp;
 	int power;
 	int speed;
-	int sprite;
 	ProjectileType projectile;
 	Object object;
 };
 
 struct Creature
 {
-	short id;
+	MonsterType type; // 몬스터의 외형
 	int hp;
 	int power;
 	int speed;
+	int cooltime;
 	ProjectileType projectile;
-	Bool enable;
 	Object object;
+	Bool enable;
 };
 
 struct Projectile
 {
+	int from;
 	short power;
 	short speed;
 	short distance; // 나아갈 수 있는 거리
@@ -80,7 +82,7 @@ Creature* NewCreature();
 Creature* NewMonster(int id);
 
 void DisableProjectile();
-void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed); void HitProjectile(Projectile* bullet, Creature* target);
+void ShootProjectile(int from, Coordination position, Direction direction, ProjectileType type, int power, int speed); void HitProjectile(Projectile* bullet, Creature* target);
 Projectile* NewProjectile();
 Projectile* GetProjectile();
 

@@ -9,6 +9,8 @@
 #define BUFFER_MAX			4
 #define COMMAND_MAX			30
 
+typedef enum TextAlign { TEXT_LEFT, TEXT_MIDDLE, TEXT_RIGHT } TextAlign;
+
 void InitializeScreen();
 void RemoveScrollbar();
 void SetScreenSize(int x, int y);

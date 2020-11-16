@@ -62,6 +62,8 @@ Image* DuplicateImage(Image* image)
 	Image* newImage = (Image*)malloc(sizeof(Image));
 	if (newImage == NULL) { return NULL; }
 	newImage->id = image->id;
+	newImage->width = image->width;
+	newImage->height = image->height;
 	newImage->pivot.x = image->pivot.x;
 	newImage->pivot.x = image->pivot.x;
 	newImage->bitmap = DuplicateArray(image->bitmap, image->width, image->height);

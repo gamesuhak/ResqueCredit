@@ -21,10 +21,10 @@ struct RoomInfo
 	int width;
 	int height;
 	int percentage;
-	TileData tile;
-	TileData tag;
 	Door door; // ¹® Á¤º¸
 	int monsterCount;
+	TileData tile;
+	TileData tag;
 	CreatureData monsters;
 };
 

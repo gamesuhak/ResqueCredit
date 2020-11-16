@@ -5,23 +5,29 @@
 #include "Object.h" // Creature, CheckMove
 #include "Stage.h" // CheckMove
 #include "Sprite.h" // PIXELPERUNIT
+#include "Render.h"
 
 extern char ASCIIMODE; // Render.c
 extern Bool KeyState[KEY_COUNT]; // InputProcess.c
 extern int KeyCharge[KEY_COUNT]; // InputProcess.c
 extern Stage* Stage1; // Stage.c
 extern const Coordination DIRECTIONS[DIRECTION_COUNT]; // Object.c
+Bool PlayerFour = False;
+Bool PlayerDouble = False;
 
 Creature* Player;
 Coordination PlayerRoomPosition = { 0, 0 };
 Room* PlayerRoom;
-int PlayerAttackSpeed = 20;
-int PlayerAttackCooltime = 20;
+//int PlayerAttackSpeed = 20;
+int PlayerAttackCooltime = 15;
 
 void InitializePlayer()
 {
 	Player = NewCreature();
+	Player->hp = 6;
 	Player->enable = True;
+	Player->power = 1;
+	Player->cooltime = 20;
 	PlayerRoomPosition = Stage1->start;
 	Player->object.position = NewCoordination(5 * PIXELPERUNIT + 4, 3 * PIXELPERUNIT + 4);
 	int frame[4] = { 4, 4, 4, 4 };
@@ -70,10 +76,36 @@ void PlayerMove()
 	}
 	if (KeyState[KEY_A])
 	{
-		if (++PlayerAttackCooltime >= PlayerAttackSpeed)
+		if (++PlayerAttackCooltime >= Player->cooltime)
 		{
 			PlayerAttackCooltime = 0;
-			ShootProjectile(Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
+			if (PlayerFour)
+			{
+				for (int i = 0; i < DIRECTION_COUNT; i++)
+				{
+					ShootProjectile(0, Player->object.position, i, PROJECTILE_ARROW, Player->power, 1);
+				}
+				
+			}
+			else
+			{
+				ShootProjectile(0, Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
+			}
+			if (PlayerDouble)
+			{
+				if (PlayerFour)
+				{
+					for (int i = 0; i < DIRECTION_COUNT; i++)
+					{
+						ShootProjectile(0, Player->object.position, i, PROJECTILE_ARROW, Player->power, 1);
+					}
+
+				}
+				else
+				{
+					ShootProjectile(0, Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
+				}
+			}
 		}
 	}
 	if (move.x != 0 || move.y != 0)
@@ -84,7 +116,7 @@ void PlayerMove()
 
 		if (GetTileTag(PlayerRoom, Player->object.position) == TILETAG_DOOR)
 		{
-
+			StartTransition(Player->object.direction);
 		}
 	}
 	else

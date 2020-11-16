@@ -105,6 +105,7 @@ void SaveRoomInfoFile(char* name, RoomInfo* roomInfo)
 		}
 		fprintf(file, "\n");
 	}
+	fprintf(file, "\n");
 	for (int y = 0; y < roomInfo->height; y++)
 	{
 		for (int x = 0; x < roomInfo->width; x++)
@@ -113,6 +114,7 @@ void SaveRoomInfoFile(char* name, RoomInfo* roomInfo)
 		}
 		fprintf(file, "\n");
 	}
+	fprintf(file, "\n");
 	for (int y = 0; y < roomInfo->height; y++)
 	{
 		for (int x = 0; x < roomInfo->width; x++)
@@ -126,7 +128,7 @@ void SaveRoomInfoFile(char* name, RoomInfo* roomInfo)
 
 RoomInfo* LoadRoomInfoFile(char* name)
 {
-	RoomInfo* room;	
+	RoomInfo* room;
 	FILE* file;
 	char names[50] = "Room/";
 	strcat(names, name);
@@ -146,26 +148,29 @@ RoomInfo* LoadRoomInfoFile(char* name)
 	room->tile = NewArray(room->width, room->height);
 	room->tag = NewArray(room->width, room->height);
 	room->monsters = NewArray(room->width, room->height);
-	
+	int data;
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			fscanf(file, "%d ", &room->tile[x][y]);
+			fscanf(file, "%d ", &data);
+			room->tile[x][y] = data;
 		}
 	}
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			fscanf(file, "%d ", &room->tag[x][y]);
+			fscanf(file, "%d ", &data);
+			room->tag[x][y] = data;
 		}
 	}
 	for (int y = 0; y < room->height; y++)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			fscanf(file, "%d ", &room->monsters[x][y]);
+			fscanf(file, "%d ", &data);
+			room->monsters[x][y] = data;
 		}
 	}
 	fclose(file);
@@ -180,7 +185,8 @@ void SaveMonsterInfoFile(char* name, MonsterInfo* monsterInfo)
 	strcat(names, ".txt");
 	file = fopen(names, "wt");
 	if (file == NULL) { return NULL; }
-
+	fprintf(file, "Type : %d\n", monsterInfo->type);
+	fprintf(file, "Projectile : %d\n", monsterInfo->projectile);
 	fprintf(file, "HP : %d\n", monsterInfo->hp);
 	fprintf(file, "Power : %d\n", monsterInfo->power);
 	fprintf(file, "Speed : %d\n", monsterInfo->speed);
@@ -198,8 +204,10 @@ MonsterInfo* LoadMonsterInfoFile(char* name)
 	strcat(names, ".txt");
 	if ((file = fopen(names, "rb")) == NULL) { return NULL; }
 
-	MonsterInfo* monsterInfo = (MonsterInfo*)malloc(sizeof(MonsterInfo));
+	MonsterInfo* monsterInfo = NewMonsterInfo();//(MonsterInfo*)malloc(sizeof(MonsterInfo));
 	if (monsterInfo == NULL) { return NULL; }
+	fscanf(file, "Type : %d\n", &monsterInfo->type);
+	fscanf(file, "Projectile : %d\n", &monsterInfo->projectile);
 	fscanf(file, "HP : %d\n", &monsterInfo->hp);
 	fscanf(file, "Power : %d\n", &monsterInfo->power);
 	fscanf(file, "Speed : %d\n", &monsterInfo->speed);

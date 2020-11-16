@@ -17,7 +17,6 @@
 extern TitleMenuType TitleMenu;
 SceneType Scene = SCENE_TITLE;
 Bool Pause = False;
-Bool IsProcess = True;
 
 int Random(int value)
 {
@@ -36,13 +35,13 @@ int main()
 	InitializeKey(); // 키를 초기화
 	InitializeMonsterInfo(); // 몬스터 정보를 초기화
 	InitializeRoomInfo(); // 방 정보를 초기화
-
+	
 	InitializeScreen(); // 화면 초기화
 	InitializeSprites(); // 스프라이트들 초기화
 	InitializeRender(); // 렌더링 초기화
 	
 	InitilizeTitle(); // 타이틀 초기화
-	//InitializeStage();
+
 	// 스레드 실행
 	Thread(InputProcess); // 입력 프로세스를 스레드로 실행
 	Thread(Render); // 

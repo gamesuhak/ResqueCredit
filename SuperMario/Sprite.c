@@ -24,7 +24,7 @@ const char* SPRITENAME[SPRITE_COUNT] =
 	"", "", "", "",
 	"", "", "", "",
 
-	"Monster",
+	"Kirby",
 
 	"UI", "", "",
 	
@@ -51,6 +51,11 @@ const char* SPRITENAME[SPRITE_COUNT] =
 	"","","","",
 	"","","","",
 
+	"Bubblun",
+	"Crew",
+	"Ghost",
+	"Clear",
+	"GameOver"
 };
 
 // Sprites를 초기화하는 함수
@@ -80,7 +85,7 @@ void InitializeSprites()
 	ParseSprite(SPRITE_SWORD, 1, DIRECTION_COUNT);
 	SetPivot(SPRITE_SWORD, DIRECTION_COUNT, PIVOT_MIDDLE);
 
-	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
+	
 
 	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
 	ParseSprite(SPRITE_HEART, 3, 1);
@@ -89,6 +94,16 @@ void InitializeSprites()
 
 	Sprites[SPRITE_TILE] = LoadBitmapFile(SPRITENAME[SPRITE_TILE], COLOR_PINK);
 	ParseSprite(SPRITE_TILE, 4, 8);
+
+	Sprites[SPRITE_TILE] = LoadBitmapFile(SPRITENAME[SPRITE_TILE], COLOR_PINK);
+
+	Sprites[SPRITE_KIRBY] = LoadBitmapFile(SPRITENAME[SPRITE_KIRBY], COLOR_YELLOW);
+	Sprites[SPRITE_BUBBLUN] = LoadBitmapFile(SPRITENAME[SPRITE_BUBBLUN], COLOR_DARKPINK);
+	Sprites[SPRITE_CREW] = LoadBitmapFile(SPRITENAME[SPRITE_CREW], COLOR_DARKPINK);
+	Sprites[SPRITE_GHOST] = LoadBitmapFile(SPRITENAME[SPRITE_GHOST], COLOR_DARKPINK);
+
+	Sprites[SPRITE_CLEAR] = LoadBitmapFile(SPRITENAME[SPRITE_CLEAR], COLOR_DARKYELLOW);
+	Sprites[SPRITE_GAMEOVER] = LoadBitmapFile(SPRITENAME[SPRITE_GAMEOVER], COLOR_DARKGREEN);
 }
 
 // 스프라이트를 분할하여 Sprites에 저장하는 메소드 

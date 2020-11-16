@@ -14,6 +14,7 @@ void Render();
 void UpdateRender();
 void InitializeRender();
 
+void StartTransition(Direction direction);
 void RenderRoom(Room* room, Image* target);
 void RenderImage(int x, int y, Image* image);
 void RenderStage(int x, int y, Stage* stage);

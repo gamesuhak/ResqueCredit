@@ -14,6 +14,9 @@ extern SceneType Scene;
 extern Stage* Stage1; // Stage.c
 extern Creature* Player; // Player.c
 extern Room* PlayerRoom; // Player.c
+extern Bool PlayerFour;
+extern Bool PlayerDouble;
+extern Coordination PlayerRoomPosition;
 
 extern Image** Sprites; // Sprite.c
 
@@ -27,12 +30,19 @@ Image* CurrentRoom;
 Image* Temp; // 트랜지션용 이미지
 Image* UIBackGround; // UI 뒤에 그릴 검은 그림
 Bool IsTransition = False;
+extern const Coordination DIRECTIONS[DIRECTION_COUNT]; // Object.c
 
 // 화면 출력 함수
 void Render()
 {
+	RenderImage(0, 0, Sprites[SPRITE_CLEAR]);
+	exit(0);
 	while (1)
 	{
+		if (IsTransition)
+		{
+			continue;
+		}
 		if (Scene == SCENE_GAME)
 		{
 			RenderGame();
@@ -43,24 +53,92 @@ void Render()
 
 void StartTransition(Direction direction)
 {
-	if (direction == DIRECTION_DOWN)
-	{
-		//Player
-	}
-	else if (direction == DIRECTION_UP)
-	{
+	Coordination offset = DIRECTIONS[direction];
+	Coordination zero = NewCoordination(0, 0);
 
-	}
-	else if (direction == DIRECTION_LEFT)
 	{
-
+		int random = Random(5);
+		switch (random)
+		{
+		case 0:
+			Player->power++;
+			break;
+		case 1:
+			Player->speed++;
+			break;
+		case 2:
+			Player->cooltime--;
+			if (Player->cooltime < 10)
+			{
+				Player->cooltime = 10;
+			}
+			break;
+		case 3:
+			PlayerFour = True;
+			break;
+		case 4:
+			PlayerDouble = True;
+			break;
+		}
 	}
-	else if (direction == DIRECTION_RIGHT)
-	{
 
+	if (direction == DIRECTION_DOWN || direction == DIRECTION_UP)
+	{
+ 		offset = MultiplyCoordination(offset, CurrentRoom->height);
+	}
+	else if (direction == DIRECTION_LEFT || direction == DIRECTION_RIGHT)
+	{
+		offset = MultiplyCoordination(offset, CurrentRoom->width);
 	}
 	IsTransition = True;
-	DuplicateImage(CurrentRoom);
+	Player->enable = False;
+	if (Temp != NULL)
+	{
+		ReleaseImage(Temp);
+	}
+	Temp = DuplicateImage(CurrentRoom);
+	
+	RenderRoom(PlayerRoom, Temp);
+	DisableProjectile(); // 발사체 초기화
+	PlayerRoomPosition = AddCoordination(PlayerRoomPosition, DIRECTIONS[direction]);
+	PlayerRoom = Stage1->rooms[Stage1->roomData[PlayerRoomPosition.x][PlayerRoomPosition.y]];
+	if (PlayerRoom->type == ROOM_BOSS)
+	{
+		RenderImage(0, 0, Sprites[SPRITE_CLEAR]);
+		exit(0);
+	}
+	Player->enable = True;
+	if (direction == DIRECTION_DOWN)
+	{
+		Player->object.position = NewCoordination(5 * PIXELPERUNIT + 4, 1 * PIXELPERUNIT + 4);
+	}
+	if (direction == DIRECTION_UP)
+	{
+		Player->object.position = NewCoordination(5 * PIXELPERUNIT + 4, 5 * PIXELPERUNIT + 4);
+	}
+	if (direction == DIRECTION_LEFT)
+	{
+		Player->object.position = NewCoordination(9 * PIXELPERUNIT + 4, 3 * PIXELPERUNIT + 4);
+	}
+	if (direction == DIRECTION_RIGHT)
+	{
+		Player->object.position = NewCoordination(1 * PIXELPERUNIT + 4, 3 * PIXELPERUNIT + 4);
+	}
+	RenderRoom(PlayerRoom, CurrentRoom);
+
+	direction = (direction + 2) % DIRECTION_COUNT;
+	Coordination temp = NewCoordination(0, 0);
+	while (!CompareCoordination(offset, zero))
+	{
+		AddImage(temp.x, temp.y + UI_HEIGHT, Temp, Buffer);
+		AddImage(offset.x, offset.y + UI_HEIGHT, CurrentRoom, Buffer);
+		offset = AddCoordination(offset, DIRECTIONS[direction]);
+		temp = AddCoordination(temp, DIRECTIONS[direction]);
+		UpdateUI(Buffer);
+		UpdateRender();
+		//Sleep(5);
+	}
+	IsTransition = False;
 }
 
 // Render를 초기화하는 함수
@@ -77,7 +155,7 @@ void RenderGame()
 {
 	UpdateUI(Buffer); // UI 업데이트
 	RenderRoom(PlayerRoom, CurrentRoom); // 방 그리기
-	AddImage(0, PIXELPERUNIT, CurrentRoom, Buffer);
+	AddImage(0, UI_HEIGHT, CurrentRoom, Buffer);
 }
 
 // 화면을 갱신하는 함수
@@ -159,13 +237,16 @@ void RenderRoom(Room* room, Image* target)
 
 	for (int layer = 0; layer < LAYER_COUNT; layer++)
 	{
-		AddImage(Player->object.position.x, Player->object.position.y, Sprites[Player->object.sprite], target);
-
-		for (int i = 1; i < room->monsterCount; i++)
+		if (Player->enable)
+		{
+			AddImage(Player->object.position.x, Player->object.position.y, Sprites[Player->object.sprite], target);
+		}
+		
+		for (int i = 0; i < room->monsterCount; i++)
 		{
 			// 몬스터가 비활성화 돼있을 때 생략
 			if (!room->monsters[i]->enable) { continue; }
-			AddImage(room->monsters[i]->object.position.x, room->monsters[i]->object.position.y, Sprites[2], target);
+			AddImage(room->monsters[i]->object.position.x, room->monsters[i]->object.position.y, Sprites[room->monsters[i]->object.sprite], target);
 		}
 		for (int i = 0; i < ProjectileCount; i++)
 		{
@@ -204,8 +285,12 @@ void RenderStage(int x, int y, Stage* stage)
 // UI를 그리는 메소드
 void UpdateUI(Image* target)
 {
+	if (Player->hp <= 0)
+	{
+		RenderImage(0, 0, Sprites[SPRITE_GAMEOVER]);
+		exit(0);
+	}
 	AddImage(UI_X, UI_Y, UIBackGround, target);
-	Player->hp = 6;
 	// 온전한 하트의 개수는 hp에서 1의 비트를 없앤 다음에 / 2한 결과
 	int hpCount = (Player->hp ^ 1) >> 1;
 

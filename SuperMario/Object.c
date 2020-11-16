@@ -19,8 +19,8 @@ int ProjectileCount = 0; // 발사체 개수를 저장할 변수
 
 void InitializeMonsterInfo()
 {
-	MonsterInfo* monsterInfo = NewMonsterInfo();
-	SaveMonsterInfoFile("001", monsterInfo);
+	//MonsterInfo* monsterInfo = NewMonsterInfo();
+	//SaveMonsterInfoFile("001", monsterInfo);
 	MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*));
 	if (MonsterInfos == NULL) { return NULL; }
 
@@ -31,7 +31,6 @@ void InitializeMonsterInfo()
 		MonsterInfo* monsterInfo = LoadMonsterInfoFile(name);
 		if (monsterInfo == NULL) { return; }
 		++MonsterInfoCount;
-		monsterInfo->object.direction = DIRECTION_DOWN;
 		AddMonsterInfo(monsterInfo);
 	}
 }
@@ -47,13 +46,19 @@ MonsterInfo* NewMonsterInfo()
 	monsterInfo->object.collider.pivot.y = 4;
 	monsterInfo->object.collider.size.x = 8;
 	monsterInfo->object.collider.size.y = 8;
+	monsterInfo->object.sprite = SPRITE_BULLET;
+	monsterInfo->object.direction = DIRECTION_DOWN;
+	monsterInfo->object.layer = 0;
+	monsterInfo->object.state = STATE_IDLE;
+	monsterInfo->object.animator = NULL;
 	monsterInfo->projectile = 0;
 	return monsterInfo;
 }
 
-void AddMonsterInfo(Creature* monster)
+void AddMonsterInfo(MonsterInfo* monster)
 {
-	MonsterInfos = (Creature**)realloc(MonsterInfos, sizeof(Creature*) * MonsterInfoCount);
+	if (MonsterInfos == NULL) { return NULL; }
+	MonsterInfos = (MonsterInfo**)realloc(MonsterInfos, sizeof(MonsterInfo*) * MonsterInfoCount);
 	if (MonsterInfos == NULL) { return NULL; }
 	MonsterInfos[MonsterInfoCount - 1] = monster;
 }
@@ -76,16 +81,17 @@ void DisableProjectile()
 	}
 }
 
-void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed)
+void ShootProjectile(int from, Coordination position, Direction direction, ProjectileType type, int power, int speed)
 {
 	Projectile* projectile;
 	projectile = GetProjectile();
+	projectile->from = from;
 	projectile->object.position = position;
 	projectile->object.direction = direction;
 	projectile->power = power;
 	projectile->speed = speed;
 	projectile->penetration = 1;
-	projectile->distance = 20;
+	projectile->distance = 50;
 	projectile->enable = True;
 	if (type == PROJECTILE_BULLET)
 	{
@@ -117,10 +123,10 @@ Projectile* NewProjectile()
 	projectile->object.layer = 0;
 	projectile->object.state = STATE_IDLE;
 	projectile->object.direction = DIRECTION_DOWN;
-	projectile->object.collider.pivot.x = 4;
-	projectile->object.collider.pivot.y = 4;
-	projectile->object.collider.size.x = 8;
-	projectile->object.collider.size.y = 8;
+	projectile->object.collider.pivot.x = 2;
+	projectile->object.collider.pivot.y = 2;
+	projectile->object.collider.size.x = 4;
+	projectile->object.collider.size.y = 4;
 	return projectile;
 }
 
@@ -129,7 +135,11 @@ Creature* NewCreature()
 	Creature* creature = (Creature*)malloc(sizeof(Creature));
 	if (creature == NULL) { return NULL; }
 	memset(creature, 0, sizeof(Creature));
+	creature->type = MONSTER_BUBBLUN;
+	creature->hp = 0;
+	creature->cooltime = 0;
 	creature->enable = False;
+	creature->object.sprite = SPRITE_BULLET;
 	creature->object.direction = DIRECTION_DOWN;
 	creature->object.layer = 0;
 	creature->object.state = STATE_IDLE;
@@ -162,15 +172,34 @@ Projectile* GetProjectile()
 // id로 몬스터를 생성하는 메소드
 Creature* NewMonster(int id)
 {
-	Creature* creature = (Creature*)malloc(sizeof(Creature));
+	Creature* creature = NewCreature();
 	if (creature == NULL) { return NULL; }
-	memset(creature, 0, sizeof(Creature));
-	//creature->id = CreatureCount++;
-	creature->enable = False;
+	creature->type = MonsterInfos[id]->type;
+	creature->hp = MonsterInfos[id]->hp;
 	creature->power = MonsterInfos[id]->power;
 	creature->speed = MonsterInfos[id]->speed;
 	creature->object = MonsterInfos[id]->object;
 	creature->projectile = MonsterInfos[id]->projectile;
+	int sprite = SPRITE_KIRBY;
+	int frame[2] = { 4, 4 };
+	if (creature->type == MONSTER_BUBBLUN)
+	{
+		creature->object.sprite = SPRITE_BUBBLUN;
+		//creature->object.animator = NewAnimator(SPRITE_BUBBLUN, STATE_WALK + 1, DIRECTION_COUNT, 20, frame);
+	}
+	else if (creature->type == MONSTER_CREW)
+	{
+		creature->object.sprite = SPRITE_CREW;
+	}
+	else if (creature->type == MONSTER_GHOST)
+	{
+		creature->object.sprite = SPRITE_GHOST;
+	}
+	else if (creature->type == MONSTER_KIRBY)
+	{
+		creature->object.sprite = SPRITE_KIRBY;
+	}
+	
 	return creature;
 }
 
@@ -205,6 +234,11 @@ Bool CheckCollider(Object* object1, Object* object2, Coordination offset)
 
 void UpdateAnimator(Object* object)
 {
+	if (object->animator == NULL)
+	{
+		return;
+	}
+
 	// 오브젝트의 상태가 변했을 때
 	if (object->state != object->animator->state)
 	{

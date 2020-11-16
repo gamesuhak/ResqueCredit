@@ -1,13 +1,11 @@
-﻿  Room.c
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Object.h(20,67): warning C4091: 'typedef ': 변수를 선언하지 않으면 'MonsterType' 왼쪽은 무시됩니다.
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Room.c(30,10): warning C4013: 'sprintf'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Room.c(33,8): warning C4013: 'Sleep'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Room.c(43,22): warning C4033: 'NewRoomInfo'은(는) 값을 반환해야 합니다.
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Room.c(82,24): warning C4013: 'Random'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+﻿  Player.c
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Player.c(127,7): warning C4013: 'Sleep'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  Render.c
+C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Render.c(60,22): warning C4013: 'Random'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
 x64\Release\Render.obj : warning LNK4042: 개체가 두 번 이상 지정되었습니다. 나머지는 무시됩니다.
   코드를 생성하고 있습니다.
-  2 of 90 functions ( 2.2%) were compiled, the rest were copied from previous compilation.
+  7 of 95 functions ( 7.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    6 functions had inline decision re-evaluated but remain unchanged
+    2 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   SuperMario.vcxproj -> C:\Users\Coremos\Documents\GitHub\SuperMarioBros\x64\Release\SuperMario.exe

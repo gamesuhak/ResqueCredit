@@ -1,6 +1,8 @@
-HP : 0
-Power : 0
-Speed : 0
+Type : 1
+Projectile : 2
+HP : 5
+Power : 1
+Speed : 1
 Layer : 0
 Pivot : {4, 4}
 Size : {8, 8}

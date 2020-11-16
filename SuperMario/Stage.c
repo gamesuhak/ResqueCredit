@@ -12,12 +12,6 @@ Stage* Stage1 = NULL; // 스테이지 1의 정보를 저장할 포인터
 // 스테이지를 생성하고 여부를 반환하는 메소드
 Bool InitializeStage()
 {
-	//printf("입력된 파일 개수 : %d\n", RoomInfoCount);
-	//for (int i = 0; i < RoomInfoCount; i++)
-	//{
-	//	printf("%d의 타입 : %d\n", i, RoomInfos[i]->type);
-	//}
-
 	for (int count = 0; count < LOOP_COUNT; count++)
 	{
 		Stage1 = NewStage(Stage1);
