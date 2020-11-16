@@ -23,7 +23,7 @@ void InitializePlayer()
 	Player = NewCreature();
 	Player->enable = True;
 	PlayerRoomPosition = Stage1->start;
-	Player->object.position = NewCoordination(4 * PIXELPERUNIT , 2 * PIXELPERUNIT);
+	Player->object.position = NewCoordination(5 * PIXELPERUNIT + 4, 3 * PIXELPERUNIT + 4);
 	int frame[4] = { 4, 4, 4, 4 };
 	Player->object.animator = NewAnimator(SPRITE_PLAYER, STATE_WALK + 1, DIRECTION_COUNT, 20, frame);
 	PlayerRoom = Stage1->rooms[Stage1->roomData[PlayerRoomPosition.x][PlayerRoomPosition.y]];
@@ -73,7 +73,7 @@ void PlayerMove()
 		if (++PlayerAttackCooltime >= PlayerAttackSpeed)
 		{
 			PlayerAttackCooltime = 0;
-			ShootProjectile(Player->object.position, Player->object.direction, 0, 1, 1);
+			ShootProjectile(Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
 		}
 	}
 	if (move.x != 0 || move.y != 0)
@@ -81,6 +81,11 @@ void PlayerMove()
 		move = CheckMove(PlayerRoom, &Player->object, move);
 		Player->object.position = AddCoordination(Player->object.position, move);
 		Player->object.state = STATE_WALK;
+
+		if (GetTileTag(PlayerRoom, Player->object.position) == TILETAG_DOOR)
+		{
+
+		}
 	}
 	else
 	{

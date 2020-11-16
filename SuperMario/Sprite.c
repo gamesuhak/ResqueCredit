@@ -26,7 +26,31 @@ const char* SPRITENAME[SPRITE_COUNT] =
 
 	"Monster",
 
-	"UI", "UI", "Title",
+	"UI", "", "",
+	
+	"Bullet",
+	
+	"Arrow",
+	"",
+	"",
+	"",
+
+	"Sword",
+	"Sword",
+	"Sword",
+	"Sword",
+
+	"Title",
+
+	"Tile", "","","",
+	"","","","",
+	"","","","",
+	"","","","",
+	"","","","",
+	"","","","",
+	"","","","",
+	"","","","",
+
 };
 
 // Sprites를 초기화하는 함수
@@ -44,12 +68,27 @@ void InitializeSprites()
 	Sprites[SPRITE_PLAYER_WALK] = LoadBitmapFile(SPRITENAME[SPRITE_PLAYER_WALK], COLOR_GRAY);
 	ParseSprite(SPRITE_PLAYER_WALK, 4, DIRECTION_COUNT);
 	SetPivot(SPRITE_PLAYER_WALK, 4 * DIRECTION_COUNT, PIVOT_MIDDLE);
+	
+	Sprites[SPRITE_BULLET] = LoadBitmapFile(SPRITENAME[SPRITE_BULLET], COLOR_BLACK);
+	SetPivot(SPRITE_BULLET, 1, PIVOT_MIDDLE);
+	
+	Sprites[SPRITE_ARROW] = LoadBitmapFile(SPRITENAME[SPRITE_ARROW], COLOR_BLACK);
+	ParseSprite(SPRITE_ARROW, 1, DIRECTION_COUNT);
+	SetPivot(SPRITE_ARROW, DIRECTION_COUNT, PIVOT_MIDDLE);
+
+	Sprites[SPRITE_SWORD] = LoadBitmapFile(SPRITENAME[SPRITE_SWORD], COLOR_BLACK);
+	ParseSprite(SPRITE_SWORD, 1, DIRECTION_COUNT);
+	SetPivot(SPRITE_SWORD, DIRECTION_COUNT, PIVOT_MIDDLE);
 
 	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
 
 	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
+	ParseSprite(SPRITE_HEART, 3, 1);
 
 	Sprites[SPRITE_TITLE] = LoadBitmapFile(SPRITENAME[SPRITE_TITLE], COLOR_DARKSKY);
+
+	Sprites[SPRITE_TILE] = LoadBitmapFile(SPRITENAME[SPRITE_TILE], COLOR_PINK);
+	ParseSprite(SPRITE_TILE, 4, 8);
 }
 
 // 스프라이트를 분할하여 Sprites에 저장하는 메소드 
@@ -60,7 +99,7 @@ void ParseSprite(int index, int column, int row)
 	for (int i = 0; i < column * row; i++)
 	{
 		Sprites[index + i] = images[i];
-		//printf("%d : %d\n", i, Sprites[index + i]->height);
+		//printf("%d : %d\n", index + i, Sprites[index + i]->height);
 	}
 	free(images);
 }
@@ -78,8 +117,6 @@ void SetPivot(int index, int count, int pivot)
 		else if (pivot == PIVOT_MIDDLE)
 		{
 			Sprites[index + i]->pivot = NewCoordination(Sprites[index + i]->width >> 1, Sprites[index + i]->height >> 1);
-			/*Sprites[index + i]->pivot.x = Sprites[index + i]->width >> 1;
-			Sprites[index + i]->pivot.y = Sprites[index + i]->height >> 1;*/
 		}
 	}
 }

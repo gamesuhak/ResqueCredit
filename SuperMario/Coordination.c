@@ -26,8 +26,8 @@ Coordination MultiplyCoordination(Coordination coordination, int scalar)
 // 좌표에 스칼라로 나누어 반환하는 메소드
 Coordination DivideCoordination(Coordination coordination, int scalar)
 {
-	coordination.x /= scalar;
-	coordination.y /= scalar;
+	coordination.x = (int)(coordination.x / (float)scalar);
+	coordination.y = (int)(coordination.y / (float)scalar);
 	return coordination;
 }
 

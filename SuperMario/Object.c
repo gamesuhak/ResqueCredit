@@ -5,6 +5,7 @@
 #include <string.h> // memset
 #include "Function.h"
 #include "FileLoader.h" // LoadMonsterInfoFile
+#include "Sprite.h"
 
 const Coordination DIRECTIONS[DIRECTION_COUNT] =
 {
@@ -18,6 +19,8 @@ int ProjectileCount = 0; // 발사체 개수를 저장할 변수
 
 void InitializeMonsterInfo()
 {
+	MonsterInfo* monsterInfo = NewMonsterInfo();
+	SaveMonsterInfoFile("001", monsterInfo);
 	MonsterInfos = (MonsterInfo**)malloc(sizeof(MonsterInfo*));
 	if (MonsterInfos == NULL) { return NULL; }
 
@@ -31,6 +34,21 @@ void InitializeMonsterInfo()
 		monsterInfo->object.direction = DIRECTION_DOWN;
 		AddMonsterInfo(monsterInfo);
 	}
+}
+
+// 초기화된 방 정보를 생성
+MonsterInfo* NewMonsterInfo()
+{
+	MonsterInfo* monsterInfo = (MonsterInfo*)malloc(sizeof(MonsterInfo));
+	if (monsterInfo == NULL) { return; }
+	monsterInfo->hp = 0;
+	monsterInfo->power = 0;
+	monsterInfo->object.collider.pivot.x = 4;
+	monsterInfo->object.collider.pivot.y = 4;
+	monsterInfo->object.collider.size.x = 8;
+	monsterInfo->object.collider.size.y = 8;
+	monsterInfo->projectile = 0;
+	return monsterInfo;
 }
 
 void AddMonsterInfo(Creature* monster)
@@ -69,6 +87,24 @@ void ShootProjectile(Coordination position, Direction direction, ProjectileType 
 	projectile->penetration = 1;
 	projectile->distance = 20;
 	projectile->enable = True;
+	if (type == PROJECTILE_BULLET)
+	{
+		int frame = 1;
+		projectile->object.sprite = SPRITE_BULLET;
+		projectile->object.animator = NewAnimator(SPRITE_BULLET, 1, 1, 20, &frame);
+	}
+	else if (type == PROJECTILE_ARROW)
+	{
+		int frame = 1;
+		projectile->object.sprite = SPRITE_ARROW;
+		projectile->object.animator = NewAnimator(SPRITE_ARROW, 1, DIRECTION_COUNT, 20, &frame);
+	}
+	else if (type == PROJECTILE_SWORD)
+	{
+		int frame = 1;
+		projectile->object.sprite = SPRITE_SWORD;
+		projectile->object.animator = NewAnimator(SPRITE_ARROW, 1, DIRECTION_COUNT, 20, &frame);
+	}
 }
 
 Projectile* NewProjectile()
@@ -79,6 +115,7 @@ Projectile* NewProjectile()
 	ProjectileCount++;
 	projectile->enable = False;
 	projectile->object.layer = 0;
+	projectile->object.state = STATE_IDLE;
 	projectile->object.direction = DIRECTION_DOWN;
 	projectile->object.collider.pivot.x = 4;
 	projectile->object.collider.pivot.y = 4;
@@ -101,6 +138,7 @@ Creature* NewCreature()
 	creature->object.collider.size.x = 8;
 	creature->object.collider.size.y = 8;
 	creature->object.animator = NULL;
+	creature->projectile = 0;
 	return creature;
 }
 
@@ -132,6 +170,7 @@ Creature* NewMonster(int id)
 	creature->power = MonsterInfos[id]->power;
 	creature->speed = MonsterInfos[id]->speed;
 	creature->object = MonsterInfos[id]->object;
+	creature->projectile = MonsterInfos[id]->projectile;
 	return creature;
 }
 

@@ -41,28 +41,23 @@ int main()
 	InitializeSprites(); // 스프라이트들 초기화
 	InitializeRender(); // 렌더링 초기화
 	
-	//InitilizeTitle(); // 타이틀 초기화
-	
+	InitilizeTitle(); // 타이틀 초기화
+	//InitializeStage();
 	// 스레드 실행
 	Thread(InputProcess); // 입력 프로세스를 스레드로 실행
-	//Thread(TitleProcess);
+	Thread(Render); // 
+	TitleProcess(); // 타이틀 실행
 	
-	if (InitializeStage())
-	{
-		Scene = SCENE_GAME;
-		InitializePlayer(); // 플레이어를 초기화
-		SetInputHandler(PlayerMove); // 입력 핸들러에 플레이어 이동 메소드를 연결
-		Thread(ProcessRoom);
-		Thread(Render);
-		
-	}
-	
-	while (IsProcess) {}
-	/*while (IsProcess) {}
-
 	if (TitleMenu == TITLEMENU_GAME)
 	{
-		
+		if (InitializeStage())
+		{
+			InitializePlayer(); // 플레이어를 초기화
+			Thread(ProcessRoom); // 방 처리 스레드로 실행
+			
+			Scene = SCENE_GAME;
+			SetInputHandler(PlayerMove); // 입력 핸들러에 플레이어 이동 메소드를 연결
+		}
 	}
 	else if (TitleMenu == TITLEMENU_EDIT)
 	{
@@ -72,8 +67,5 @@ int main()
 	{
 		exit(0);
 	}
-	while (True)
-	{
-		printf("아무것도없어\n");
-	}*/
+	while (True) {}
 }

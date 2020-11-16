@@ -1,8 +1,8 @@
 #pragma once
 #include "Object.h"
 
-#define ROOM_WIDTH			9
-#define ROOM_HEIGHT			5
+#define ROOM_WIDTH			11
+#define ROOM_HEIGHT			7
 
 typedef enum RoomType { ROOM_NOT = -1, ROOM_START = 0, ROOM_BOSS, ROOM_MONSTER, ROOM_ITEM, ROOM_SECRET, ROOM_COUNT } RoomType;
 typedef enum Tile { TILE_GROUND = 0 } Tile;

@@ -40,8 +40,7 @@ void TitleProcess()
 				if (KeyState[KEY_A])
 				{
 					IsProcess = False;
-					return TitleMenu;
-					break;
+					return;
 				}
 				if (KeyState[KEY_LEFT])
 				{
@@ -64,7 +63,6 @@ void TitleProcess()
 		++time;
 		Sleep(10);
 	}
-	return;
 }
 
 void InitilizeTitle()

@@ -16,7 +16,9 @@ typedef struct Collider Collider;
 
 typedef enum Direction { DIRECTION_DOWN = 0, DIRECTION_LEFT, DIRECTION_UP, DIRECTION_RIGHT, DIRECTION_COUNT } Direction;
 typedef enum ObjectType { TYPE_MONSTER = 0, TYPE_ITEM, TYPE_PROJECTILE, TYPE_COUNT } ObjectType;
-typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_MISSILE, PROJECTILE_COUNT } ProjectileType;
+typedef enum ProjectileType { PROJECTILE_BULLET = 0, PROJECTILE_ARROW, PROJECTILE_SWORD, PROJECTILE_MISSILE, PROJECTILE_COUNT } ProjectileType;
+typedef enum MonsterType { MONSTER_BUBBLUN = 0, MONSTER_CREW = 0 };
+
 
 struct Collider
 {
@@ -42,6 +44,7 @@ struct MonsterInfo
 	int power;
 	int speed;
 	int sprite;
+	ProjectileType projectile;
 	Object object;
 };
 
@@ -51,6 +54,7 @@ struct Creature
 	int hp;
 	int power;
 	int speed;
+	ProjectileType projectile;
 	Bool enable;
 	Object object;
 };
@@ -69,14 +73,14 @@ struct Projectile
 void InitializeObject();
 
 void InitializeMonsterInfo();
+MonsterInfo* NewMonsterInfo();
 void AddMonsterInfo(Creature* monster);
 
 Creature* NewCreature();
 Creature* NewMonster(int id);
 
 void DisableProjectile();
-void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed);
-void HitProjectile(Projectile* bullet, Creature* target);
+void ShootProjectile(Coordination position, Direction direction, ProjectileType type, int power, int speed); void HitProjectile(Projectile* bullet, Creature* target);
 Projectile* NewProjectile();
 Projectile* GetProjectile();
 

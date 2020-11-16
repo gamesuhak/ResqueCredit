@@ -1,0 +1,6 @@
+HP : 0
+Power : 0
+Speed : 0
+Layer : 0
+Pivot : {4, 4}
+Size : {8, 8}

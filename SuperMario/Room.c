@@ -19,8 +19,8 @@ int RoomInfoCount = 0; // 방 정보의 개수를 저장할 변수
 
 void InitializeRoomInfo()
 {
-	/*Room* room = NewRoomInfo();
-	SaveRoomInfoFile("001", room);*/
+	//Room* room = NewRoomInfo();
+	//SaveRoomInfoFile("001", room);
 	RoomInfos = (RoomInfo**)malloc(sizeof(RoomInfo*));
 	if (RoomInfos == NULL) { return; }
 
@@ -101,9 +101,10 @@ Room* NewRoom(int index, Door door)
 	room->type = RoomInfos[index]->type;
 	room->width = RoomInfos[index]->width;
 	room->height = RoomInfos[index]->height;
-	room->door = RoomInfos[index]->door;
+	room->door = door;
 	room->tile = DuplicateArray(RoomInfos[index]->tile, room->width, room->height);
 	room->tag = DuplicateArray(RoomInfos[index]->tag, room->width, room->height);
+
 	room->clear = RoomInfos[index]->monsterCount == 0;
 	room->monsters = (Creature**)malloc(sizeof(Creature*) * RoomInfos[index]->monsterCount);
 	room->monsterCount = 0;
@@ -111,6 +112,10 @@ Room* NewRoom(int index, Door door)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
+			if (x == 0 || x == ROOM_WIDTH - 1 || y == 0 || y == ROOM_HEIGHT - 1)
+			{
+				room->tag[x][y] = TILETAG_WALL;
+			}
 			int id;
 			if (id = RoomInfos[index]->monsters[x][y] < 0)
 			{
@@ -121,6 +126,22 @@ Room* NewRoom(int index, Door door)
 			monster->object.position.y = y;
 			room->monsters[room->monsterCount++] = monster;
 		}
+	}
+	if (door & 1 << DIRECTION_DOWN)
+	{
+		room->tag[5][ROOM_HEIGHT - 1] = TILETAG_DOOR;
+	}
+	if (door & 1 << DIRECTION_LEFT)
+	{
+		room->tag[0][3] = TILETAG_DOOR;
+	}
+	if (door & 1 << DIRECTION_RIGHT)
+	{
+		room->tag[ROOM_WIDTH - 1][3] = TILETAG_DOOR;
+	}
+	if (door & 1 << DIRECTION_UP)
+	{
+		room->tag[5][0] = TILETAG_DOOR;
 	}
 
 	return room;
@@ -180,6 +201,7 @@ void UpdateMonster(Room* room)
 			direction = MultiplyCoordination(direction, room->monsters[i]->speed);
 			direction = CheckMove(room, &(room->monsters[i]->object), direction);
 			room->monsters[i]->object.position = AddCoordination(room->monsters[i]->object.position, direction);
+			UpdateAnimator(&room->monsters[i]->object);
 		}
 	}
 }
@@ -198,6 +220,7 @@ void UpdateProjectile(Room* room)
 			{
 				Projectiles[i]->enable = False;
 			}
+			UpdateAnimator(&Projectiles[i]->object);
 		}
 	}
 }
@@ -229,6 +252,22 @@ Coordination CheckMove(Room* room, Object* object, Coordination coordination)
 			coordination.y = 0;
 		}
 	}
+
+	temp.x = coordination.x;
+	temp.y = 0;
+
+	if (GetTileTag(room, AddCoordination(object->position, temp)) == TILETAG_WALL)// || (GetTileTag(room, temp) == TILETAG_DOOR && !room->clear))
+	{ 
+		coordination.x = 0;
+	}
+
+	temp.x = 0;
+	temp.y = coordination.y;
+	if (GetTileTag(room, AddCoordination(object->position, temp)) == TILETAG_WALL)// || (GetTileTag(room, temp) == TILETAG_DOOR && !room->clear))
+	{
+		coordination.y = 0;
+	}
+
 	return coordination;
 }
 

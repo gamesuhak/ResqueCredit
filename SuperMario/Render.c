@@ -25,6 +25,7 @@ Image* Buffer; // 메인 화면 그리기 전에 그리는 구간
 
 Image* CurrentRoom;
 Image* Temp; // 트랜지션용 이미지
+Image* UIBackGround; // UI 뒤에 그릴 검은 그림
 Bool IsTransition = False;
 
 // 화면 출력 함수
@@ -35,14 +36,29 @@ void Render()
 		if (Scene == SCENE_GAME)
 		{
 			RenderGame();
-			UpdateRender();
 		}
-		
+		UpdateRender();
 	}
 }
 
 void StartTransition(Direction direction)
 {
+	if (direction == DIRECTION_DOWN)
+	{
+		//Player
+	}
+	else if (direction == DIRECTION_UP)
+	{
+
+	}
+	else if (direction == DIRECTION_LEFT)
+	{
+
+	}
+	else if (direction == DIRECTION_RIGHT)
+	{
+
+	}
 	IsTransition = True;
 	DuplicateImage(CurrentRoom);
 }
@@ -53,6 +69,8 @@ void InitializeRender()
 	Screen = NewImage(SCREEN_WIDTH, SCREEN_HEIGHT);
 	Buffer = NewImage(Screen->width, Screen->height);
 	CurrentRoom = NewImage(Screen->width, Screen->height - UI_HEIGHT);
+	UIBackGround = NewImage(UI_WIDTH, UI_HEIGHT);
+	FillImage(UIBackGround, COLOR_BLACK);
 }
 
 void RenderGame()
@@ -84,7 +102,58 @@ void RenderRoom(Room* room, Image* target)
 	{
 		for (int x = 0; x < room->width; x++)
 		{
-			//AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], target);
+			if (room->tile[x][y] < 0)
+			{
+				continue;
+			}
+			AddImage(x * PIXELPERUNIT, y * PIXELPERUNIT, Sprites[SPRITE_TILE + room->tile[x][y]], target);
+		}
+	}
+
+	// 문을 출력하는 부분
+
+	if (room->door & (1 << DIRECTION_DOWN))
+	{
+		AddImage(4 * PIXELPERUNIT, 6 * PIXELPERUNIT, Sprites[SPRITE_TILE + 4], target);
+		AddImage(5 * PIXELPERUNIT, 6 * PIXELPERUNIT, Sprites[SPRITE_TILE + 5], target);
+		AddImage(6 * PIXELPERUNIT, 6 * PIXELPERUNIT, Sprites[SPRITE_TILE + 6], target);
+	}
+	if (room->door & (1 << DIRECTION_LEFT))
+	{
+		AddImage(0 * PIXELPERUNIT, 2 * PIXELPERUNIT, Sprites[SPRITE_TILE + 7], target);
+		AddImage(0 * PIXELPERUNIT, 3 * PIXELPERUNIT, Sprites[SPRITE_TILE + 8], target);
+		AddImage(0 * PIXELPERUNIT, 4 * PIXELPERUNIT, Sprites[SPRITE_TILE + 9], target);
+	}
+	if (room->door & (1 << DIRECTION_UP))
+	{
+		AddImage(4 * PIXELPERUNIT, 0 * PIXELPERUNIT, Sprites[SPRITE_TILE + 10], target);
+		AddImage(5 * PIXELPERUNIT, 0 * PIXELPERUNIT, Sprites[SPRITE_TILE + 11], target);
+		AddImage(6 * PIXELPERUNIT, 0 * PIXELPERUNIT, Sprites[SPRITE_TILE + 12], target);
+	}
+	if (room->door & (1 << DIRECTION_RIGHT))
+	{
+		AddImage(10 * PIXELPERUNIT, 2 * PIXELPERUNIT, Sprites[SPRITE_TILE + 13], target);
+		AddImage(10 * PIXELPERUNIT, 3 * PIXELPERUNIT, Sprites[SPRITE_TILE + 14], target);
+		AddImage(10 * PIXELPERUNIT, 4 * PIXELPERUNIT, Sprites[SPRITE_TILE + 15], target);
+	}
+
+	if (!room->clear)
+	{
+		if (room->door & (1 << DIRECTION_DOWN))
+		{
+			AddImage(5 * PIXELPERUNIT, 6 * PIXELPERUNIT, Sprites[SPRITE_TILE + DIRECTION_DOWN], target);
+		}
+		if (room->door & (1 << DIRECTION_UP))
+		{
+			AddImage(5 * PIXELPERUNIT, 0 * PIXELPERUNIT, Sprites[SPRITE_TILE + DIRECTION_UP], target);
+		}
+		if (room->door & (1 << DIRECTION_LEFT))
+		{
+			AddImage(0 * PIXELPERUNIT, 3 * PIXELPERUNIT, Sprites[SPRITE_TILE + DIRECTION_LEFT], target);
+		}
+		if (room->door & (1 << DIRECTION_RIGHT))
+		{
+			AddImage(10 * PIXELPERUNIT, 3 * PIXELPERUNIT, Sprites[SPRITE_TILE + DIRECTION_RIGHT], target);
 		}
 	}
 
@@ -102,15 +171,8 @@ void RenderRoom(Room* room, Image* target)
 		{
 			// 투사체가 비활성화 돼있을 때 생략
 			if (!Projectiles[i]->enable) { continue; }
-			AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[2], target);
+			AddImage(Projectiles[i]->object.position.x, Projectiles[i]->object.position.y, Sprites[Projectiles[i]->object.sprite], target);
 		}
-	}
-
-	// 문을 출력하는 부분
-
-	if (!room->clear)
-	{
-
 	}
 }
 
@@ -142,6 +204,8 @@ void RenderStage(int x, int y, Stage* stage)
 // UI를 그리는 메소드
 void UpdateUI(Image* target)
 {
+	AddImage(UI_X, UI_Y, UIBackGround, target);
+	Player->hp = 6;
 	// 온전한 하트의 개수는 hp에서 1의 비트를 없앤 다음에 / 2한 결과
 	int hpCount = (Player->hp ^ 1) >> 1;
 
@@ -154,7 +218,7 @@ void UpdateUI(Image* target)
 	//HP가 홀수일 때
 	if (Player->hp & 1)
 	{
-		AddImage((hpCount + 1) * PIXELPERUNIT, 0, Sprites[SPRITE_HEART_HALF], target);
+		AddImage((hpCount) * PIXELPERUNIT, 0, Sprites[SPRITE_HEART_HALF], target);
 	}
 }
 

@@ -6,13 +6,13 @@ Array NewArray(int width, int height)
 {
 	Array array = NULL;
 	array = (Array)malloc(sizeof(char*) * width);
-	if (array == NULL) { printf("NewBitmap2\n"); return NULL; }
+	if (array == NULL) { printf("NewBitmapError2\n"); return NULL; }
 	array[0] = (char*)malloc(sizeof(char) * width * height);
-	if (array[0] == NULL) { printf("NewBitmap3\n"); return NULL; }
+	if (array[0] == NULL) { printf("NewBitmapError3\n"); return NULL; }
 	for (int i = 1; i < width; i++)
 	{
 		array[i] = array[i - 1] + height;
-		if (array[i] == NULL) { printf("NewArray : %d\n", i); return NULL; }
+		if (array[i] == NULL) { printf("NewArrayError : %d\n", i); return NULL; }
 	}
 	
 	memset(array[0], COLOR_TRANSPARENT, sizeof(char) * width * height);
@@ -80,18 +80,19 @@ Image** SliceImage(Image* image, int column, int row)
 	int width = image->width / column;
 	int height = image->height / row;
 	Image** images = (Image**)malloc(sizeof(Image*) * column * row);
+	
 	if (images == NULL) { printf("SliceImage\n"); return NULL; }
 	
 	for (int y = 0; y < row; y++)
 	{
 		for (int x = 0; x < column; x++)
 		{
-			images[y * (row) + x] = NewImage(width, height);
+			images[y * column + x] = NewImage(width, height);
 			for (int pixelX = 0; pixelX < width; pixelX++)
 			{
 				for (int pixelY = 0; pixelY < height; pixelY++)
 				{
-					images[y * (row) + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
+					images[y * column + x]->bitmap[pixelX][pixelY] = image->bitmap[pixelX + width * x][pixelY + height * y];
 				}
 			}
 		}
@@ -142,6 +143,7 @@ void AddImage(int x, int y, Image* image, Image* target)
 	}
 }
 
+// 이미지를 color의 색으로 칠
 void FillImage(Image* image, Color color)
 {
 	memset(image->bitmap[0], color, sizeof(char) * image->width * image->height);

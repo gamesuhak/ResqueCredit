@@ -29,3 +29,4 @@ Image* DuplicateImage(Image* image);
 void ReleaseImage(Image* image);
 Image** SliceImage(Image* image, int column, int row);
 void AddImage(int x, int y, Image* image, Image* target);
+void FillImage(Image* image, Color color);

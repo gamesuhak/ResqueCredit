@@ -62,9 +62,6 @@
     <ClCompile Include="Stage.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameData.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Title.c">
       <Filter>소스 파일</Filter>
     </ClCompile>

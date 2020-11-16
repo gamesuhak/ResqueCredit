@@ -83,7 +83,7 @@ int CountNeighbor(Stage* stage, Coordination position)
 	for (int direction = 0; direction < DIRECTION_COUNT; direction++)
 	{
 		Coordination temp = AddCoordination(position, DIRECTIONS[direction]);
-		if (CheckStageValidPosition(stage, temp) && stage->roomData[temp.x][temp.y] > ROOM_NOT)
+		if (CheckStageValidPosition(stage, temp) && (stage->roomData[temp.x][temp.y] > ROOM_NOT))
 		{
 			count = count | (1 << direction);
 		}
@@ -239,6 +239,7 @@ Stage* NewStage()
 					if (id < 0) { continue; }
 					if (CheckDoor(neighborRoom, RoomInfos[id]->door))
 					{
+						//printf("%d\n", neighborRoom);
 						Room* room = NewRoom(id, neighborRoom);
 						AddRoom(stage, room);
 						stage->roomData[x][y] = stage->roomCount - 1;

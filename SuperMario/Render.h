@@ -4,7 +4,7 @@
 
 #define UI_X				0
 #define UI_Y				0
-#define UI_WIDTH			48
+#define UI_WIDTH			88
 #define UI_HEIGHT			8
 //#define CAMERA_X			16
 //#define CAMERA_Y			0
