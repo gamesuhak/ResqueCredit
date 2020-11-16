@@ -15,6 +15,8 @@ extern const Coordination DIRECTIONS[DIRECTION_COUNT]; // Object.c
 Creature* Player;
 Coordination PlayerRoomPosition = { 0, 0 };
 Room* PlayerRoom;
+int PlayerAttackSpeed = 20;
+int PlayerAttackCooltime = 20;
 
 void InitializePlayer()
 {
@@ -29,8 +31,6 @@ void InitializePlayer()
 
 void PlayerMove()
 {
-	int cooltime = 0;
-
 	Coordination move = { 0,0 };
 	if (KeyState[KEY_C])
 	{
@@ -70,10 +70,10 @@ void PlayerMove()
 	}
 	if (KeyState[KEY_A])
 	{
-		if (--cooltime <= 0)
+		if (++PlayerAttackCooltime >= PlayerAttackSpeed)
 		{
-			cooltime = 5;
-			ShootProjectile(Player->object.position, Player->object.direction, 0, 1, 2);
+			PlayerAttackCooltime = 0;
+			ShootProjectile(Player->object.position, Player->object.direction, 0, 1, 1);
 		}
 	}
 	if (move.x != 0 || move.y != 0)

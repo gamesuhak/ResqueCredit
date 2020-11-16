@@ -15,3 +15,5 @@ void SetScreenSize(int x, int y);
 void SetPoint(int x, int y);
 void SetPixelColor(int x, int y, Color textColor, Color backColor);
 void ViewCursor(char value);
+void PrintText(int x, int y, char* string, Color textColor);
+void EraseText(int x, int y, int count);

@@ -1,5 +1,7 @@
 //#include <Windows.h>
 #include <time.h> // time
+#include "Screen.h"
+#include "Sprite.h"
 #include "Render.h" // Render
 #include "Object.h" // ProcessRoom
 #include "Input.h" // InputProcess
@@ -8,8 +10,14 @@
 #include "Room.h"
 #include "Function.h" // Random, RandomRange
 #include "Player.h" // InitializePlayer, PlayerMove
+#include "Title.h"
+#include "GameData.h"
+#include <stdio.h>
 
+extern TitleMenuType TitleMenu;
+SceneType Scene = SCENE_TITLE;
 Bool Pause = False;
+Bool IsProcess = True;
 
 int Random(int value)
 {
@@ -23,23 +31,49 @@ int RandomRange(int start, int end)
 
 int main()
 {
-	srand(time(NULL));
+	srand(time(NULL)); // 랜덤시드를 현재 시간으로 초기화
 
 	InitializeKey(); // 키를 초기화
 	InitializeMonsterInfo(); // 몬스터 정보를 초기화
 	InitializeRoomInfo(); // 방 정보를 초기화
 
+	InitializeScreen(); // 화면 초기화
+	InitializeSprites(); // 스프라이트들 초기화
+	InitializeRender(); // 렌더링 초기화
+	
+	//InitilizeTitle(); // 타이틀 초기화
+	
+	// 스레드 실행
 	Thread(InputProcess); // 입력 프로세스를 스레드로 실행
-
+	//Thread(TitleProcess);
+	
 	if (InitializeStage())
 	{
+		Scene = SCENE_GAME;
 		InitializePlayer(); // 플레이어를 초기화
 		SetInputHandler(PlayerMove); // 입력 핸들러에 플레이어 이동 메소드를 연결
 		Thread(ProcessRoom);
 		Thread(Render);
+		
 	}
-	while (1)
-	{
+	
+	while (IsProcess) {}
+	/*while (IsProcess) {}
 
+	if (TitleMenu == TITLEMENU_GAME)
+	{
+		
 	}
+	else if (TitleMenu == TITLEMENU_EDIT)
+	{
+		Scene = SCENE_EDIT;
+	}
+	else if (TitleMenu == TITLEMENU_EXIT)
+	{
+		exit(0);
+	}
+	while (True)
+	{
+		printf("아무것도없어\n");
+	}*/
 }

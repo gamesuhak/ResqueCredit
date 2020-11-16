@@ -29,9 +29,6 @@
     <ClCompile Include="Object.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Data.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="FileLoader.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -63,6 +60,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Stage.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameData.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -113,6 +116,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Stage.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

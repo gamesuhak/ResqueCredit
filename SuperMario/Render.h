@@ -19,3 +19,4 @@ void RenderImage(int x, int y, Image* image);
 void RenderStage(int x, int y, Stage* stage);
 void UpdateUI(Image* target);
 void UpdateAnimation();
+void RenderGame();

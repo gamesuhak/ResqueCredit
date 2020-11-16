@@ -219,7 +219,6 @@ Stage* NewStage()
 				}
 			}
 		}
-		RenderStage(0, 0, stage);
 		// 보스방과 아이템 방이 기준 미달일 때
 		if (bossRoom > 0 || itemRoom > 0)
 		{
@@ -252,8 +251,7 @@ Stage* NewStage()
 		// 생성된 방 보다 채워진 방의 개수가 작을 때
 		if (roomCount > stage->roomCount)
 		{
-			printf("방이 없어요 %d, %d\n",roomCount, stage->roomCount);
-			Sleep(1000);
+			//printf("방이 없어요 %d, %d\n",roomCount, stage->roomCount);
 			for (int i = 0; i < stage->roomCount; i++)
 			{
 				free(stage->rooms[i]);
@@ -262,8 +260,6 @@ Stage* NewStage()
 			stage->roomCount = 0;
 			return NULL;
 		}
-		printf("스테이지 생성 성공\n");
-		Sleep(1000);
 		break;
 	}
 	return stage;

@@ -164,8 +164,8 @@ void ProcessRoom()
 	{
 		if (Pause) { continue; }
 		UpdateAnimator(&Player->object);
-		//UpdateMonster(PlayerRoom);
-		//UpdateProjectile(PlayerRoom);
+		UpdateMonster(PlayerRoom);
+		UpdateProjectile(PlayerRoom);
 		Sleep(10);
 	}
 }

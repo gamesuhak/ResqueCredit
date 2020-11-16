@@ -1,6 +1,9 @@
 #include "Screen.h"
 #include <stdio.h>
 #include "Bool.h"
+#include "Image.h"
+
+extern Image* Screen;
 
 // 화면 정보를 가지고 있는 핸들을 저장할 변수
 HANDLE Handle;
@@ -12,7 +15,6 @@ void InitializeScreen()
 {
 	Handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	//SetConsoleTitle("Title");
-	//system("cls");
 	SetScreenSize(SCREEN_WIDTH << 1, SCREEN_HEIGHT); // 가로의 실제 크기는 픽셀 * 2이다
 	RemoveScrollbar();
 	ViewCursor(0);
@@ -81,5 +83,39 @@ void SetPixelColor(int x, int y, Color textColor, Color backColor)
 	{
 		SetConsoleTextAttribute(Handle, textColor + (backColor << 4)); // backColor << 4는 backColor * 16과 같음
 		printf("  ");
+	}
+}
+
+void PrintText(int x, int y, char* string, Color textColor)
+{
+	char text[3] = "";//유니코드는 2개의 코드값으로 이루어져 있으므로 2개 저장, 1개는 널문자를 담기위함
+	SetPoint(x, y);
+	for (int i = 0; i < strlen(string); i++)//총 길이만큼 반복
+	{
+		SetConsoleTextAttribute(Handle, textColor + (Screen->bitmap[x + (i >> 1)][y] << 4)); // backColor << 4는 backColor * 16과 같음
+
+		if (string[i] < 0)
+		{
+			strncpy(text, string + i++, 2);//코드 2개를 text에 복사, 처리가 끝난뒤 i을 1더해줌
+		}
+		else
+		{
+			text[0] = string[i];//해당 코드를 text[0]에 대입
+			text[1] = '\0';//코드 뒤에 널문자를 대입
+		}
+		printf("%s", text);//text에 들어있는 문자를 출력
+	}
+}
+
+void EraseText(int x, int y, int count)
+{
+	SetPoint(x, y);
+	for (int i = 0; i < count; i++)
+	{
+		if (x + i >= SCREEN_WIDTH)
+		{
+			break;
+		}
+		SetPixelColor(x + i, y, COLOR_BLACK, Screen->bitmap[x + i][y]);
 	}
 }

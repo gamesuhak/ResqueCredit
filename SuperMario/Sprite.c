@@ -26,7 +26,7 @@ const char* SPRITENAME[SPRITE_COUNT] =
 
 	"Monster",
 
-	"UI", "UI", "UI",
+	"UI", "UI", "Title",
 };
 
 // Sprites를 초기화하는 함수
@@ -48,6 +48,8 @@ void InitializeSprites()
 	Sprites[SPRITE_MONSTER] = LoadBitmapFile(SPRITENAME[SPRITE_MONSTER], COLOR_YELLOW);
 
 	Sprites[SPRITE_HEART] = LoadBitmapFile(SPRITENAME[SPRITE_HEART], COLOR_BLACK);
+
+	Sprites[SPRITE_TITLE] = LoadBitmapFile(SPRITENAME[SPRITE_TITLE], COLOR_DARKSKY);
 }
 
 // 스프라이트를 분할하여 Sprites에 저장하는 메소드 

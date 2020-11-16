@@ -1,4 +1,6 @@
 #pragma once
+#include "Bool.h"
+
 typedef enum Key
 {
 	KEY_UP = 0, KEY_DOWN, KEY_LEFT, KEY_RIGHT,
@@ -10,3 +12,4 @@ void InitializeKey();
 void BindKey();
 void PushKey();
 void SetInputHandler(void (*method)());
+Bool PressAnyKey();

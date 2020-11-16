@@ -1,5 +1,5 @@
 #include "Render.h"
-//#include <stdio.h> // 
+#include <stdio.h> // 
 
 #include "Screen.h" // 
 #include "FileLoader.h"
@@ -8,7 +8,9 @@
 #include "Animator.h"
 #include "Bool.h"
 #include "Room.h"
+#include "GameData.h"
 
+extern SceneType Scene;
 extern Stage* Stage1; // Stage.c
 extern Creature* Player; // Player.c
 extern Room* PlayerRoom; // Player.c
@@ -28,20 +30,14 @@ Bool IsTransition = False;
 // 화면 출력 함수
 void Render()
 {
-	InitializeScreen();
-	InitializeSprites();
-	InitializeRender();
-	/*for (int y = 0; y < 4; y++)
-	{
-		for (int x = 0; x < 4; x++)
-		{
-			RenderImage(PIXELPERUNIT * x, PIXELPERUNIT * y, Sprites[SPRITE_PLAYER + (y * 4) + x]);
-			printf("%d==\n", SPRITE_PLAYER + (y * 4) + x);
-		}
-	}*/
 	while (1)
 	{
-		UpdateRender();
+		if (Scene == SCENE_GAME)
+		{
+			RenderGame();
+			UpdateRender();
+		}
+		
 	}
 }
 
@@ -59,14 +55,17 @@ void InitializeRender()
 	CurrentRoom = NewImage(Screen->width, Screen->height - UI_HEIGHT);
 }
 
+void RenderGame()
+{
+	UpdateUI(Buffer); // UI 업데이트
+	RenderRoom(PlayerRoom, CurrentRoom); // 방 그리기
+	AddImage(0, PIXELPERUNIT, CurrentRoom, Buffer);
+}
+
 // 화면을 갱신하는 함수
 // 참고로 레이어별 / Y축 기준으로 정렬되어야됨
 void UpdateRender()
 {
-	UpdateUI(Buffer); // UI 업데이트
-	RenderRoom(PlayerRoom, CurrentRoom);
-	AddImage(0, PIXELPERUNIT, CurrentRoom, Buffer);
-	
 	for (int posy = 0; posy < Screen->height; posy++)
 	{
 		for (int posx = 0; posx < Screen->width; posx++)

@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Animator.c" />
     <ClCompile Include="Coordination.c" />
-    <ClCompile Include="Data.c" />
+    <ClCompile Include="GameData.c" />
     <ClCompile Include="FileLoader.c" />
     <ClCompile Include="Image.c" />
     <ClCompile Include="Input.c" />
@@ -155,6 +155,7 @@
     <ClCompile Include="Screen.c" />
     <ClCompile Include="Sprite.c" />
     <ClCompile Include="Thread.c" />
+    <ClCompile Include="Title.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Coordination.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="GameData.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Stage.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Thread.h" />
+    <ClInclude Include="Title.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

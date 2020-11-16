@@ -67,7 +67,7 @@ void ShootProjectile(Coordination position, Direction direction, ProjectileType 
 	projectile->power = power;
 	projectile->speed = speed;
 	projectile->penetration = 1;
-	projectile->distance = 15;
+	projectile->distance = 20;
 	projectile->enable = True;
 }
 
