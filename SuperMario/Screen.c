@@ -1,12 +1,13 @@
 #include "Screen.h"
 #include <stdio.h>
 #include "Bool.h"
-#include "Image.h"
+
 
 extern Image* Screen;
 
 // 화면 정보를 가지고 있는 핸들을 저장할 변수
 HANDLE Handle;
+DWORD Written[SCREEN_WIDTH * SCREEN_HEIGHT];
 
 char ASCIIMODE = False;
 const char* ASCIIColor[COLOR_COUNT] = { "  ", "■", "♣", "＠", "▒", "▤", "▥", "▨", "▩", "♨", "☏", "♥", "♠", "★", "▣", "◈" };
@@ -65,6 +66,13 @@ void SetPoint(int x, int y)
 	Pos.Y = y;
 	SetConsoleCursorPosition(Handle, Pos);
 }
+
+void SetScreenImage(Image* image)
+{
+	COORD coord = { 0, 0 };
+	WriteConsoleOutputAttribute(Handle, image->bitmap, image->width * image->height, coord, Written);
+}
+
 
 void SetPixelColor(int x, int y, Color textColor, Color backColor)
 {

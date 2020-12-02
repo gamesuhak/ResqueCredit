@@ -19,15 +19,15 @@ Creature* Player;
 Coordination PlayerRoomPosition = { 0, 0 };
 Room* PlayerRoom;
 //int PlayerAttackSpeed = 20;
-int PlayerAttackCooltime = 15;
+int PlayerAttackCooltime = 10;
 
 void InitializePlayer()
 {
 	Player = NewCreature();
-	Player->hp = 6;
+	Player->hp = 10;
 	Player->enable = True;
 	Player->power = 1;
-	Player->cooltime = 20;
+	Player->cooltime = 10;
 	PlayerRoomPosition = Stage1->start;
 	Player->object.position = NewCoordination(5 * PIXELPERUNIT + 4, 3 * PIXELPERUNIT + 4);
 	int frame[4] = { 4, 4, 4, 4 };
@@ -116,7 +116,28 @@ void PlayerMove()
 
 		if (GetTileTag(PlayerRoom, Player->object.position) == TILETAG_DOOR)
 		{
-			StartTransition(Player->object.direction);
+			int direction = DIRECTION_COUNT;
+			if (Player->object.position.x <= PIXELPERUNIT)
+			{
+				direction = DIRECTION_LEFT;
+			}
+			if (Player->object.position.x >= 88 - PIXELPERUNIT)
+			{
+				direction = DIRECTION_RIGHT;
+			}
+			if (Player->object.position.y <= PIXELPERUNIT)
+			{
+				direction = DIRECTION_UP;
+			}
+			if (Player->object.position.y >= 56 - PIXELPERUNIT)
+			{
+				direction = DIRECTION_DOWN;
+			}
+			if (direction == DIRECTION_COUNT)
+			{
+				return;
+			}
+			StartTransition(direction);
 		}
 	}
 	else

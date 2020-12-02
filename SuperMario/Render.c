@@ -53,7 +53,6 @@ void StartTransition(Direction direction)
 {
 	Coordination offset = DIRECTIONS[direction];
 	Coordination zero = NewCoordination(0, 0);
-
 	{
 		int random = Random(5);
 		switch (random)
@@ -130,9 +129,9 @@ void StartTransition(Direction direction)
 	{
 		AddImage(temp.x, temp.y + UI_HEIGHT, Temp, Buffer);
 		AddImage(offset.x, offset.y + UI_HEIGHT, CurrentRoom, Buffer);
-		offset = AddCoordination(offset, DIRECTIONS[direction]);
-		temp = AddCoordination(temp, DIRECTIONS[direction]);
-		UpdateUI(Buffer);
+		offset = AddCoordination(offset, MultiplyCoordination(DIRECTIONS[direction], 4));
+		temp = AddCoordination(temp, MultiplyCoordination(DIRECTIONS[direction], 4));
+		//UpdateUI(Buffer);
 		UpdateRender();
 		//Sleep(5);
 	}
@@ -166,9 +165,11 @@ void UpdateRender()
 		{
 			if (Screen->bitmap[posx][posy] == Buffer->bitmap[posx][posy]) { continue; }
 			Screen->bitmap[posx][posy] = Buffer->bitmap[posx][posy];
+			
 			SetPixelColor(posx, posy, COLOR_BLACK, Screen->bitmap[posx][posy]);
 		}
 	}
+	//SetScreenImage(Screen);
 }
 
 void RenderRoom(Room* room, Image* target)
