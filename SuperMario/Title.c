@@ -6,6 +6,7 @@
 #include "Sprite.h"
 #include "Screen.h"
 #include <stdio.h>
+#include "Sound.h"
 
 TitleMenuType TitleMenu = TITLEMENU_NONE;
 const char* TitleMenuText[TITLEMENU_COUNT] = { "◀ 게임 시작 ▶", "◀ 에디터 ▶", "◀ 설명 ▶", "◀ 종료 ▶" };
@@ -29,12 +30,16 @@ void TitleProcess()
 				time = 0;
 				if (TitleMenu == TITLEMENU_NONE)
 				{
-					TitleMenu = 0;
+					TitleMenu = TITLEMENU_GAME;
+					PlayFMODSound(SOUND_SELECT);
 				}
 				else
 				{
 					if (KeyState[KEY_A])
 					{
+						StopFMODSound(SOUND_TITLE);
+						PlayFMODSound(SOUND_SELECT);
+						PlayFMODSound(SOUND_ROOM);
 						return;
 					}
 					if ((KeyState[KEY_LEFT]) && (KeyCharge[KEY_LEFT] < KeyCharge[KEY_RIGHT] || !KeyState[KEY_RIGHT]))
@@ -50,6 +55,7 @@ void TitleProcess()
 						++TitleMenu;
 						TitleMenu %= TITLEMENU_COUNT;
 					}
+					PlayFMODSound(SOUND_CURSOR);
 				}
 				EraseText(TITLEMENU_X, TITLEMENU_Y, SCREEN_WIDTH);
 				PrintText(TITLEMENU_X, TITLEMENU_Y, TitleMenuText[TitleMenu], TITLEMENU_COLOR, TEXT_MIDDLE);
@@ -62,6 +68,7 @@ void TitleProcess()
 
 void InitilizeTitle()
 {
+	PlayFMODSound(SOUND_TITLE);
 	AddImage(0, 0, Sprites[SPRITE_TITLE], Buffer);
 	UpdateRender();
 	PrintText(TITLEMENU_X, TITLEMENU_Y, "Press Any Key", TITLEMENU_COLOR, TEXT_MIDDLE);

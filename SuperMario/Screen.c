@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "Bool.h"
 
-
 extern Image* Screen;
 
 // 화면 정보를 가지고 있는 핸들을 저장할 변수

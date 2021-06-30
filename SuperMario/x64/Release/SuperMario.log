@@ -1,9 +1,8 @@
 ﻿  Player.c
-C:\Users\Coremos\Documents\GitHub\SuperMarioBros\SuperMario\Player.c(148,7): warning C4013: 'Sleep'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
 x64\Release\Render.obj : warning LNK4042: 개체가 두 번 이상 지정되었습니다. 나머지는 무시됩니다.
   코드를 생성하고 있습니다.
-  0 of 95 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  2 of 99 functions ( 2.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    1 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
   SuperMario.vcxproj -> C:\Users\Coremos\Documents\GitHub\SuperMarioBros\x64\Release\SuperMario.exe

@@ -13,6 +13,7 @@
 #include "Title.h"
 #include "GameData.h"
 #include <stdio.h>
+#include "Sound.h"
 
 extern TitleMenuType TitleMenu;
 SceneType Scene = SCENE_TITLE;
@@ -30,11 +31,13 @@ int RandomRange(int start, int end)
 
 int main()
 {
-	srand(time(NULL)); // 랜덤시드를 현재 시간으로 초기화
+	srand(time(NULL)); // 랜덤시드 현재 시간으로 초기화
 
-	InitializeKey(); // 키를 초기화
-	InitializeMonsterInfo(); // 몬스터 정보를 초기화
-	InitializeRoomInfo(); // 방 정보를 초기화
+	InitializeKey(); // 키 초기화
+	InitializeMonsterInfo(); // 몬스터 정보 초기화
+	InitializeRoomInfo(); // 방 정보 초기화
+
+	InitializeFMODSound(); // 사운드 초기화 
 	
 	InitializeScreen(); // 화면 초기화
 	InitializeSprites(); // 스프라이트들 초기화

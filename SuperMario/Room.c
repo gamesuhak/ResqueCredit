@@ -4,8 +4,10 @@
 #include "Sprite.h" // PIXELPERUNIT
 #include "FileLoader.h" // LoadRoomInfoFile
 #include "Function.h"
+#include "Sound.h"
+#include "GameData.h"
 
-
+extern SceneType Scene;
 extern Bool IsTransition; // Render.c
 extern Bool Pause; // Main.c
 
@@ -200,7 +202,7 @@ void ProcessRoom()
 	while (1)
 	{
 		if (Pause) { continue; }
-		if (IsTransition)
+		if (IsTransition | (Scene == SCENE_GAMEOVER) | (Scene == SCENE_CLEAR))
 		{
 			continue;
 		}
@@ -212,7 +214,6 @@ void ProcessRoom()
 		{
 			PlayerRoom->clear = IsRoomClear(PlayerRoom);
 		}
-
 	}
 }
 
@@ -243,6 +244,7 @@ void UpdateMonster(Room* room)
 			if (++room->monsters[i]->cooltime > 50)
 			{
 				room->monsters[i]->cooltime = 0;
+				PlayFMODSound(SOUND_ARROW);
 				ShootProjectile(1, room->monsters[i]->object.position, room->monsters[i]->object.direction, room->monsters[i]->projectile, room->monsters[i]->power, 1);
 
 			}
@@ -362,6 +364,7 @@ void CheckProjectile(Room* room, Projectile* projectile)
 	{
 		if (CheckCollider(&projectile->object, &Player->object, zero) == True)
 		{
+			PlayFMODSound(SOUND_HIT);
 			HitProjectile(projectile, Player);
 		}
 		return;
@@ -373,6 +376,7 @@ void CheckProjectile(Room* room, Projectile* projectile)
 			if (CheckCollider(&projectile->object, &room->monsters[i]->object, zero) == True)
 			{
 				HitProjectile(projectile, room->monsters[i]);
+				PlayFMODSound(SOUND_HIT);
 			}
 		}
 	}

@@ -6,6 +6,8 @@
 #include "Stage.h" // CheckMove
 #include "Sprite.h" // PIXELPERUNIT
 #include "Render.h"
+#include "Sound.h"
+#include "Thread.h"
 
 extern char ASCIIMODE; // Render.c
 extern Bool KeyState[KEY_COUNT]; // InputProcess.c
@@ -79,33 +81,7 @@ void PlayerMove()
 		if (++PlayerAttackCooltime >= Player->cooltime)
 		{
 			PlayerAttackCooltime = 0;
-			if (PlayerFour)
-			{
-				for (int i = 0; i < DIRECTION_COUNT; i++)
-				{
-					ShootProjectile(0, Player->object.position, i, PROJECTILE_ARROW, Player->power, 1);
-				}
-				
-			}
-			else
-			{
-				ShootProjectile(0, Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
-			}
-			if (PlayerDouble)
-			{
-				if (PlayerFour)
-				{
-					for (int i = 0; i < DIRECTION_COUNT; i++)
-					{
-						ShootProjectile(0, Player->object.position, i, PROJECTILE_ARROW, Player->power, 1);
-					}
-
-				}
-				else
-				{
-					ShootProjectile(0, Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
-				}
-			}
+			Thread(ShootPlayer);
 		}
 	}
 	if (move.x != 0 || move.y != 0)
@@ -146,4 +122,36 @@ void PlayerMove()
 	}
 	//printf("%d, %d\n", move.x, move.y);
 	Sleep(50);
+}
+
+
+void ShootPlayer()
+{
+	PlayFMODSound(SOUND_ARROW);
+	if (PlayerFour)
+	{
+		Sleep(100);
+		for (int i = 0; i < DIRECTION_COUNT; i++)
+		{
+			ShootProjectile(0, Player->object.position, i, PROJECTILE_ARROW, Player->power, 1);
+		}
+	}
+	else
+	{
+		ShootProjectile(0, Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
+	}
+
+	if (PlayerDouble)
+	{
+		if (PlayerFour)
+		{
+			Sleep(150);
+			for (int i = 0; i < DIRECTION_COUNT; i++)
+			{
+				ShootProjectile(0, Player->object.position, i, PROJECTILE_ARROW, Player->power, 1);
+			}
+		}
+		Sleep(150);
+		ShootProjectile(0, Player->object.position, Player->object.direction, PROJECTILE_ARROW, Player->power, 1);
+	}
 }

@@ -6,6 +6,7 @@
 #include "Function.h"
 #include "FileLoader.h" // LoadMonsterInfoFile
 #include "Sprite.h"
+#include "Sound.h"
 
 const Coordination DIRECTIONS[DIRECTION_COUNT] =
 {

@@ -9,6 +9,7 @@
 #include "Bool.h"
 #include "Room.h"
 #include "GameData.h"
+#include "Sound.h"
 
 extern SceneType Scene;
 extern Stage* Stage1; // Stage.c
@@ -44,6 +45,14 @@ void Render()
 		if (Scene == SCENE_GAME)
 		{
 			RenderGame();
+		}
+		else if (Scene == SCENE_GAMEOVER)
+		{
+			RenderImage(0, 0, Sprites[SPRITE_GAMEOVER]);
+		}
+		else if (Scene == SCENE_CLEAR)
+		{
+			RenderImage(0, 0, Sprites[SPRITE_CLEAR]);
 		}
 		UpdateRender();
 	}
@@ -94,15 +103,17 @@ void StartTransition(Direction direction)
 		ReleaseImage(Temp);
 	}
 	Temp = DuplicateImage(CurrentRoom);
-	
 	RenderRoom(PlayerRoom, Temp);
 	DisableProjectile(); // 발사체 초기화
 	PlayerRoomPosition = AddCoordination(PlayerRoomPosition, DIRECTIONS[direction]);
 	PlayerRoom = Stage1->rooms[Stage1->roomData[PlayerRoomPosition.x][PlayerRoomPosition.y]];
 	if (PlayerRoom->type == ROOM_BOSS)
 	{
+		StopFMODSound(SOUND_ROOM);
+		PlayFMODSound(SOUND_CLEAR);
 		RenderImage(0, 0, Sprites[SPRITE_CLEAR]);
-		exit(0);
+		Scene = SCENE_CLEAR;
+		return;
 	}
 	Player->enable = True;
 	if (direction == DIRECTION_DOWN)
@@ -131,9 +142,9 @@ void StartTransition(Direction direction)
 		AddImage(offset.x, offset.y + UI_HEIGHT, CurrentRoom, Buffer);
 		offset = AddCoordination(offset, MultiplyCoordination(DIRECTIONS[direction], 4));
 		temp = AddCoordination(temp, MultiplyCoordination(DIRECTIONS[direction], 4));
-		//UpdateUI(Buffer);
+		UpdateUI(Buffer);
 		UpdateRender();
-		//Sleep(5);
+		Sleep(5);
 	}
 	IsTransition = False;
 }
@@ -150,8 +161,8 @@ void InitializeRender()
 
 void RenderGame()
 {
-	UpdateUI(Buffer); // UI 업데이트
 	RenderRoom(PlayerRoom, CurrentRoom); // 방 그리기
+	UpdateUI(Buffer); // UI 업데이트
 	AddImage(0, UI_HEIGHT, CurrentRoom, Buffer);
 }
 
@@ -286,8 +297,9 @@ void UpdateUI(Image* target)
 {
 	if (Player->hp <= 0)
 	{
-		RenderImage(0, 0, Sprites[SPRITE_GAMEOVER]);
-		exit(0);
+		StopFMODSound(SOUND_ROOM);
+		PlayFMODSound(SOUND_LOSE);
+		Scene = SCENE_GAMEOVER;
 	}
 	AddImage(UI_X, UI_Y, UIBackGround, target);
 	// 온전한 하트의 개수는 hp에서 1의 비트를 없앤 다음에 / 2한 결과

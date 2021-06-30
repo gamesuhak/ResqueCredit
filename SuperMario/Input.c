@@ -1,6 +1,9 @@
 #include "Input.h"
 
 #include <windows.h>
+#include "GameData.h"
+
+extern SceneType Scene;
 
 int KeyCode[KEY_COUNT]; // 현재 설정되어있는 키 코드를 저장하는 배열
 Bool KeyState[KEY_COUNT] = { False, False, False, False, False, False }; // 키가 눌려있는 상태를 저장할 배열
@@ -10,7 +13,7 @@ void (*InputHandler)() = NULL; // 키를 눌렀을 때 실행할 메소드를 저장하는 포인터
 
 void InputProcess()
 {
-	while (1)
+	while (Scene != SCENE_GAMEOVER && Scene != SCENE_CLEAR)
 	{
 		PushKey();
 		if (InputHandler == NULL) { continue; }

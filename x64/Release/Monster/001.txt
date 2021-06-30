@@ -1,0 +1,8 @@
+Type : 1
+Projectile : 2
+HP : 2
+Power : 1
+Speed : 1
+Layer : 0
+Pivot : {4, 4}
+Size : {8, 8}
